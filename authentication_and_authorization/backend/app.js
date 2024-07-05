@@ -7,11 +7,17 @@ const home = require('./Controllers/home')
 
 const app = express();
 
+// const corsOptions = {
+//     origin: "http://localhost:3001/",
+//     methods: "GET, POST, PUT, DELETE, HEAD",
+//     credentials: true
+// }
+
 const corsOptions = {
-    origin: "http://localhost:3001/",
-    methods: "GET, POST, PUT, DELETE, HEAD",
-    credentials: true
-}
+    credentials: true,
+    origin: ['http://localhost:3000', 'http://localhost:3001'], // Whitelist the domains you want to allow
+    methods: "GET, POST, PUT, DELETE, HEAD"
+};
 
 app.use(cors(corsOptions));
 
@@ -31,14 +37,21 @@ var config = {
 
 sql.connect(config,(err)=>{
     if(err){
-        throw err;
+        throw err;  
     }
     console.log("Connection successful");
 })
 
+app.use(express.json());
+// basically it is our middleware which we use to pass the json data received as post or get request.
+
 app.use('/api/auth',router);
 // app.get('/',router)
 
+app.get('/',(req,res)=>{
+    res.cookie("name","test")
+    res.status(200).send("Server is running ");
+})
 
 
 const port = process.env.port || 3000 ;
