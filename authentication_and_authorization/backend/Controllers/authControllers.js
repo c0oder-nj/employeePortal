@@ -1,8 +1,26 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+// const db = require('../databaseConnection')
+const sql = require("mssql");
+
+var config = {
+    "user": "sa", // Database username
+    "password": "shakti@123", // Database password
+    "server": "13.202.132.54", // Server IP address
+    "database": "ShaktiAppsStore", // Database name
+    "options": {
+        "encrypt": false // Disable encryption
+    }
+}
 
 
-
+// Connect to SQL Server
+sql.connect(config,(err)=>{
+    if(err){
+        throw err;  
+    }
+    console.log("Connection sdfsdf successful");
+})
 
 // constant variables
 const saltRounds = 10
@@ -69,13 +87,29 @@ const login = async(req,res) => {
         }
         // console.log(encrypted_password)
         
-        //Performing JWT encryption
-        let token = jwt.sign(data,"secret_key");
-        // console.log(token);
+        
+        
+        ////Working 
+        new sql.Request().query(`SELECT id,password FROM userTable WHERE sapNumber = ${req.body.username}`, (err, result) => {
+            
+            if (err) {
+                console.error("Error executing query:", err);
+            } else {
+                
+
+                
+                console.dir(result.recordset);
+            }
+        });
+        console.log("Going in loop");
+        ///////////////////////////////
 
         
+        
+
 
     } catch (error) {
+        console.log(error)
         res.status(500).send("Internal server error")
     }
 }
