@@ -39,38 +39,41 @@ const login = async(req,res) => {
     try {
         // encrypting your password using bcrypt encryption method
 
-        console.log(req.body)
-        console.log("data type of request is ",typeof req.body)
+        // console.log(req.body)
+        // console.log("data type of request is ",typeof req.body)
 
-        console.log()
-        console.log()
-        console.log()
+        // console.log()
+        // console.log()
+        // console.log()
 
+        //Performin bcrypt
         let encrypted_password;
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(req.body.password, salt, function(err, hash) {
-                // console.log("Bcrypted password is ==> ", hash)
-                encrypted_password =  hash;
-                console.log(encrypted_password)
-                // console.log(typeof encrypted_password);
-            });
-        }).then()
-        
-        ;
+        async function hashPassword (req) {
 
-        // creating jwt token
-
-        
+            const password = req.body.password
+            const saltRounds = 10;
+          
+            const hashedPassword = await new Promise((resolve, reject) => {
+              bcrypt.hash(password, saltRounds, function(err, hash) {
+                if (err) reject(err)
+                resolve(hash)
+              });
+            })
+            
+            return hashedPassword
+          }
+        encrypted_password =await hashPassword(req);
+        // creating jwt token        
         let data ={
             password : encrypted_password
         }
-
-        console.log(data)
-
-        // let token = jwt.sign({
-        //     password : encrypted_password
-        // },"secret_key");
+        // console.log(encrypted_password)
+        
+        //Performing JWT encryption
+        let token = jwt.sign(data,"secret_key");
         // console.log(token);
+
+        
 
     } catch (error) {
         res.status(500).send("Internal server error")
