@@ -12,9 +12,7 @@ const authControllers = require('./Controllers/authControllers')
 router.route('/').get(authControllers.home);
 
 
-router.route('/test').get((req,res)=>{
-    res.status(200).send("testin route home using router of express");
-})
+router.route('/test').get(authControllers.test);
 
 
 router.route('/login').post(authControllers.login);

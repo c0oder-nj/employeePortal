@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const sql = require('mssql')
+const cookieParser = require('cookie-parser')
 
 const router = require('./routes');
 const home = require('./Controllers/home')
@@ -20,6 +21,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 
 
@@ -48,10 +50,19 @@ app.use(express.json());
 app.use('/api/auth',router);
 // app.get('/',router)
 
+app.use(express.urlencoded({extended: true}));
+
 app.get('/',(req,res)=>{
     res.cookie("name","test")
     res.status(200).send("Server is running ");
 })
+
+
+app.get('/get_cookie',(req,res)=>{
+    console.log(req.cookies);
+    res.status(200).send("Cookie printed to console")
+})
+
 
 
 const port = process.env.port || 3000 ;
