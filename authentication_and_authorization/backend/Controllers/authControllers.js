@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const db = require('../databaseConnection')
+const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 
 dotenv.config();
@@ -33,67 +34,69 @@ iii) implementation of jwt
 
 
 const login = async(req,res) => {
-    try {
-
-        //Performin bcrypt
-        let encrypted_password;
-        async function hashPassword (req) {
-
-            const password = req.body.password
-            const saltRounds = 10;
-          
-            const hashedPassword = await new Promise((resolve, reject) => {
-              bcrypt.hash(password, saltRounds, function(err, hash) {
-                if (err) reject(err)
-                resolve(hash)
-              });
-            })
+    // return res.status(204).send("testing msg")
+        try {
+            let encrypted_password;
+            async function hashPassword (req) {
+                const password = req.body.password
+                const saltRounds = 10;
+              
+                const hashedPassword = await new Promise((resolve, reject) => {
+                  bcrypt.hash(password, saltRounds, function(err, hash) {
+                    if (err) reject(err)
+                    resolve(hash)
+                  });
+                })
+                
+                return hashedPassword
+              }
+            encrypted_password =await hashPassword(req);
             
-            return hashedPassword
-          }
-        encrypted_password =await hashPassword(req);
-        
-
-        await db.connect();
-        const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.username} `);
-        const userData = result.recordset; //userData is an array of users which looks something like
-        /*
-        [
-                {
-                    id: 1,
-                    password: '$2b$10$mYOFtryX1QjnUZIkcLsd2OV8bCnF9DyVAcoKQzehjEz3/ZMF1x4dC',
-                },
-                ];
-        */
-
-        console.log(req.body.password, userData.at(0).password);
-        const compFlag = await bcrypt.compare(req.body.password,userData.at(0).password)
-        // console.log(compFlag);
-
-        if(compFlag){
-            console.log("User is a valid user")
-            let payloadData = {
-                sapNumber: req.body.username,
-                password : userData.at(0).password
+    
+            await db.connect();
+            const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.username} `);
+            const userData = result.recordset; //userData is an array of users which looks something like
+            /*
+            [
+                    {
+                        id: 1,
+                        password: '$2b$10$mYOFtryX1QjnUZIkcLsd2OV8bCnF9DyVAcoKQzehjEz3/ZMF1x4dC',
+                    },
+                    ];
+            */
+    
+            console.log(req.body.password, userData.at(0).password);
+            const compFlag = await bcrypt.compare(req.body.password,userData.at(0).password)
+            // console.log(compFlag);
+    
+            if(compFlag){
+                console.log("User is a valid user")
+                let payloadData = {
+                    sapNumber: req.body.username,
+                    password : userData.at(0).password
+                }
+                // generate jwt token
+                let jwtSecretKey = process.env.JWT_SECRET_KEY;
+                // let jwtSecretKey = "secret_key";
+                const token = jwt.sign(payloadData,jwtSecretKey);
+                console.log(token)
+                //return res.status(204).send("Testing testing");
+                res.cookie("token", token);
+                let repo = res.json({message: "user logged in successfully", accessToken : token});
+                // console.log('repo: ',repo);
+                return repo;
+            }else{
+                console.log("Validation failed");
             }
-            // generate jwt token
-            let jwtSecretKey = process.env.JWT_SECRET_KEY;
-            // let jwtSecretKey = "secret_key";
-            const token = jwt.sign(payloadData,jwtSecretKey);
-            
-            // console.log(token);
-        }else{
-            console.log("Validation failed");
+    
+        } catch (error) {
+            console.log(error)
+            res.status(500).send("Internal server error",error)
         }
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).send("Internal server error",error)
+        finally{
+            db.close();
+        }
     }
-    finally{
-        db.close();
-    }
-}
 
 
 module.exports = {home, login,test};

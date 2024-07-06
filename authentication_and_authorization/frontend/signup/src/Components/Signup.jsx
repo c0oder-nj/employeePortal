@@ -27,11 +27,16 @@ const Signup = () => {
             const response = await fetch(`http://localhost:3000/api/auth/login`, {
                 method: "POST",
                 headers: {
-                    "Content-Type":"application/json"
+                    'content-type': 'application/json',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
+                    'Access-Control-Allow-Methods': 'POST',
                 },
                 body: JSON.stringify(user)
+            }).then((response)=>{
+                return response.json();
             });
-            console.log(response);
+            // console.log(response);
+            document.cookie= 'accessToken='+response.accessToken;
         } catch (error) {
             
         }

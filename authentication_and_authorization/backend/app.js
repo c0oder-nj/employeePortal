@@ -2,62 +2,32 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const env = require('dotenv')
+const authControllers = require('./Controllers/authControllers')
 
-const router = require('./routes');
-const home = require('./Controllers/home')
 
 env.config();
-
 const app = express();
 
-// const corsOptions = {
-//     origin: "http://localhost:3001/",
-//     methods: "GET, POST, PUT, DELETE, HEAD",
-//     credentials: true
-// }
+
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 
 const corsOptions = {
     credentials: true,
     origin: ['http://localhost:5000','http://localhost:3000', 'http://localhost:3001'], // Whitelist the domains you want to allow
     methods: "GET, POST, PUT, DELETE, HEAD"
 };
-
 app.use(cors(corsOptions));
-app.use(cookieParser());
-
-
-
-// sql server configuration\
-// var config = {
-//     "user": "sa", // Database username
-//     "password": "shakti@123", // Database password
-//     "server": "13.202.132.54", // Server IP address
-//     "database": "ShaktiAppsStore", // Database name
-//     "options": {
-//         "encrypt": false // Disable encryption
-//     }
-// }
-
-
-// sql.connect(config,(err)=>{
-//     if(err){
-//         throw err;  
-//     }
-//     console.log("Connection successful");
-// })
-
-app.use(express.json());
-// basically it is our middleware which we use to pass the json data received as post or get request.
-
-app.use('/api/auth',router);
-// app.get('/',router)
-
-app.use(express.urlencoded({extended: true}));
 
 app.get('/',(req,res)=>{
-    res.cookie("name","test")
+    // res.cookie("name","test")
     res.status(200).send("Server is running ");
 })
+
+
+app.post('/api/auth/login', authControllers.login)
 
 
 app.get('/get_cookie',(req,res)=>{
