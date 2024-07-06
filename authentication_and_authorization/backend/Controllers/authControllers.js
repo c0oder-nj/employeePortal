@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const db = require('../databaseConnection')
+const dotenv = require('dotenv')
+
+dotenv.config();
 
 // constant variables
 const saltRounds = 10
@@ -69,6 +72,16 @@ const login = async(req,res) => {
 
         if(compFlag){
             console.log("User is a valid user")
+            let payloadData = {
+                sapNumber: req.body.username,
+                password : userData.at(0).password
+            }
+            // generate jwt token
+            let jwtSecretKey = process.env.JWT_SECRET_KEY;
+            // let jwtSecretKey = "secret_key";
+            const token = jwt.sign(payloadData,jwtSecretKey);
+            
+            // console.log(token);
         }else{
             console.log("Validation failed");
         }

@@ -1,9 +1,12 @@
 const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const env = require('dotenv')
 
 const router = require('./routes');
 const home = require('./Controllers/home')
+
+env.config();
 
 const app = express();
 
@@ -15,7 +18,7 @@ const app = express();
 
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:3000', 'http://localhost:3001'], // Whitelist the domains you want to allow
+    origin: ['http://localhost:5000','http://localhost:3000', 'http://localhost:3001'], // Whitelist the domains you want to allow
     methods: "GET, POST, PUT, DELETE, HEAD"
 };
 
@@ -64,7 +67,7 @@ app.get('/get_cookie',(req,res)=>{
 
 
 
-const port = process.env.port || 3000 ;
+const port = process.env.port || 3000;
 
 
 app.listen(port,()=>{
