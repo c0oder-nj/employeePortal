@@ -13,12 +13,17 @@ var config = {
 }
 
 
-// Connect to SQL Server
-sql.connect(config,(err)=>{
-    if(err){
-        throw err;  
-    }
-    console.log("Connection sdfsdf successful");
-})
 
+const pool = new sql.ConnectionPool(config);
 
+// module.exports = pool;
+
+// // Connect to SQL Server
+// sql.connect(config,(err)=>{
+//     if(err){
+//         throw err;  
+//     }
+//     console.log("Db connceted successfully");
+// })
+
+module.exports = pool
