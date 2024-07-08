@@ -5,8 +5,10 @@ const env = require('dotenv')
 const authControllers = require('./Controllers/authControllers')
 
 
+
 env.config();
 const app = express();
+
 
 
 app.use(cookieParser());
@@ -26,6 +28,12 @@ app.get('/',(req,res)=>{
     res.status(200).send("Server is running ");
 })
 
+app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
+    // res.cookie("name","test")
+    console.log('ReQ:: ',req.body);
+    res.status(200).send("Server is running ");
+})
+
 
 app.post('/api/auth/login', authControllers.login)
 
@@ -34,6 +42,11 @@ app.get('/get_cookie',(req,res)=>{
     console.log(req.cookies);
     res.status(200).send("Cookie printed to console")
 })
+
+
+
+// api endpoint for getting the sap data into our mssql database
+app.get('/api/get_data',authControllers.getData);
 
 
 

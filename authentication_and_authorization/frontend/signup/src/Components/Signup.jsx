@@ -36,6 +36,7 @@ const Signup = () => {
                 return response.json();
             });
             // console.log(response);
+            console.log(document.cookie);
             document.cookie= 'accessToken='+response.accessToken;
         } catch (error) {
             
