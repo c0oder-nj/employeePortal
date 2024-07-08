@@ -35,7 +35,9 @@ iii) implementation of jwt
 
 const login = async(req,res) => {
     // return res.status(204).send("testing msg")
+    
         try {
+            
             let encrypted_password;
             async function hashPassword (req) {
                 const password = req.body.password
@@ -52,9 +54,11 @@ const login = async(req,res) => {
               }
             encrypted_password =await hashPassword(req);
             
-    
+            
             await db.connect();
-            const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.username} `);
+            console.log(req.body);
+            const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.sapNumber} `);
+            
             const userData = result.recordset; //userData is an array of users which looks something like
             /*
             [
@@ -72,7 +76,7 @@ const login = async(req,res) => {
             if(compFlag){
                 console.log("User is a valid user")
                 let payloadData = {
-                    sapNumber: req.body.username,
+                    sapNumber: req.body.sapNumber,
                     password : userData.at(0).password
                 }
                 // generate jwt token
