@@ -14,6 +14,9 @@ const saltRounds = 10
 const home = async(req,res) => {
     // res.status(200).send("Data for showing at router part");
     // setting cookie
+
+    // console.log('Cookies:', req.cookies);
+    // res.send('Check console for cookies');
     
 }
 
@@ -57,7 +60,7 @@ const login = async(req,res) => {
             
             await db.connect();
             console.log(req.body);
-            const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.sapNumber} `);
+            const result = await db.request().query(`SELECT top 1 empCode,empPassword FROM userTable WHERE empCode = ${req.body.sapNumber} `);
             
             const userData = result.recordset; //userData is an array of users which looks something like
             /*
@@ -68,16 +71,16 @@ const login = async(req,res) => {
                     },
                     ];
             */
-    
-            console.log(req.body.password, userData.at(0).password);
-            const compFlag = await bcrypt.compare(req.body.password,userData.at(0).password)
+           console.log(req.body.password, userData.at(0).empPassword);
+           const compFlag = await bcrypt.compare(req.body.password,userData.at(0).empPassword)
+           console.log("Working")
             // console.log(compFlag);
     
             if(compFlag){
                 console.log("User is a valid user")
                 let payloadData = {
-                    sapNumber: req.body.sapNumber,
-                    password : userData.at(0).password
+                    empCode: req.body.sapNumber,
+                    empPassword : userData.at(0).password
                 }
                 // generate jwt token
                 let jwtSecretKey = process.env.JWT_SECRET_KEY;

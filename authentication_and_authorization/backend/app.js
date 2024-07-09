@@ -28,6 +28,7 @@ app.get('/',(req,res)=>{
 
 
 app.post('/api/auth/login',authControllers.login)
+app.post('/api/auth/home',authControllers.home)
 
 
 app.get('/get_cookie',(req,res)=>{

@@ -89,7 +89,20 @@ const Header = (props) => {
             : lnGerman
     );
   };
-
+  const deleteCookie = (cookieName) => {
+    // location.href = 'localhost:3001/react/template';
+    var expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate()+7);
+    document.cookie = "name=accessToken; expires="+expiryDate.toUTCString()+ "; path=/";
+    
+  };
+  const handleLogout = ()=>{
+    // console.log(document.cookie);
+    // localStorage.clear();
+    deleteCookie('accessToken');
+        
+    window.location.href = '/react/template';
+  }
   return (
     <div className="header" style={{ right: "0px" }}>
       {/* Logo */}
@@ -363,7 +376,7 @@ const Header = (props) => {
             <Link className="dropdown-item" to="/settings/companysetting">
               Settings
             </Link>
-            <Link className="dropdown-item" to="/">
+            <Link className="dropdown-item" to="/" onClickCapture={handleLogout}>
               Logout
             </Link>
           </div>

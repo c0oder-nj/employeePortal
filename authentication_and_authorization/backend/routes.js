@@ -16,6 +16,7 @@ router.route('/test').get(authControllers.test);
 
 
 router.route('/login').post(authControllers.login);
+router.route('/home').post(authControllers.home);
 
 
 
