@@ -48,20 +48,43 @@ async function hashPassword(password) {
 
 
 const login = async (req, res) => {
+    // primary validations -> empCode should be neumeric
+    if(isNaN(req.body.sapNumber)){
+        return res.status(500).json({"status":false,"message":"Sap number should always be Numeric"})
+    }
+
     var unSuccessfulAttempts;
     var allowedAttempts;
     var userLockFlag;
     try {
-        await db.connect();
-        const data = await db.request().query(`SELECT unSuccessfulAttempts, allowUnSuccessfulAttempts,userLockFlag from userTable where empCode = ${req.body.sapNumber}`);
-        unSuccessfulAttempts = data.recordset.at(0).unSuccessfulAttempts;
-        allowedAttempts = data.recordset.at(0).allowUnSuccessfulAttempts;
-        userLockFlag = data.recordset.at(0).userLockFlag;
+        try {
+            await db.connect();
+        } catch (error) {
+            console.log("Error in db connection::", error)
+        }
+        // try-catch for query block 
+        try {
+            const userAttempts = await db.request().query(`SELECT unSuccessfulAttempts, allowUnSuccessfulAttempts,userLockFlag from userTable where empCode = ${req.body.sapNumber}`);
+            if(userAttempts.recordset.length == 0 ){
+                console.log("wrong sap number")
+                return res.json({ "status": false, "message": "wrong sap number" })
+            }
+            unSuccessfulAttempts = userAttempts.recordset.at(0).unSuccessfulAttempts;
+            allowedAttempts = userAttempts.recordset.at(0).allowUnSuccessfulAttempts;
+            userLockFlag = userAttempts.recordset.at(0).userLockFlag;
+        } catch (error) {
+            console.log("Error in query execution: ", error);
+        }
+
         if ((unSuccessfulAttempts == allowedAttempts) && !userLockFlag) {
             // lock the user
-            const response = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapNumber}`);
-            if (response.rowsAffected[0]) {
-                isUserLocked = true;
+            var isUserLocked;
+            try {
+                isUserLocked = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapNumber}`);
+            } catch (error) {
+                console.log("Error occured in second query :: ",error);
+            }
+            if (isUserLocked.rowsAffected[0]) {
                 return res.json({ "status": false, "message": "maximum possible no. of attempts reached, user is locked now" })
             }
         } else if (userLockFlag) {
@@ -78,8 +101,12 @@ const login = async (req, res) => {
             var mobileNo;
             var emailIdShakti;
             var empAddress;
-
-            const result = await db.request().query(`SELECT top 1 empCode,empPassword,empName,empDesignation,compName,mobileNo,emailIdShakti, empAddress  FROM userTable WHERE empCode = ${req.body.sapNumber} `);
+            var result;
+            try {
+                result = await db.request().query(`SELECT top 1 empCode,empPassword,empName,empDesignation,compName,mobileNo,emailIdShakti, empAddress  FROM userTable WHERE empCode = ${req.body.sapNumber} `);
+            } catch (error) {
+                console.log("Error occured at third query :: ",error);
+            }
             const userData = result.recordset; //userData is an array of users which looks something like
             // assiging variables for payload data
             empCode = userData.at(0).empCode;
@@ -90,11 +117,18 @@ const login = async (req, res) => {
             mobileNo = userData.at(0).mobileNo;
             emailIdShakti = userData.at(0).emailIdShakti;
             empAddress = userData.at(0).empAddress;
+
+            // comparing the passwords
             compFlag = await bcrypt.compare(req.body.password, empPassword);
 
 
             if (compFlag) {
                 console.log("User is a valid user")
+                try {
+                    resettingLockStatus = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = 0 where empCode = ${req.body.sapNumber}`);
+                } catch (error) {
+                    console.log("Error occured in query :: ",error);
+                }
                 let payloadData = {
                     empCode: empCode,
                     empPassword: empPassword,
@@ -115,15 +149,20 @@ const login = async (req, res) => {
             } else {
                 // console.log("Wrong credentials");
                 unSuccessfulAttempts += 1;
-                const response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = ${unSuccessfulAttempts} WHERE empCode = ${req.body.sapNumber}`);
+                var response;
+                try {
+                    response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = ${unSuccessfulAttempts} WHERE empCode = ${req.body.sapNumber}`);
+                } catch (error) {
+                    console.log("Error occured at fifth query :: ",error);
+                }
                 console.log(response.rowsAffected[0]);
                 return res.json({ "status": false, "message": "Wrong Credentials" });
             }
         }
 
     } catch (error) {
-        // res.status(500).json({"status":false, "message":"Internal server error "})
-        res.status(500).send("Some error occured ", error);
+        console.log("Error in try block ");
+        res.status(200).send("Some error occured ", error);
     }
     finally {
         db.close();

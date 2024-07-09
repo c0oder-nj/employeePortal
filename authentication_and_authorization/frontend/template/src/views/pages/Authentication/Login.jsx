@@ -43,6 +43,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
 
   const [user, setUser] = useState({
@@ -113,14 +114,14 @@ const Login = () => {
               document.cookie= 'accessToken='+response.accessToken;
               navigate("/admin-dashboard");
             }else{
-              console.log(response.message)
+              setErrorMessage(response.message)
               navigate("/")
             }
         } catch (error) {
             
         }
 
-
+  
 
   };
 
@@ -174,6 +175,10 @@ const Login = () => {
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}
                   <div>
+                  {errorMessage && <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Alert:</strong> {errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">x</button>
+                  </div> }
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
                         <label className="col-form-label">Enter You Sap Id</label>
