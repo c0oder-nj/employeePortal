@@ -7,8 +7,6 @@ const axios = require('axios')
 
 dotenv.config();
 
-// constant variables
-const saltRounds = 10
 
 
 
@@ -33,19 +31,23 @@ iii) implementation of jwt
 
 */
 async function hashPassword (password) {
-                const saltRounds = 10;
-              
-                const hashedPassword = await new Promise((resolve, reject) => {
-                  bcrypt.hash(password, saltRounds, function(err, hash) {
-                    if (err) reject(err)
-                    resolve(hash)
-                  });
-                })
-                return hashedPassword
-              }
-            encrypted_password =await hashPassword(req);
-            
-    
+    const saltRounds = 10;
+  
+    const hashedPassword = await new Promise((resolve, reject) => {
+      bcrypt.hash(password, saltRounds, function(err, hash) {
+        if (err) reject(err)
+        resolve(hash)
+      });
+    })
+    return hashedPassword
+  }
+
+
+
+const login = async(req,res) => {
+        try {
+            let encrypted_password;
+            encrypted_password =await hashPassword(req.body.password);
             await db.connect();
             const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.username} `);
             const userData = result.recordset; //userData is an array of users which looks something like
@@ -60,7 +62,6 @@ async function hashPassword (password) {
     
             console.log(req.body.password, userData.at(0).password);
             const compFlag = await bcrypt.compare(req.body.password,userData.at(0).password)
-            // console.log(compFlag);
     
             if(compFlag){
                 console.log("User is a valid user")

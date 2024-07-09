@@ -46,7 +46,9 @@ app.get('/get_cookie',(req,res)=>{
 
 
 // api endpoint for getting the sap data into our mssql database
-app.get('/api/get_data',authControllers.getData);
+// app.get('/api/get_data',authControllers.getData);
+
+app.get('/encode_me', authControllers.encodePassword);
 
 
 

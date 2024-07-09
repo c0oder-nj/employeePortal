@@ -1,0 +1,37 @@
+INSERT INTO [dbo].[userTable]
+           ([empCode]
+           ,[empPassword]
+           ,[empName]
+           ,[compCode]
+           ,[compName]
+           ,[plantNo]
+           ,[plantName]
+           ,[empDesignation]
+           ,[payrollArea]
+           ,[mobileNo]
+           ,[emailIdShakti]
+           ,[emailIdPersonal]
+           ,[empAddress]
+           ,[empStatus]
+           ,[createdDate]
+		   ,[dateModified]
+		   )
+     VALUES
+           (5054,
+			'$2b$10$Idjww2p60H5Dzc.wxbx.6eikQFRPf7kxH3q7WMGPuI/8OupekyVNa',
+			'Neeraj Chittodiya',
+			'1200',
+			'Shakti Pumps India Limited',
+			'1170',
+			'Head office',
+			'Executive',
+			'Shakti',
+			'9669996569',
+			'it.web1@shakti',
+			'neerajchittodiya@gmail.com',
+			'458 VN colony Near krashi vihar, Indore [M.P.]',
+			1,
+			'09-07-2024',
+			'09-07-2024'
+		   )
+GO
