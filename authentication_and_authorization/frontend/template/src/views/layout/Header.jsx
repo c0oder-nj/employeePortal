@@ -91,9 +91,10 @@ const Header = (props) => {
   };
   const deleteCookie = (cookieName) => {
     // location.href = 'localhost:3001/react/template';
-    var expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate()+7);
-    document.cookie = "name=accessToken; expires="+expiryDate.toUTCString()+ "; path=/";
+   //Need To implement 
+   console.log(document.cookie);
+   const [key, value] = document.cookie.split("=");
+   document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";
     
   };
   const handleLogout = ()=>{

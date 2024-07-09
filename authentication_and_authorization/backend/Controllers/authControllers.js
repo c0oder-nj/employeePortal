@@ -91,6 +91,7 @@ const login = async(req,res) => {
                 res.cookie("token", token);
                 let repo = res.json({message: "user logged in successfully", accessToken : token});
                 // console.log('repo: ',repo);
+                
                 return repo;
             }else{
                 console.log("Validation failed gesv");
