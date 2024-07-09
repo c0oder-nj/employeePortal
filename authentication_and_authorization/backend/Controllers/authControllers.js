@@ -32,14 +32,7 @@ iii) implementation of jwt
 
 
 */
-
-
-const login = async(req,res) => {
-    // return res.status(204).send("testing msg")
-        try {
-            let encrypted_password;
-            async function hashPassword (req) {
-                const password = req.body.password
+async function hashPassword (password) {
                 const saltRounds = 10;
               
                 const hashedPassword = await new Promise((resolve, reject) => {
@@ -48,7 +41,6 @@ const login = async(req,res) => {
                     resolve(hash)
                   });
                 })
-                
                 return hashedPassword
               }
             encrypted_password =await hashPassword(req);
@@ -149,5 +141,13 @@ const getData = async(req,res) => {
     
 }
 
+const encodePassword = async(req,res) => {
+    const pass = req.query.pass;
+    const hashedPassword = await hashPassword(pass);
+    console.log("Encrypted password is: ",hashedPassword);
 
-module.exports = {home, login,test, getData};
+    res.status(200).send("API hit ho gai");
+}
+
+
+module.exports = {home, login,test, getData,encodePassword};
