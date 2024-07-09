@@ -49,7 +49,9 @@ const login = async(req,res) => {
             let encrypted_password;
             encrypted_password =await hashPassword(req.body.password);
             await db.connect();
-            const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.username} `);
+            console.log(req.body);
+            const result = await db.request().query(`SELECT top 1 id,password FROM userTable WHERE sapNumber = ${req.body.sapNumber} `);
+            
             const userData = result.recordset; //userData is an array of users which looks something like
             /*
             [
@@ -66,7 +68,7 @@ const login = async(req,res) => {
             if(compFlag){
                 console.log("User is a valid user")
                 let payloadData = {
-                    sapNumber: req.body.username,
+                    sapNumber: req.body.sapNumber,
                     password : userData.at(0).password
                 }
                 // generate jwt token
