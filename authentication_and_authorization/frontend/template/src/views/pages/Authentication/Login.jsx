@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
+import Swal from 'sweetalert2';
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
@@ -61,6 +62,7 @@ const Login = () => {
       })
   }
 
+  
   const checkCookie = async ()=>{
     
     function checkCookie(cookieName) {
@@ -71,7 +73,7 @@ const Login = () => {
           // Check if the cookie name matches the parameter
           if(cookie.startsWith(cookieName + '=')) {
               // Cookie found
-              console.log(cookie);
+              // console.log(cookie);
               return true;
           }
       }
@@ -85,10 +87,11 @@ const Login = () => {
     }
   }
  
-
+ 
   const onSubmit = async (data) => {
     // e.preventDefault();
         
+      
         
         // console.log(document.cookie)
         console.log(JSON.stringify(user))

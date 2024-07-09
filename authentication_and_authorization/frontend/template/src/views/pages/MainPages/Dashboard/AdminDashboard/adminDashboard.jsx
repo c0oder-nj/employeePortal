@@ -9,16 +9,42 @@ import ClientTable from "./clientTable";
 import RecentTable from "./recentTable";
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
 import { base_url } from "../../../../../base_urls";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
-    axios.get(base_url + "/api/dash.json").then((res) => setUsers(res.data));
+    
+    let cookieExists = checkCookie('accessToken');
+    if(!cookieExists){
+      navigate("react/template/");
+    }
+
+    axios.get(base_url + "/api/dash.json").then(async (res) => setUsers(res.data));
   }, []);
+  function checkCookie(cookieName) {
+    // Split cookie string and iterate over each cookie pair
+    const cookies = document.cookie.split(';');
+    for(let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      // Check if the cookie name matches the parameter
+      if(cookie.startsWith(cookieName + '=')) {
+        // Cookie found
+        // console.log(cookie);
+        return true;
+      }
+    }
+    // Cookie not found
+    return false;
+  }
+
+  
 
   return (
-    <div className="main-wrapper">
+    <div>
+    <div className="main-wrapper" >
       <div className="page-wrapper">
         <div className="content container-fluid">
           {/* Page Header */}
@@ -62,6 +88,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
