@@ -10,17 +10,17 @@ dotenv.config();
 
 
 
-const home = async(req,res) => {
+const home = async (req, res) => {
     // res.status(200).send("Data for showing at router part");
     // setting cookie
 
     // console.log('Cookies:', req.cookies);
     // res.send('Check console for cookies');
-    
+
 }
 
 
-const test = async(req,res) => {
+const test = async (req, res) => {
 
 }
 
@@ -33,128 +33,160 @@ iii) implementation of jwt
 
 
 */
-async function hashPassword (password) {
+async function hashPassword(password) {
     const saltRounds = 10;
-  
+
     const hashedPassword = await new Promise((resolve, reject) => {
-      bcrypt.hash(password, saltRounds, function(err, hash) {
-        if (err) reject(err)
-        resolve(hash)
-      });
+        bcrypt.hash(password, saltRounds, function (err, hash) {
+            if (err) reject(err)
+            resolve(hash)
+        });
     })
     return hashedPassword
-  }
+}
 
 
 
-const login = async(req,res) => {
-        try {
-            let encrypted_password;
-            encrypted_password =await hashPassword(req.body.password);
-            await db.connect();
-            console.log(req.body);
-            const result = await db.request().query(`SELECT top 1 empCode,empPassword FROM userTable WHERE empCode = ${req.body.sapNumber} `);
-            
+const login = async (req, res) => {
+    var unSuccessfulAttempts;
+    var allowedAttempts;
+    var userLockFlag;
+    try {
+        await db.connect();
+        const data = await db.request().query(`SELECT unSuccessfulAttempts, allowUnSuccessfulAttempts,userLockFlag from userTable where empCode = ${req.body.sapNumber}`);
+        unSuccessfulAttempts = data.recordset.at(0).unSuccessfulAttempts;
+        allowedAttempts = data.recordset.at(0).allowUnSuccessfulAttempts;
+        userLockFlag = data.recordset.at(0).userLockFlag;
+        if ((unSuccessfulAttempts == allowedAttempts) && !userLockFlag) {
+            // lock the user
+            const response = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapNumber}`);
+            if (response.rowsAffected[0]) {
+                isUserLocked = true;
+                return res.json({ "status": false, "message": "maximum possible no. of attempts reached, user is locked now" })
+            }
+        } else if (userLockFlag) {
+            // show lock message as response
+            return res.json({ "status": false, "message": "user is locked" })
+        } else {
+            var compFlag;
+            // variables for payload data
+            var empCode;
+            var empPassword;
+            var empName;
+            var empDesignation;
+            var compName;
+            var mobileNo;
+            var emailIdShakti;
+            var empAddress;
+
+            const result = await db.request().query(`SELECT top 1 empCode,empPassword,empName,empDesignation,compName,mobileNo,emailIdShakti, empAddress  FROM userTable WHERE empCode = ${req.body.sapNumber} `);
             const userData = result.recordset; //userData is an array of users which looks something like
-            /*
-            [
-                    {
-                        id: 1,
-                        password: '$2b$10$mYOFtryX1QjnUZIkcLsd2OV8bCnF9DyVAcoKQzehjEz3/ZMF1x4dC',
-                    },
-                    ];
-            */
-           console.log(req.body.password, userData.at(0).empPassword);
-           const compFlag = await bcrypt.compare(req.body.password,userData.at(0).empPassword)
-           console.log("Working")
-            // console.log(compFlag);
-    
-            if(compFlag){
+            // assiging variables for payload data
+            empCode = userData.at(0).empCode;
+            empPassword = userData.at(0).empPassword;
+            empName = userData.at(0).empName;
+            empDesignation = userData.at(0).empDesignation;
+            compName = userData.at(0).compName;
+            mobileNo = userData.at(0).mobileNo;
+            emailIdShakti = userData.at(0).emailIdShakti;
+            empAddress = userData.at(0).empAddress;
+            compFlag = await bcrypt.compare(req.body.password, empPassword);
+
+
+            if (compFlag) {
                 console.log("User is a valid user")
                 let payloadData = {
-                    empCode: req.body.sapNumber,
-                    empPassword : userData.at(0).password
+                    empCode: empCode,
+                    empPassword: empPassword,
+                    empName: empName,
+                    empDesignation: empDesignation,
+                    compName: compName,
+                    mobileNo: mobileNo,
+                    emailIdShakti: emailIdShakti,
+                    empAddress: empAddress,
                 }
                 // generate jwt token
                 let jwtSecretKey = process.env.JWT_SECRET_KEY;
-                // let jwtSecretKey = "secret_key";
-                const token = jwt.sign(payloadData,jwtSecretKey);
+                const token = jwt.sign(payloadData, jwtSecretKey);
                 console.log(token)
-                //return res.status(204).send("Testing testing");
                 res.cookie("token", token);
-                let repo = res.json({message: "user logged in successfully", accessToken : token});
-                // console.log('repo: ',repo);
+                let repo = res.json({ "status": true, message: "user logged in successfully", accessToken: token });
                 return repo;
-            }else{
-                console.log("Validation failed gesv");
+            } else {
+                // console.log("Wrong credentials");
+                unSuccessfulAttempts += 1;
+                const response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = ${unSuccessfulAttempts} WHERE empCode = ${req.body.sapNumber}`);
+                console.log(response.rowsAffected[0]);
+                return res.json({ "status": false, "message": "Wrong Credentials" });
             }
-    
-        } catch (error) {
-            console.log(error)
-            res.status(500).send("Internal server error",error)
         }
-        finally{
-            db.close();
-        }
+
+    } catch (error) {
+        // res.status(500).json({"status":false, "message":"Internal server error "})
+        res.status(500).send("Some error occured ", error);
     }
+    finally {
+        db.close();
+    }
+}
 
 
 
 
-const getData = async(req,res) => {
+const getData = async (req, res) => {
     // establish the connection with the database
-    
+
     const result = await axios.get('https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/emp_credentials.htm');
     const userArray = result.data.Response;
 
 
-    async function hashPassword (plainText) {
+    async function hashPassword(plainText) {
         const saltRounds = 10;
         const hashedPassword = await new Promise((resolve, reject) => {
-          bcrypt.hash(plainText, saltRounds, function(err, hash) {
-            if (err) reject(err)
-            resolve(hash)
-          });
+            bcrypt.hash(plainText, saltRounds, function (err, hash) {
+                if (err) reject(err)
+                resolve(hash)
+            });
         })
         return hashedPassword
-      }
+    }
 
-      await db.connect();
+    await db.connect();
 
     try {
-        for(i=1; i<=userArray.length; i++){
+        for (i = 1; i <= userArray.length; i++) {
             const sapNumber = userArray[i].persno
             const encrypted_password = await hashPassword(userArray[i].pass)
             const result = await db.request().query(`INSERT INTO userTable (sapNumber, password) values (${sapNumber}, '${encrypted_password}') `);
-            
-            console.log("Rows affected ",result.rowsAffected[0]);
+
+            console.log("Rows affected ", result.rowsAffected[0]);
         }
         // userArray.forEach(async data => {
         //     const sapNumber = data.persno
         //     const encrypted_password = await hashPassword(data.pass)
         //     const result = await db.request().query(`INSERT INTO userTable (sapNumber, password) values (${sapNumber}, ${encrypted_password}) `);
-          
+
         //     console.log("Rows affected ",result.rowsAffected[0]);
         // });
     } catch (error) {
-        console.log("Some error occurred --> ",error );
-    }finally{
+        console.log("Some error occurred --> ", error);
+    } finally {
         db.close();
     }
-    
-    
 
 
-    
+
+
+
 }
 
-const encodePassword = async(req,res) => {
+const encodePassword = async (req, res) => {
     const pass = req.query.pass;
     const hashedPassword = await hashPassword(pass);
-    console.log("Encrypted password is: ",hashedPassword);
+    console.log("Encrypted password is: ", hashedPassword);
 
     res.status(200).send("API hit ho gai");
 }
 
 
-module.exports = {home, login,test, getData,encodePassword};
+module.exports = { home, login, test, getData, encodePassword };

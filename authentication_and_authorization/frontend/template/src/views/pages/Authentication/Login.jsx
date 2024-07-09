@@ -105,9 +105,14 @@ const Login = () => {
                 return response.json();
             });
             // console.log(response);
-            document.cookie= 'accessToken='+response.accessToken;
             // console.log(document.cookie);    
-            navigate("/admin-dashboard");
+            if(response.status){
+              document.cookie= 'accessToken='+response.accessToken;
+              navigate("/admin-dashboard");
+            }else{
+              console.log(response.message)
+              navigate("/")
+            }
         } catch (error) {
             
         }
