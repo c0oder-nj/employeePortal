@@ -61,12 +61,36 @@ const Login = () => {
       })
   }
 
+  const checkCookie = async ()=>{
+    
+    function checkCookie(cookieName) {
+      // Split cookie string and iterate over each cookie pair
+      const cookies = document.cookie.split(';');
+      for(let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          // Check if the cookie name matches the parameter
+          if(cookie.startsWith(cookieName + '=')) {
+              // Cookie found
+              console.log(cookie);
+              return true;
+          }
+      }
+      // Cookie not found
+      return false;
+  }
+    
+    let cookieExists = checkCookie('accessToken');
+    if(cookieExists){
+      navigate("/admin-dashboard");
+    }
+  }
  
 
   const onSubmit = async (data) => {
     // e.preventDefault();
         
-      
+        
+        // console.log(document.cookie)
         console.log(JSON.stringify(user))
         try {
             const response = await fetch(`http://localhost:3000/api/auth/login`, {
@@ -82,9 +106,7 @@ const Login = () => {
             });
             // console.log(response);
             document.cookie= 'accessToken='+response.accessToken;
-            // console.log(document.cookie);
-            
-
+            // console.log(document.cookie);    
             navigate("/admin-dashboard");
         } catch (error) {
             
@@ -123,7 +145,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div onLoad={checkCookie}>
       <div className="account-page" >
         <div className="main-wrapper">
           <div className="account-content">
