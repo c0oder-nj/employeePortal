@@ -113,7 +113,8 @@ const Login = () => {
               document.cookie= 'accessToken='+response.accessToken;
               navigate("/admin-dashboard");
             }else{
-              console.log(response.message)
+              // console.log(response.message)
+             
               navigate("/")
             }
         } catch (error) {

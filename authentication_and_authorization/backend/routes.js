@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const authControllers = require('./Controllers/authControllers')
+// const authUserThoughMiddleware = require('./middleware')
 
 // path for routers
 
@@ -16,7 +17,7 @@ router.route('/test').get(authControllers.test);
 
 
 router.route('/login').post(authControllers.login);
-router.route('/home').post(authControllers.home);
+// router.route('/home').post(authUserThoughMiddleware.checkUser,authControllers.home);
 
 
 

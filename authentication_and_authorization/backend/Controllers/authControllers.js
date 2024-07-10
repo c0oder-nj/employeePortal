@@ -4,6 +4,7 @@ const db = require('../databaseConnection')
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const axios = require('axios')
+const session = require('express-session')
 
 dotenv.config();
 
@@ -14,14 +15,26 @@ const home = async (req, res) => {
     // res.status(200).send("Data for showing at router part");
     // setting cookie
 
+    
+    console.log(req.cookies.token)
+    res.status(200).send("Working");
+    console.log("Your cookie is working")
+    // console.log(req.session.user);
     // console.log('Cookies:', req.cookies);
     // res.send('Check console for cookies');
+    return res.status(200).send({message : "Working",key:"Value"})
+    return;
 
 }
 
 
 const test = async (req, res) => {
-
+    // const token = req.headers['Access-Control-Allow-Headers'];
+    // console.log(token);
+    console.log(req.cookies.token)
+    console.log("Your cookie is working")
+    res.status(200).send({message : "Working",key:"Value"})
+    return;
 }
 
 /*
@@ -48,6 +61,10 @@ async function hashPassword(password) {
 
 
 const login = async (req, res) => {
+    
+    // req.session.user = req.body.sapNumber;
+    // req.session.save();
+    // console.log("Your session name is :",req.session.user);
     var unSuccessfulAttempts;
     var allowedAttempts;
     var userLockFlag;
@@ -66,6 +83,7 @@ const login = async (req, res) => {
             }
         } else if (userLockFlag) {
             // show lock message as response
+            console.log("In dbzvbk")
             return res.json({ "status": false, "message": "user is locked" })
         } else {
             var compFlag;
@@ -78,7 +96,7 @@ const login = async (req, res) => {
             var mobileNo;
             var emailIdShakti;
             var empAddress;
-
+            
             const result = await db.request().query(`SELECT top 1 empCode,empPassword,empName,empDesignation,compName,mobileNo,emailIdShakti, empAddress  FROM userTable WHERE empCode = ${req.body.sapNumber} `);
             const userData = result.recordset; //userData is an array of users which looks something like
             // assiging variables for payload data

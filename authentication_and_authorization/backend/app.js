@@ -2,7 +2,9 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const env = require('dotenv')
+const session = require('express-session')
 const authControllers = require('./Controllers/authControllers')
+const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 
 
 
@@ -23,8 +25,18 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Working on session : start
+//app.use(session({secret : "Creating a seesion for user authentication"}))
+app.use(session({
+    secret: 'your-secret-key', // Replace with a strong and unique string
+    resave: false,
+    saveUninitialized: false
+}));
+//Working on session : end
+
 app.get('/',(req,res)=>{
     // res.cookie("name","test")
+    // req.session.username = "Programming"
     res.status(200).send("Server is running ");
 })
 
@@ -36,11 +48,18 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 
 
 app.post('/api/auth/login',authControllers.login)
-app.post('/api/auth/home',authControllers.home)
+app.get('/api/auth/test',authControllers.test)
+app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
 
 
 app.get('/get_cookie',(req,res)=>{
-    console.log(req.cookies);
+    console.log(req.session.username);
+    res.status(200).send("Cookie printed to console")
+})
+
+app.get('/destroy_cookie',(req,res)=>{
+    req.session.destroy();
+    // console.log(req.session.username);
     res.status(200).send("Cookie printed to console")
 })
 
