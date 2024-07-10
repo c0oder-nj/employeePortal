@@ -12,14 +12,19 @@ import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
 // import { login } from "../../../user";
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .max(20, "Password must be at most 20 characters")
-    .required("Password is required"),
+const validationSchema = Yup.object({
+  sapid: Yup
+      .string()
+      .required("this is a required field")
+      .matches(/^[0-9]+$/, "Must be only digits")
+      .trim(),
+  password: Yup
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .max(20, "Password must be at most 20 characters")
+      .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/, "Password should contain at least one uppercase letter, one lowercase letter, one digit, and one special symbol.")
+      .required("Password is required")
+      .trim(),
 });
 
 
@@ -27,9 +32,6 @@ const validationSchema = Yup.object().shape({
 
 
 const Login = () => {
-  const details = localStorage.getItem("loginDetails");
-
-  const loginData = JSON.parse(details);
 
   const {
     register,
@@ -46,28 +48,10 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
 
-  const [user, setUser] = useState({
-    sapNumber: '',
-    password: ''
-  })
-
-
-  const setUserMethod = (e) => {
-      let name = e.target.name;
-      let value = e.target.value;
-
-
-      setUser({
-          ...user,
-          [name]: value
-      })
-  }
-
   
   const checkCookie = async ()=>{
     
     function checkCookie(cookieName) {
-      // Split cookie string and iterate over each cookie pair
       const cookies = document.cookie.split(';');
       for(let i = 0; i < cookies.length; i++) {
           let cookie = cookies[i].trim();
@@ -90,12 +74,14 @@ const Login = () => {
  
  
   const onSubmit = async (data) => {
-    // e.preventDefault();
+        // when user enters the default password navigate it to set new password
+        if(data.password === "shakti@123"){
+          return navigate('/set-password')
+        }
+
         
-      
-        
-        // console.log(document.cookie)
-        console.log(JSON.stringify(user))
+        // console.log(JSON.stringify(data))
+        console.log(data)
         try {
             const response = await fetch(`http://localhost:3000/api/auth/login`, {
                 method: "POST",
@@ -104,12 +90,10 @@ const Login = () => {
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
                     'Access-Control-Allow-Methods': 'POST',
                 },
-                body: JSON.stringify(user)
+                body: JSON.stringify(data)
             }).then((response)=>{
                 return response.json();
-            });
-            // console.log(response);
-            // console.log(document.cookie);    
+            });   
             if(response.status){
               document.cookie= 'accessToken='+response.accessToken;
               navigate("/admin-dashboard");
@@ -142,10 +126,10 @@ const Login = () => {
   //   navigate("/admin-dashboard");
   // };
 
-  useEffect(() => {
-    setValue("email", localStorage.getItem("email"));
-    setValue("password", localStorage.getItem("password"));
-  }, []);
+  // useEffect(() => {
+  //   setValue("email", localStorage.getItem("email"));
+  //   setValue("password", localStorage.getItem("password"));
+  // }, []);
 
   const [eye, seteye] = useState(true);
 
@@ -154,7 +138,7 @@ const Login = () => {
   };
 
   return (
-    <div onLoad={checkCookie}>
+    <div>
       <div className="account-page" >
         <div className="main-wrapper">
           <div className="account-content">
@@ -175,24 +159,23 @@ const Login = () => {
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}
                   <div>
-                  {errorMessage && <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  {errorMessage && <div className="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>Alert:</strong> {errorMessage}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">x</button>
+                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close">x</button>
                   </div> }
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
                         <label className="col-form-label">Enter You Sap Id</label>
                         <Controller
-                          name="email"
+                          name="sapid"
                           control={control}
-                          render={({ field }) => (
+                          render={({ field : {value,onChange} }) => (
                             <input
                               className={`form-control ${
                                 errors?.email ? "error-input" : ""
                               }`}
                               type="text"
-                              defaultValue={localStorage.getItem("email")}
-                              name='sapNumber' value={user.sapNumber} onChange={setUserMethod}
+                              name='sapNumber' value={value} onChange={onChange}
                               autoComplete="true"
                             />
                           )}
@@ -200,9 +183,10 @@ const Login = () => {
 
                         <span className="text-danger">
                           {" "}
-                          {errors.email?.message}{" "}
+                          {errors.sapid?.message}{" "}
                         </span>
                       </div>
+
                       <div className="input-block mb-4">
                         <div className="row">
                           <div className="col">
@@ -218,14 +202,13 @@ const Login = () => {
                           <Controller
                             name="password"
                             control={control}
-                            render={({ field }) => (
+                            render={({ field : {value, onChange} }) => (
                               <input
                                 className={`form-control ${
                                   errors?.password ? "error-input" : ""
                                 }`}
                                 type={eye ? "password" : "text"}
-                                defaultValue={localStorage.getItem("password")}
-                                name='password' value={user.password} onChange={setUserMethod}
+                                name='password' value={value} onChange={onChange}
                               />
                             )}
                           />

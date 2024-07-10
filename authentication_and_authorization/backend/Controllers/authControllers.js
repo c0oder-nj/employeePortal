@@ -171,6 +171,34 @@ const login = async (req, res) => {
 
 
 
+const setPassword = async (req,res) => {
+    
+    try {
+        await db.connect();
+        hashPassword(req.body.password).then((encrypted_password)=>{
+            try {
+                db.request().query(`update userTable set empPassword = '${encrypted_password}', setPassword = 1 where empCode=${req.body.sapid}`)
+                .then((result)=>{
+                    if(result.rowsAffected[0]){
+                        db.close();
+                        return res.status(200).json({"status":true, "message":"Api hitted"});
+                    }
+                })
+            } catch (error) {
+                res.status(500).json({"status":false,"message":"Cant set the password"})
+            }
+            
+        })
+    } catch (error) {
+        res.status(500).json({"status":false,"message":"Cant set the password"})
+    }
+    finally{
+        // db.close();
+    }
+}
+
+
+
 
 const getData = async (req, res) => {
     // establish the connection with the database
@@ -228,4 +256,4 @@ const encodePassword = async (req, res) => {
 }
 
 
-module.exports = { home, login, test, getData, encodePassword };
+module.exports = { home, login, test, getData, encodePassword,setPassword };
