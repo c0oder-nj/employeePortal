@@ -81,7 +81,7 @@ const Login = () => {
 
         
         // console.log(JSON.stringify(data))
-        console.log(data)
+        // console.log(data)
         try {
             const response = await fetch(`http://localhost:3000/api/auth/login`, {
                 method: "POST",
@@ -98,7 +98,7 @@ const Login = () => {
               document.cookie= 'accessToken='+response.accessToken;
               navigate("/admin-dashboard");
             }else{
-              setErrorMessage(response.message)
+              console.log(response.message);
               navigate("/")
             }
         } catch (error) {

@@ -48,11 +48,8 @@ async function hashPassword(password) {
 
 
 const login = async (req, res) => {
-    // primary validations -> empCode should be neumeric
-    if(isNaN(req.body.sapNumber)){
-        return res.status(500).json({"status":false,"message":"Sap number should always be Numeric"})
-    }
 
+    var empData;
     var unSuccessfulAttempts;
     var allowedAttempts;
     var userLockFlag;
@@ -62,61 +59,48 @@ const login = async (req, res) => {
         } catch (error) {
             console.log("Error in db connection::", error)
         }
-        // try-catch for query block 
+        
+
         try {
-            const userAttempts = await db.request().query(`SELECT unSuccessfulAttempts, allowUnSuccessfulAttempts,userLockFlag from userTable where empCode = ${req.body.sapNumber}`);
-            if(userAttempts.recordset.length == 0 ){
-                console.log("wrong sap number")
-                return res.json({ "status": false, "message": "wrong sap number" })
-            }
-            unSuccessfulAttempts = userAttempts.recordset.at(0).unSuccessfulAttempts;
-            allowedAttempts = userAttempts.recordset.at(0).allowUnSuccessfulAttempts;
-            userLockFlag = userAttempts.recordset.at(0).userLockFlag;
+            empData = await db.request().query(`SELECT top 1 * from userTable where empCode = ${req.body.sapid}`);
         } catch (error) {
-            console.log("Error in query execution: ", error);
+            console.log("Error in query execution of employee record::",error);
+        }   
+            
+        if(empData.recordset.length == 0 ){
+            console.log("wrong sap number")
+            return res.json({ "status": false, "message": "wrong sap number" })
         }
+
+        unSuccessfulAttempts = empData.recordset.at(0).unSuccessfulAttempts;
+        allowedAttempts = empData.recordset.at(0).allowUnSuccessfulAttempts;
+        userLockFlag = empData.recordset.at(0).userLockFlag;
 
         if ((unSuccessfulAttempts == allowedAttempts) && !userLockFlag) {
             // lock the user
-            var isUserLocked;
+            var lockUser;
             try {
-                isUserLocked = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapNumber}`);
+                lockUser = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapid}`);
             } catch (error) {
-                console.log("Error occured in second query :: ",error);
+                console.log("Error occured while locking user :: ",error);
             }
-            if (isUserLocked.rowsAffected[0]) {
+            if (lockUser.rowsAffected[0]) {
                 return res.json({ "status": false, "message": "maximum possible no. of attempts reached, user is locked now" })
             }
         } else if (userLockFlag) {
-            // show lock message as response
             return res.json({ "status": false, "message": "user is locked" })
         } else {
+            // check if user is verified or not
             var compFlag;
             // variables for payload data
-            var empCode;
-            var empPassword;
-            var empName;
-            var empDesignation;
-            var compName;
-            var mobileNo;
-            var emailIdShakti;
-            var empAddress;
-            var result;
-            try {
-                result = await db.request().query(`SELECT top 1 empCode,empPassword,empName,empDesignation,compName,mobileNo,emailIdShakti, empAddress  FROM userTable WHERE empCode = ${req.body.sapNumber} `);
-            } catch (error) {
-                console.log("Error occured at third query :: ",error);
-            }
-            const userData = result.recordset; //userData is an array of users which looks something like
-            // assiging variables for payload data
-            empCode = userData.at(0).empCode;
-            empPassword = userData.at(0).empPassword;
-            empName = userData.at(0).empName;
-            empDesignation = userData.at(0).empDesignation;
-            compName = userData.at(0).compName;
-            mobileNo = userData.at(0).mobileNo;
-            emailIdShakti = userData.at(0).emailIdShakti;
-            empAddress = userData.at(0).empAddress;
+            var empCode = empData.recordset.at(0).empCode;
+            var empPassword = empData.recordset.at(0).empPassword;
+            var empName = empData.recordset.at(0).empName;
+            var empDesignation = empData.recordset.at(0).empDesignation;
+            var compName = empData.recordset.at(0).compName;
+            var mobileNo = empData.recordset.at(0).mobileNo;
+            var emailIdShakti = empData.recordset.at(0).emailIdShakti;
+            var empAddress = empData.recordset.at(0).empAddress;
 
             // comparing the passwords
             compFlag = await bcrypt.compare(req.body.password, empPassword);
@@ -125,7 +109,7 @@ const login = async (req, res) => {
             if (compFlag) {
                 console.log("User is a valid user")
                 try {
-                    resettingLockStatus = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = 0 where empCode = ${req.body.sapNumber}`);
+                    resettingLockStatus = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = 0 where empCode = ${req.body.sapid}`);
                 } catch (error) {
                     console.log("Error occured in query :: ",error);
                 }
@@ -148,10 +132,10 @@ const login = async (req, res) => {
                 return repo;
             } else {
                 // console.log("Wrong credentials");
-                unSuccessfulAttempts += 1;
+               
                 var response;
                 try {
-                    response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = ${unSuccessfulAttempts} WHERE empCode = ${req.body.sapNumber}`);
+                    response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = unSuccessfulAttempts+1 WHERE empCode = ${req.body.sapid};UPDATE userTable SET userLockFlag = 1 where allowUnSuccessfulAttempts in ( select unSuccessfulAttempts from userTable  where empCode =${req.body.sapid}) and empCode=${req.body.sapid} `);
                 } catch (error) {
                     console.log("Error occured at fifth query :: ",error);
                 }
