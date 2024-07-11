@@ -12,18 +12,15 @@ dotenv.config();
 
 
 const home = async (req, res) => {
-    // res.status(200).send("Data for showing at router part");
-    // setting cookie
 
+    console.log("You are entering in cookie validation part")
+    console.log(req.query.value)
+    const newValue = req.query.value;
+    headerValue = newValue.split("=")[1];
+    console.log("Your : ",headerValue)
     
-    console.log(req.cookies.token)
-    res.status(200).send("Working");
     console.log("Your cookie is working")
-    // console.log(req.session.user);
-    // console.log('Cookies:', req.cookies);
-    // res.send('Check console for cookies');
-    return res.status(200).send({message : "Working",key:"Value"})
-    return;
+    return res.json({ "status": false, "message": "You are getting values from home function end point" });
 
 }
 

@@ -3,17 +3,20 @@ const session = require('express-session')
 const db = require('../databaseConnection')
 
 const checkUser = async (req,res,next)=> {
-    
-    var headerValue = req.cookies.token;
+
+    console.log(req.query.value)
+    if(req.query.value===undefined){
+        return res.json({ "status": false, "message": "Unauthorized Access" });
+    }
+
+    const newValue = req.query.value;
+  
+    //If you have changed the formate of access token then adjust this line of comment this line 
+    //Current access token formate accesToken=elelfnoeuhfmdvnlszdnvzljsdmszvksjzdvjzsdhlj
+    headerValue = newValue.split("=")[1];
 
     var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-    console.log(decodedValue)
-    var sapNumber = decodedValue['empCode'] 
-    await db.connect();
-    const data = await db.request().query(`SELECT unSuccessfulAttempts, allowUnSuccessfulAttempts,userLockFlag from userTable where empCode = ${sapNumber}`);
-    
-    console.log(data);
-    
+    console.log(decodedValue);
     next()
 }
 
