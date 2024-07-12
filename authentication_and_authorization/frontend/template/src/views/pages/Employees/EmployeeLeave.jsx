@@ -10,13 +10,39 @@ import { base_url } from "../../../base_urls";
 
 const EmployeeLeave = () => {
   const [users, setUsers] = useState([]);
-
-  useEffect(() => {
+  
+  //Value update nahi ho rahi hai
+  var leave 
+  var dataFetch
+  useEffect(async() => {
     axios
-      .get(base_url + "/api/adminleaves.json")
-      .then((res) => setUsers(res.data));
-  }, []);
+    .get(base_url + "/api/adminleaves.json")
+    .then((res) => setUsers(res.data));
+    
+    //Fetching data for attendance
+    
+    const value = `${document.cookie}`;
+    let storeResponse
+    const url = `http://localhost:3000/api/auth/home?value=${value}`;
+    console.log(url);
+    await fetch(url).then((response)=>{
+      return response.json();
+    }).then((data) => {
+      
+      storeResponse = data;
+      dataFetch = data;
+      // leave = storeResponse.number;
+      console.log(dataFetch)
+      console.log(data);
+    });
+    
+    leave = storeResponse.number
+    console.log(typeof leave)
 
+    console.log("Your Response: ",storeResponse.message);
+    
+  }, []);
+  
   const userElements = users.map((user, index) => ({
     key: index,
     leavetype: user.leavetype,
@@ -28,7 +54,8 @@ const EmployeeLeave = () => {
     status: user.status,
     approvedby: user.approvedby,
   }));
-
+  // leave = 120;
+  console.log(leave)
   const columns = [
     {
       title: "Leave Type",
@@ -149,7 +176,7 @@ const EmployeeLeave = () => {
     {
       id: 1,
       title: "Annual Leave",
-      value: 12,
+      value: leave,
     },
     {
       id: 2,
@@ -186,6 +213,7 @@ const EmployeeLeave = () => {
                 <div className="stats-info">
                   <h6>{stat.title}</h6>
                   <h4>{stat.value}</h4>
+                  {/* <h4>{leave}</h4> */}
                 </div>
               </div>
             ))}

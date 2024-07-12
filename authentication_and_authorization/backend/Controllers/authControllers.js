@@ -21,7 +21,7 @@ const home = async (req, res) => {
     console.log("Your : ",headerValue)
     
     console.log("Your cookie is working")
-    return res.json({ "status": false, "message": "You are getting values from home function end point" });
+    return res.json({ "status": false, "message": "You are getting values from home function end point","number":10 });
 
 }
 

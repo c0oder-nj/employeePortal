@@ -88,9 +88,11 @@ const AdminDashboard = () => {
     });
     console.log("Your Response: ",storeResponse.message);
 
-    if(storeResponse.status===false){
-      popUpvalueUpdationState(true)
-    }
+    
+    // Uncomment this thing to access the Alert
+    // if(storeResponse.status===false){
+    //   popUpvalueUpdationState(true)
+    // }
     navigate("/admin-dashboard");
   }
 
