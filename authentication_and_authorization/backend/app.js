@@ -38,6 +38,8 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 app.post('/api/auth/login',authControllers.login)
 app.post('/api/auth/setPassword',authControllers.setPassword)
 app.post('/api/auth/home',authControllers.home)
+app.post('/api/auth/forget-password',authControllers.forgetPassword);
+app.post('/api/auth/verify-otp', authControllers.verifyOtp);
 
 
 app.get('/get_cookie',(req,res)=>{

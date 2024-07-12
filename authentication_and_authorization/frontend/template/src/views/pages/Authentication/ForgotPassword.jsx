@@ -1,8 +1,80 @@
-import React from "react";
+import React, {  useState } from "react";
 import { Link } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
+import axios from 'axios';
 
 const ForgotPassword = () => {
+  const [data, setData] = useState({
+    sapId: "",
+    mobileNo : "",
+    otp : ""
+  })
+
+  const [hashValue, setHashValue] = useState('');
+
+
+  const setOtpData = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setData({
+      ...data,
+      [name] : value
+    })
+  }
+
+  var hash, mobileNo;
+  const [otpDivStyle, setOtpDivStyle] = useState('none');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(data.otp === ''){
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://localhost:3000/api/auth/forget-password',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : JSON.stringify(data)
+      };
+      axios.request(config).then((res)=>{
+        // hash = res.data.hash;
+        setHashValue(res.data.hash);
+        if(res.data.status){
+          setOtpDivStyle('block')
+        }
+        console.log( res.data.hash, res.data.mobileNo)
+      }).catch((err)=>{
+        console.log("Error occured:::",err);
+      })
+    }
+    
+    
+    
+    
+    else{
+      const apiBody = {
+        "mobileNo" : data.mobileNo,
+        "hash" : hashValue,
+        "otp" : data.otp
+      }
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://localhost:3000/api/auth/verify-otp',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : JSON.stringify(apiBody)
+      };
+      axios.request(config).then((res)=>{
+        console.log(res.data);
+      })
+    }
+    
+  }
+
+
   return (
     <div className="account-page">
       <div className="main-wrapper">
@@ -11,19 +83,27 @@ const ForgotPassword = () => {
           <div className="container">
             <div className="account-logo">
               <Link to="/app/main/dashboard">
-                <img src={Applogo} alt="Dreamguy's Technologies" />
+                <img src={Applogo} alt="Shakti Pumps India Limited" />
               </Link>
             </div>
             <div className="account-box">
               <div className="account-wrapper">
                 <h3 className="account-title">Forgot Password?</h3>
-                <p className="account-subtitle">
+                {/* <p className="account-subtitle">
                   Enter your email to get a password reset link
-                </p>
-                <form>
+                </p> */}
+                <form onSubmit={handleSubmit}>
                   <div className="input-block">
-                    <label>Email Address</label>
-                    <input className="form-control" type="text" />
+                    <label>SAP Id</label>
+                    <input className="form-control" type="text" name="sapId" value={data.sapId} onChange={setOtpData}/>
+                  </div>
+                  <div className="input-block">
+                    <label>Mobile Number</label>
+                    <input className="form-control" type="text" name="mobileNo" value={data.mobileNo} onChange={setOtpData}/>
+                  </div>
+                  <div className="input-block" id="otpDiv" style={{display: otpDivStyle}}>
+                    <label>Enter OTP</label>
+                    <input className="form-control" type="text" name="otp" value={data.otp} onChange={setOtpData}/>
                   </div>
                   <div className="input-block text-center">
                     <button
@@ -38,6 +118,11 @@ const ForgotPassword = () => {
                     </p>
                   </div>
                 </form>
+
+
+
+                {/* form for entering otp  */}
+                
               </div>
             </div>
           </div>

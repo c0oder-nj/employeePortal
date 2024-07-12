@@ -5,6 +5,8 @@ const db = require('../databaseConnection')
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const axios = require('axios')
+const otpGenerator = require('otp-generator')
+const crypto = require('crypto')
 
 dotenv.config();
 
@@ -139,75 +141,6 @@ const login = async (req, res) => {
         }
 
     }
-        
-
-    //     try {
-    //         empData = await db.request().query(`SELECT top 1 * from userTable where empCode = ${req.body.sapid}`);
-    //     } catch (error) {
-    //         console.log("Error in query execution of employee record::",error);
-    //     }   
-            
-    //     if(empData.recordset.length == 0 ){
-    //         console.log("wrong sap number")
-    //         return res.json({ "status": false, "message": "wrong sap number" })
-    //     }
-
-    //     unSuccessfulAttempts = empData.recordset.at(0).unSuccessfulAttempts;
-    //     allowedAttempts = empData.recordset.at(0).allowUnSuccessfulAttempts;
-    //     userLockFlag = empData.recordset.at(0).userLockFlag;
-
-    //     if ((unSuccessfulAttempts == allowedAttempts) && !userLockFlag) {
-    //         // lock the user
-    //         var lockUser;
-    //         try {
-    //             lockUser = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapid}`);
-    //         } catch (error) {
-    //             console.log("Error occured while locking user :: ",error);
-    //         }
-    //         if (lockUser.rowsAffected[0]) {
-    //             return res.json({ "status": false, "message": "maximum possible no. of attempts reached, user is locked now" })
-    //         }
-    //     } else if (userLockFlag) {
-    //         return res.json({ "status": false, "message": "user is locked" })
-    //     } else {
-    //         // check if user is verified or not
-    //         var compFlag;
-    //         // variables for payload data
-            
-
-    //         // comparing the passwords
-    //         compFlag = await bcrypt.compare(req.body.password, empPassword);
-
-
-    //         if (compFlag) {
-    //             console.log("User is a valid user")
-    //             try {
-    //                 resettingLockStatus = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = 0 where empCode = ${req.body.sapid}`);
-    //             } catch (error) {
-    //                 console.log("Error occured in query :: ",error);
-    //             }
-                
-    //         } else {
-    //             // console.log("Wrong credentials");
-               
-    //             var response;
-    //             try {
-    //                 response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = unSuccessfulAttempts+1 WHERE empCode = ${req.body.sapid};UPDATE userTable SET userLockFlag = 1 where allowUnSuccessfulAttempts in ( select unSuccessfulAttempts from userTable  where empCode =${req.body.sapid}) and empCode=${req.body.sapid} `);
-    //             } catch (error) {
-    //                 console.log("Error occured at fifth query :: ",error);
-    //             }
-    //             console.log(response.rowsAffected[0]);
-    //             return res.json({ "status": false, "message": "Wrong Credentials" });
-    //         }
-    //     }
-
-    // } catch (error) {
-    //     console.log("Error in try block ");
-    //     res.status(200).send("Some error occured ", error);
-    // }
-    // finally {
-    //     db.close();
-    // }
 
 
 
@@ -296,4 +229,63 @@ const encodePassword = async (req, res) => {
 }
 
 
-module.exports = { home, login, test, getData, encodePassword,setPassword };
+const forgetPassword = async(req,res) => {
+    // creating otp and hash and send them to user 
+    const {sapId, mobileNo} = req.body; 
+    const otp = otpGenerator.generate(6,{
+        digits: true, 
+        lowerCaseAlphabets : true, 
+        upperCaseAlphabets: false, 
+        specialChars : false
+    })
+    const ttl = 5*60*1000; // 5 minutes 
+    const expires = Date.now() + ttl;
+    const data = `${mobileNo}.${otp}.${expires}`
+    const hash = crypto.createHmac("sha256",process.env.SECRET_CRYPTO_KEY).update(data).digest('hex');
+    const fullhash = `${hash}.${expires}`;
+
+    console.log(otp, ttl, expires, data, hash, fullhash);
+    
+
+    
+    const msg = `Hey there, your otp for login is ${otp} use it wisely as it expired in five minutes.`;
+    const smsResponse = await axios.get('http://control.yourbulksms.com/api/sendhttp.php', {
+        params: {
+            'authkey' : process.env.AUTH_KEY,
+            'mobiles' : mobileNo,
+            'message' : msg,
+            'sender' : process.env.SENDER,
+            'route' : process.env.ROUTE,
+            'country' : 91,
+            'DLT_TE_ID' : process.env.DLT_TE_ID,
+            'unicode' : 1
+        }
+    })
+    console.log(otp);
+    return res.json({"status":true, "message":"OTP send successfully", "hash":fullhash, "mobileNo": mobileNo})
+    // res.send("api hitted");
+
+
+    // if(smsResponse.Status == "Success"){
+    //     // message has been send successfully
+    // }
+}
+
+const verifyOtp = (req,res) => {
+    const {mobileNo, hash, otp} = req.body;
+    // Seperate Hash value and expires from the hash returned from the user
+    let [hashValue,expires] = hash.split(".");
+    // Check if expiry time has passed
+    let now = Date.now();
+    if(now>parseInt(expires)) return false;
+    // Calculate new hash with the same key and the same algorithm
+    let data  = `${mobileNo}.${otp}.${expires}`;
+    let newCalculatedHash = crypto.createHmac("sha256",process.env.SECRET_CRYPTO_KEY).update(data).digest("hex");
+    // Match the hashes
+    if(newCalculatedHash === hashValue){
+        return res.send("OTP verifies");
+    } 
+    return res.send("OTP not verified");
+}
+
+module.exports = { home, login, test, getData, encodePassword,setPassword,forgetPassword,verifyOtp };
