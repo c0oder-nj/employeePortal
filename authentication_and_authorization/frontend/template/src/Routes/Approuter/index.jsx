@@ -4,7 +4,7 @@ import AppContainer from "../Appcontainer";
 import store from "../../store";
 import { Provider } from "react-redux";
 import Login from "../../views/pages/Authentication/Login";
-import Register from "../../views/pages/Authentication/Register";
+import SetPassword from "../../views/pages/Authentication/SetPassword";
 import Otp from "../../views/pages/Authentication/Otp";
 import Error404 from "../../views/pages/Error/Error404";
 import Error500 from "../../views/pages/Error/Error500";
@@ -74,7 +74,7 @@ const AppRouter = () => {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/set-password" element={<SetPassword />} />
             <Route path="/otp" element={<Otp />} />
             <Route path="/error-404" element={<Error404 />} />
             <Route path="/error-500" element={<Error500 />} />

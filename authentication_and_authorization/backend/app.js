@@ -50,6 +50,8 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 app.post('/api/auth/login',authControllers.login)
 app.get('/api/auth/test',authControllers.test)
 app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
+app.post('/api/auth/setPassword',authControllers.setPassword)
+app.post('/api/auth/home',authControllers.home)
 
 
 app.get('/get_cookie',(req,res)=>{
