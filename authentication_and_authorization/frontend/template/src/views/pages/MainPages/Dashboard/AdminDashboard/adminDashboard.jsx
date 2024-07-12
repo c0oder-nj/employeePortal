@@ -9,7 +9,7 @@ import ClientTable from "./clientTable";
 import RecentTable from "./recentTable";
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
 import { base_url } from "../../../../../base_urls";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   //This state is used for showing a pop up
   const [popUpvalueState, popUpvalueUpdationState] = useState(false);
   const navigate = useNavigate();
-  const [currentValue,updateCurrentValue] = useState("");
+  
   useEffect(() => {
     
     let cookieExists = checkCookie('accessToken');
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     }
 
     axios.get(base_url + "/api/dash.json").then(async (res) => setUsers(res.data));
-  }, []);
+  });
 
   function checkCookie(cookieName) {
     // Split cookie string and iterate over each cookie pair
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
 
   useEffect(()=>{
     
-    if(popUpvalueState==true)
+    if(popUpvalueState===true)
     // alert("Hello : you have updated a value of pop ")
     {
       Swal.fire({
@@ -59,6 +59,7 @@ const AdminDashboard = () => {
         confirmButtonText: "Okay"
       }).then(function () {
         // Redirect the user
+        popUpvalueUpdationState(false)
         window.location.href = "http://localhost:3001/react/template/";
       });    
     }
@@ -87,7 +88,7 @@ const AdminDashboard = () => {
     });
     console.log("Your Response: ",storeResponse.message);
 
-    if(storeResponse.status==false){
+    if(storeResponse.status===false){
       popUpvalueUpdationState(true)
     }
     navigate("/admin-dashboard");
