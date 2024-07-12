@@ -16,13 +16,9 @@ const validationSchema = Yup.object({
   sapid: Yup
       .string()
       .required("this is a required field")
-      .matches(/^[0-9]+$/, "Must be only digits")
       .trim(),
   password: Yup
       .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(20, "Password must be at most 20 characters")
-      .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/, "Password should contain at least one uppercase letter, one lowercase letter, one digit, and one special symbol.")
       .required("Password is required")
       .trim(),
 });
@@ -45,7 +41,9 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  // cont [errorStatus, setErrorStatus] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({});
+  const [display, setDisplay] = useState('block');
 
 
   
@@ -99,6 +97,8 @@ const Login = () => {
               navigate("/admin-dashboard");
             }else{
               console.log(response.message);
+              setErrorMessage({"status": true, "message":response.message});
+              setDisplay('block');
               navigate("/")
             }
         } catch (error) {
@@ -137,6 +137,14 @@ const Login = () => {
     seteye(!eye);
   };
 
+  useEffect(()=>{
+    if(errorMessage.status){
+      setTimeout(() => {
+        setDisplay('none');
+      }, 5000);
+    }
+  },[errorMessage])
+
   return (
     <div>
       <div className="account-page" >
@@ -159,10 +167,14 @@ const Login = () => {
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}
                   <div>
-                  {errorMessage && <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Alert:</strong> {errorMessage}
-                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close">x</button>
-                  </div> }
+                    {errorMessage.status && 
+
+                      <div id='alert-div' className="alert alert-warning alert-dismissible fade show" style={{display : display}}>
+                        <strong>Errro:</strong> {errorMessage.message}
+                        <button type="button" className="btn-close"></button>
+                      </div>
+                   }
+
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
                         <label className="col-form-label">Enter You Sap Id</label>
