@@ -9,9 +9,6 @@ const session = require('express-session')
 
 dotenv.config();
 
-
-
-
 const home = async (req, res) => {
 
     console.log("You are entering in cookie validation part")
@@ -27,23 +24,31 @@ const home = async (req, res) => {
 
 
 const test = async (req, res) => {
-    // const token = req.headers['Access-Control-Allow-Headers'];
-    // console.log(token);
     console.log(req.cookies.token)
     console.log("Your cookie is working")
     res.status(200).send({message : "Working",key:"Value"})
     return;
 }
 
-/*
-// Authentication and authorization
-i) Setting cookies
-ii) bcrypt for password authentication and authorization.
-iii) implementation of jwt
+//Fetching data for employee attendance
 
+const employeeattendance = async (req,res)=>{
 
+    var value = 5054
+    // var url = `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${value}`
+    // const result = await axios.get(url);
+    // const userArray = result.data.Response;
+    // console.log("User attendance is coming here",userArray)
 
-*/
+    const url = `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${value}`;
+    const response = await fetch(url);
+    const jsonResponse = await response.json();
+    // console.log(jsonResponse);
+    var attendanceJson
+    // res.status(200).send({message : "Working in employee attendance part",key:"Value"})
+    return;
+}
+
 async function hashPassword(password) {
     const saltRounds = 10;
 
@@ -56,14 +61,8 @@ async function hashPassword(password) {
     return hashedPassword
 }
 
-
-
 const login = async (req, res) => {
     
-    // req.session.user = req.body.sapNumber;
-    // req.session.save();
-    // console.log("Your session name is :",req.session.user);
-
     var empData;
     var unSuccessfulAttempts;
     var allowedAttempts;
@@ -153,77 +152,7 @@ const login = async (req, res) => {
         }
 
     }
-        
-
-    //     try {
-    //         empData = await db.request().query(`SELECT top 1 * from userTable where empCode = ${req.body.sapid}`);
-    //     } catch (error) {
-    //         console.log("Error in query execution of employee record::",error);
-    //     }   
-            
-    //     if(empData.recordset.length == 0 ){
-    //         console.log("wrong sap number")
-    //         return res.json({ "status": false, "message": "wrong sap number" })
-    //     }
-
-    //     unSuccessfulAttempts = empData.recordset.at(0).unSuccessfulAttempts;
-    //     allowedAttempts = empData.recordset.at(0).allowUnSuccessfulAttempts;
-    //     userLockFlag = empData.recordset.at(0).userLockFlag;
-
-    //     if ((unSuccessfulAttempts == allowedAttempts) && !userLockFlag) {
-    //         // lock the user
-    //         var lockUser;
-    //         try {
-    //             lockUser = await db.request().query(`UPDATE userTable SET userLockFlag = 1 where empCode = ${req.body.sapid}`);
-    //         } catch (error) {
-    //             console.log("Error occured while locking user :: ",error);
-    //         }
-    //         if (lockUser.rowsAffected[0]) {
-    //             return res.json({ "status": false, "message": "maximum possible no. of attempts reached, user is locked now" })
-    //         }
-    //     } else if (userLockFlag) {
-    //         return res.json({ "status": false, "message": "user is locked" })
-    //     } else {
-    //         // check if user is verified or not
-    //         var compFlag;
-    //         // variables for payload data
-            
-
-    //         // comparing the passwords
-    //         compFlag = await bcrypt.compare(req.body.password, empPassword);
-
-
-    //         if (compFlag) {
-    //             console.log("User is a valid user")
-    //             try {
-    //                 resettingLockStatus = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = 0 where empCode = ${req.body.sapid}`);
-    //             } catch (error) {
-    //                 console.log("Error occured in query :: ",error);
-    //             }
-                
-    //         } else {
-    //             // console.log("Wrong credentials");
-               
-    //             var response;
-    //             try {
-    //                 response = await db.request().query(`UPDATE userTable SET unSuccessfulAttempts = unSuccessfulAttempts+1 WHERE empCode = ${req.body.sapid};UPDATE userTable SET userLockFlag = 1 where allowUnSuccessfulAttempts in ( select unSuccessfulAttempts from userTable  where empCode =${req.body.sapid}) and empCode=${req.body.sapid} `);
-    //             } catch (error) {
-    //                 console.log("Error occured at fifth query :: ",error);
-    //             }
-    //             console.log(response.rowsAffected[0]);
-    //             return res.json({ "status": false, "message": "Wrong Credentials" });
-    //         }
-    //     }
-
-    // } catch (error) {
-    //     console.log("Error in try block ");
-    //     res.status(200).send("Some error occured ", error);
-    // }
-    // finally {
-    //     db.close();
-    // }
-
-
+  
 
 const setPassword = async (req,res) => {
     
@@ -282,23 +211,11 @@ const getData = async (req, res) => {
 
             console.log("Rows affected ", result.rowsAffected[0]);
         }
-        // userArray.forEach(async data => {
-        //     const sapNumber = data.persno
-        //     const encrypted_password = await hashPassword(data.pass)
-        //     const result = await db.request().query(`INSERT INTO userTable (sapNumber, password) values (${sapNumber}, ${encrypted_password}) `);
-
-        //     console.log("Rows affected ",result.rowsAffected[0]);
-        // });
     } catch (error) {
         console.log("Some error occurred --> ", error);
     } finally {
         db.close();
     }
-
-
-
-
-
 }
 
 const encodePassword = async (req, res) => {
@@ -310,4 +227,4 @@ const encodePassword = async (req, res) => {
 }
 
 
-module.exports = { home, login, test, getData, encodePassword,setPassword };
+module.exports = { home, login, test, getData, encodePassword,setPassword,employeeattendance};

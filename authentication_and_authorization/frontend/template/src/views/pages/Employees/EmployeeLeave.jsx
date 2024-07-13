@@ -6,56 +6,80 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import DeleteModal from "../../../components/modelpopup/DeleteModal";
 import EmployeeLeaveModelPopup from "../../../components/modelpopup/EmployeeLeaveModelPopup";
 import SearchBox from "../../../components/SearchBox";
+import { useNavigate } from "react-router-dom";
 import { base_url } from "../../../base_urls";
 
 const EmployeeLeave = () => {
   const [users, setUsers] = useState([]);
+  const [displayVariable, displayVariableSet] = useState("none");
+  const [leaveInfo,leaveSet] = useState([]);
+  const navigate = useNavigate();
+  var dataFetchedThroughApi;
   
-  //Value update nahi ho rahi hai
-  var leave 
-  var dataFetch
-  useEffect(async() => {
-    axios
-    .get(base_url + "/api/adminleaves.json")
-    .then((res) => setUsers(res.data));
-    
-    //Fetching data for attendance
-    
-    const value = `${document.cookie}`;
-    let storeResponse
-    const url = `http://localhost:3000/api/auth/home?value=${value}`;
-    console.log(url);
-    await fetch(url).then((response)=>{
-      return response.json();
-    }).then((data) => {
-      
-      storeResponse = data;
-      dataFetch = data;
-      // leave = storeResponse.number;
-      console.log(dataFetch)
-      console.log(data);
-    });
-    
-    leave = storeResponse.number
-    console.log(typeof leave)
+  function checkCookie(cookieName) {
+    // Split cookie string and iterate over each cookie pair
+    const cookies = document.cookie.split(';');
+    for(let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      // Check if the cookie name matches the parameter
+      if(cookie.startsWith(cookieName + '=')) {
+        // Cookie found
+        return true;
+      }
+    }
+    // Cookie not found
+    return false;
+  }
 
-    console.log("Your Response: ",storeResponse.message);
+
+  useEffect(() => {
+    // axios
+    // .get(base_url + "/api/adminleaves.json")
+    // .then((res) => setUsers(res.data));
+    let cookieExists = checkCookie('accessToken');
+    if(!cookieExists){
+      navigate("react/template/");
+    }
+
+    const fetchData = async ()=>{
+
+        //Fetching data for attendance
+        const value = `${document.cookie}`;
+        console.log(value)
+        let storeResponse
+        // const url = `http://localhost:3000/api/auth/home?value=${value}`;
+        const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
+        console.log(url);
+        
+        dataFetchedThroughApi = await fetch(url).then((response)=>{
+          return response.json();
+        }).then((data) => {
+          
+          //Value will be initialized after getting a response
+          leaveSet(data.leave)
+          console.log("Printing")
+          setUsers(data.leaveInfo)
+          displayVariableSet("block");
+          return data;
+
+        }).catch((error)=>{
+          console.log("Error");
+        });
+    }
+    fetchData();
     
   }, []);
-  
   const userElements = users.map((user, index) => ({
     key: index,
-    leavetype: user.leavetype,
-    from: user.from,
-    to: user.to,
-    noofdays: user.noofdays,
+    leavetype: user.lev_typ,
+    from: user.lev_frm,
+    to: user.lev_to,
+    noofdays: user.horo,
     reason: user.reason,
     role: user.role,
-    status: user.status,
+    status: (user.apphod)?"Approved":"Decline",
     approvedby: user.approvedby,
   }));
-  // leave = 120;
-  console.log(leave)
   const columns = [
     {
       title: "Leave Type",
@@ -100,9 +124,9 @@ const EmployeeLeave = () => {
       render: (text) => (
         <div className="dropdown action-label text-center">
           <Link
-            className="btn btn-white btn-sm btn-rounded dropdown-toggle"
+            className="btn btn-white btn-sm btn-rounded "
             to="#"
-            data-bs-toggle="dropdown"
+            
             aria-expanded="false"
           >
             <i
@@ -119,7 +143,7 @@ const EmployeeLeave = () => {
             {text}
           </Link>
 
-          <div className="dropdown-menu dropdown-menu-right">
+          {/* <div className="dropdown-menu dropdown-menu-right">
             <Link className="dropdown-item" to="#">
               <i className="far fa-dot-circle text-purple" /> New
             </Link>
@@ -132,71 +156,72 @@ const EmployeeLeave = () => {
             <Link className="dropdown-item" to="#">
               <i className="far fa-dot-circle text-danger" /> Declined
             </Link>
-          </div>
+          </div> */}
         </div>
       ),
-    },
-    {
-      title: "Action",
-      className: "text-end",
-      sorter: true,
-      render: () => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_leave"
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete"
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
-          </div>
-        </div>
-      ),
-    },
+    }
+    // ,
+    // {
+    //   title: "Action",
+    //   className: "text-end",
+    //   sorter: true,
+    //   render: () => (
+    //     <div className="dropdown dropdown-action text-end">
+    //       <Link
+    //         to="#"
+    //         className="action-icon dropdown-toggle"
+    //         data-bs-toggle="dropdown"
+    //         aria-expanded="false"
+    //       >
+    //         <i className="material-icons">more_vert</i>
+    //       </Link>
+    //       <div className="dropdown-menu dropdown-menu-right">
+    //         <Link
+    //           className="dropdown-item"
+    //           to="#"
+    //           data-bs-toggle="modal"
+    //           data-bs-target="#edit_leave"
+    //         >
+    //           <i className="fa fa-pencil m-r-5" /> Edit
+    //         </Link>
+    //         <Link
+    //           className="dropdown-item"
+    //           to="#"
+    //           data-bs-toggle="modal"
+    //           data-bs-target="#delete"
+    //         >
+    //           <i className="fa fa-trash m-r-5" /> Delete
+    //         </Link>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
   ];
   const leaveStats = [
     {
       id: 1,
       title: "Annual Leave",
-      value: leave,
+      value: 123,
     },
     {
       id: 2,
       title: "Medical Leave",
-      value: 3,
+      value: 123,
     },
     {
       id: 3,
       title: "Other Leave",
-      value: 4,
+      value: 123,
     },
     {
       id: 4,
       title: "Remaining Leave",
-      value: 5,
+      value: 123,
     },
   ];
 
   return (
-    <>
+    <div className="blockingOrNot" style= {{display:displayVariable}}>
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
@@ -208,11 +233,11 @@ const EmployeeLeave = () => {
           />
 
           <div className="row">
-            {leaveStats.map((stat, index) => (
+            {leaveInfo.map((stat, index) => (
               <div className="col-md-3" key={index}>
                 <div className="stats-info">
-                  <h6>{stat.title}</h6>
-                  <h4>{stat.value}</h4>
+                  <h6>{stat.leaveType}</h6>
+                  <h4>{stat.leaveBal}</h4>
                   {/* <h4>{leave}</h4> */}
                 </div>
               </div>
@@ -239,7 +264,7 @@ const EmployeeLeave = () => {
       {/* Delete Modal */}
       <DeleteModal Name="Delete Leaves" />
       {/* Delete Modal */}
-    </>
+    </div>
   );
 };
 

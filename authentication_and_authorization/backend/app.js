@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const env = require('dotenv')
 const session = require('express-session')
 const authControllers = require('./Controllers/authControllers')
+const empControllers = require('./Controllers/empControllers')
 const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 
 
@@ -24,7 +25,6 @@ const corsOptions = {
     methods: "GET, POST, PUT, DELETE, HEAD"
 };
 app.use(cors(corsOptions));
-
 // Working on session : start
 //app.use(session({secret : "Creating a seesion for user authentication"}))
 app.use(session({
@@ -33,12 +33,17 @@ app.use(session({
     saveUninitialized: false
 }));
 //Working on session : end
-
 app.get('/',(req,res)=>{
     // res.cookie("name","test")
     // req.session.username = "Programming"
     res.status(200).send("Server is running ");
 })
+
+
+
+
+
+
 
 app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
     // res.cookie("name","test")
@@ -47,13 +52,28 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 })
 
 
+
+
+
+//For user login and jwt token creation
 app.post('/api/auth/login',authControllers.login)
+//Just for test
 app.get('/api/auth/test',authControllers.test)
 
+//For setting a password
+app.post('/api/auth/setPassword',authControllers.setPassword)
+// app.post('/api/auth/home',authControllers.home)
+
+//For dashboard content
 app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
 
-app.post('/api/auth/setPassword',authControllers.setPassword)
-app.post('/api/auth/home',authControllers.home)
+//For Employee attendance need to add middleware
+app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
+// app.get('/api/auth/emp',empControllers.employeeattendance)
+
+
+
+
 
 
 app.get('/get_cookie',(req,res)=>{
@@ -69,14 +89,19 @@ app.get('/destroy_cookie',(req,res)=>{
 
 
 
+
 // api endpoint for getting the sap data into our mssql database
 // app.get('/api/get_data',authControllers.getData);
 
+
+
+//for encoding a password
 app.get('/encode_me', authControllers.encodePassword);
 
 
 
 const port = process.env.port || 3000;
+
 
 
 app.listen(port,()=>{
