@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Applogo } from "../../../Routes/ImagePath";
 import axios from "axios";
+import Error from './Error'
 // import { emailrgx } from "./RegEx"; // Assuming you might need this for email validation
 
 const schema = yup.object({
@@ -46,31 +47,50 @@ const SetPassword = (props) => {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  const [errorObject, setErrorObject ] = useState({
+    'status' : false,
+    'display' : 'none',
+    'message' : ''
+  })
+
+  const onSubmit = async(data) => {
     // custom implementation
     console.log(data);
-    axios.post('http://localhost:3000/api/auth/setPassword', data, {
-      'Content-Type' : 'application/json'
-    }).then((res)=>{
-      if(res.data.status){
-        navigate('/');
+    try {
+      const response = await fetch(`http://localhost:3000/api/auth/setPassword`, {
+          method: "POST",
+          headers: {
+              'content-type': 'application/json',
+              'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
+              'Access-Control-Allow-Methods': 'POST',
+          },
+          body: JSON.stringify(data)
+      }).then((response)=>{
+          return response.json();
+      }); 
+      console.log(response)  
+      if(response.status){
+        navigate('/'); // navigate user to login with new password
+      }else{
+        setErrorObject({status: true, message: response.message, display : 'block'});
       }
-    })
+    } catch (error) {
+        console.log("Error at login try block ::: ",error);
+    }
 
-    // default code in template commented by Neeraj 
-    // const currentUser = loginInfo?.find((item) => item?.email === data?.email);
-    // if (currentUser === undefined) {
-    //   const credencial = { email: data.email, password: data.password };
-    //   localStorage.setItem(
-    //     "loginDetails",
-    //     JSON.stringify([...loginInfo, credencial])
-    //   );
-    //   setLoginState([...loginInfo, credencial]);
-    //   setCheckUser(true); // Set checkUser to true for a successful login
-    //   navigate("/");
-    // } else {
-    //   setCheckUser(false); // Set checkUser to false for a failed login
-    //   return false;
+    // previous code with axios
+    // var response;
+    // try {
+    //   response = await axios.post('http://localhost:3000/api/auth/setPassword', data, { 'Content-Type' : 'application/json'}).then((response)=>{
+    //     return response.data;
+    //   });
+    // } catch (error) {
+    //   console.log("error while hitting api ::: ",error.response.data);
+    // }
+    // if(response.status){
+    //   navigate('/'); // navigate user to login with new password
+    // }else{
+    //   console.log(response.message);
     // }
   };
 
@@ -91,6 +111,10 @@ const SetPassword = (props) => {
             </div>
             {/* /Account Logo */}
             <div className="account-box">
+              {
+                // show error message to user
+                errorObject.status && <Error message={errorObject.message} display={errorObject.display}/>
+              }
               <div className="account-wrapper">
                 <h3 className="account-title">Set your new Password</h3>
                 {/* <p className="account-subtitle">Access to our dashboard</p> */}

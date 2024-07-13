@@ -3,6 +3,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const env = require('dotenv')
 const authControllers = require('./Controllers/authControllers')
+const routes = require('./Routes/index')
 
 
 
@@ -35,11 +36,13 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 })
 
 
-app.post('/api/auth/login',authControllers.login)
-app.post('/api/auth/setPassword',authControllers.setPassword)
-app.post('/api/auth/home',authControllers.home)
-app.post('/api/auth/forget-password',authControllers.forgetPassword);
-app.post('/api/auth/verify-otp', authControllers.verifyOtp);
+app.use('/api',routes);
+
+// app.post('/api/auth/login',authControllers.login)
+// app.post('/api/auth/setPassword',authControllers.setPassword)
+// app.post('/api/auth/home',authControllers.home)
+// app.post('/api/auth/forget-password',authControllers.forgetPassword);
+// app.post('/api/auth/verify-otp', authControllers.verifyOtp);
 
 
 app.get('/get_cookie',(req,res)=>{

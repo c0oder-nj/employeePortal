@@ -1,13 +1,21 @@
 import React, {  useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
 import axios from 'axios';
+import Error from "./Error";
 
 const ForgotPassword = () => {
   const [data, setData] = useState({
     sapId: "",
     mobileNo : "",
     otp : ""
+  })
+
+
+  const [errorObject, setErrorObject ] = useState({
+    'status' : false,
+    'display' : 'none',
+    'message' : ''
   })
 
   const [hashValue, setHashValue] = useState('');
@@ -21,9 +29,9 @@ const ForgotPassword = () => {
       [name] : value
     })
   }
-
-  var hash, mobileNo;
   const [otpDivStyle, setOtpDivStyle] = useState('none');
+  
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,8 +50,10 @@ const ForgotPassword = () => {
         setHashValue(res.data.hash);
         if(res.data.status){
           setOtpDivStyle('block')
+          console.log( res.data.hash, res.data.mobileNo)
+        }else{
+          setErrorObject({status: true, message: res.data.message, display : 'block'})
         }
-        console.log( res.data.hash, res.data.mobileNo)
       }).catch((err)=>{
         console.log("Error occured:::",err);
       })
@@ -68,7 +78,14 @@ const ForgotPassword = () => {
         data : JSON.stringify(apiBody)
       };
       axios.request(config).then((res)=>{
-        console.log(res.data);
+        if(res.data.status){
+          console.log(res.data.message);
+          navigate('/set-password');
+        }else{
+          setErrorObject({status:true, message : res.data.message, display: 'block'})
+        }
+      }).catch((err)=>{
+        console.log("Error aayi :: forgotpassword ui componet ::: ",err);
       })
     }
     
@@ -76,6 +93,8 @@ const ForgotPassword = () => {
 
 
   return (
+
+
     <div className="account-page">
       <div className="main-wrapper">
         
@@ -87,6 +106,9 @@ const ForgotPassword = () => {
               </Link>
             </div>
             <div className="account-box">
+              {
+                errorObject.status && <Error message={errorObject.message} display={errorObject.display} />
+              }
               <div className="account-wrapper">
                 <h3 className="account-title">Forgot Password?</h3>
                 {/* <p className="account-subtitle">
