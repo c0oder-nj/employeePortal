@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const session = require('express-session')
 const db = require('../databaseConnection')
 
 const checkUser = async (req,res,next)=> {
@@ -24,4 +23,27 @@ const checkUser = async (req,res,next)=> {
     next()
 }
 
-module.exports = { checkUser};
+const checkUserNeeraj = (req,res,next)=> {
+
+    // console.log(req.query.value)
+    console.log(req.headers.accesstoken);
+
+    if(!req.headers.accesstoken){
+        return res.json({ "status": false, "message": "Unauthorized Access" });
+    }
+
+    const newValue = req.headers.accesstoken;
+  
+    //If you have changed the formate of access token then adjust this line of comment this line 
+    //Current access token formate accesToken=elelfnoeuhfmdvnlszdnvzljsdmszvksjzdvjzsdhlj
+    console.log("+++++++++++++++++++++++++++")
+    console.log(newValue)
+    console.log("+++++++++++++++++++++++++++")
+    var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
+    console.log(decodedValue);
+    req.sapid = decodedValue.empCode;
+
+    next()
+}
+
+module.exports = { checkUser,checkUserNeeraj};

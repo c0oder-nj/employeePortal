@@ -2,10 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const env = require('dotenv')
-const session = require('express-session')
 const authControllers = require('./Controllers/authControllers')
 const empControllers = require('./Controllers/empControllers')
-const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 const routes = require('./Routes/index')
 
 
@@ -28,11 +26,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // Working on session : start
 //app.use(session({secret : "Creating a seesion for user authentication"}))
-app.use(session({
-    secret: 'your-secret-key', // Replace with a strong and unique string
-    resave: false,
-    saveUninitialized: false
-}));
+// app.use(session({
+//     secret: 'your-secret-key', // Replace with a strong and unique string
+//     resave: false,
+//     saveUninitialized: false
+// }));
 //Working on session : end
 app.get('/',(req,res)=>{
     // res.cookie("name","test")
@@ -56,34 +54,8 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 
 
 
-// //For user login and jwt token creation
-// app.post('/api/auth/login',authControllers.login)
-// //Just for test
-// app.get('/api/auth/test',authControllers.test)
-
-// //For setting a password
-// app.post('/api/auth/setPassword',authControllers.setPassword)
-// // app.post('/api/auth/home',authControllers.home)
-
-// //For dashboard content
-// app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
-
-//For Employee attendance need to add middleware
-app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
-app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
-app.get('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)
-
-
-
-
 
 app.use('/api',routes);
-
-// app.post('/api/auth/login',authControllers.login)
-// app.post('/api/auth/setPassword',authControllers.setPassword)
-// app.post('/api/auth/home',authControllers.home)
-// app.post('/api/auth/forget-password',authControllers.forgetPassword);
-// app.post('/api/auth/verify-otp', authControllers.verifyOtp);
 
 
 app.get('/get_cookie',(req,res)=>{

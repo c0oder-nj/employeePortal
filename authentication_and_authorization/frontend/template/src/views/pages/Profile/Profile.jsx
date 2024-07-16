@@ -1,41 +1,125 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar_02, Avatar_16 } from "../../../Routes/ImagePath";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 
+
 const Profile = () => {
-  const userData = {
+  var employeeProfile;
+  const navigate = useNavigate();
+  const [empData, setEmpData] = useState({});
+  employeeProfile = {
     id: 1,
-    name: "John Doe",
-    role: "UI/UX Design Team",
-    jobTitle: "Web Designer",
-    employeeId: "FT-0001",
-    dateOfJoin: "1st Jan 2023",
-    phone: "9876543210",
-    email: "johndoe@example.com",
-    birthday: "24th July",
-    address: "1861 Bayonne Ave, Manchester Township, NJ, 08759",
-    gender: "Male",
-    supervisor: {
-      name: "Jeffery Lalor",
-      avatar: "assets/img/profiles/avatar-16.jpg",
-    },
+    name: "TEST",
+    companyCode: "TEST",
+    companyText : "TEST",
+    plantCode : "TEST",
+    plantName : "TEST",
+    departmentCode : "TEST",
+    departmentName : "TEST",
+    positionCode : "TEST",
+    position : "TEST",
+    payrollCode : "TEST",
+    payrollText : "TEST",
+    mobileNo : "TEST",
+    companyEmailId : "TEST",
+    personalEmailId : "TEST",
+    address : "TEST",
+    joiningDate : "TEST",
+    dateOfBirth : "TEST",
+    reportingManagerName : "TEST",
+    reportingManagerPernr : "TEST",
+    nationality : "TEST",
+    noOfChildrens : "TEST",
+    maritalStatus : "TEST",
+    religion : "TEST"
   };
 
-  const fetchApiRequest = (uri) => {
-    
+
+  function checkCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for(let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if(cookie.startsWith(cookieName + '=')) {
+        const accesstoken = cookie.split('=').at(1)
+        return {"status" : true, accesstoken : accesstoken};
+      }
+    }
+    return {"status" : false, accesstoken : null};
   }
+  
 
-  const fetchData = async() => {
+  // const getToken = (cookie) => {
+  //   let accessToken = cookie.split('=');
+  //   if(!(accessToken[0] !== 'accessToken')){
+  //     return false;
+  //   }else{
+  //     return accessToken[1];
+  //   }
+  // }
 
-  }
 
 
-  useEffect(()=>{
+  useEffect(() => {
+    console.log("Hello how are you ");
+    if(!checkCookie('accessToken').status){
+      navigate('/react/template');
+    }
+
+    const fetchData = async ()=>{
+        const url = 'http://localhost:3000/api/employee/employee_profile';
+        const accessToken = checkCookie("accessToken").status ? checkCookie('accessToken').accesstoken : null
+        
+        const apiResponse = await fetch(url,{
+          method: 'get',
+          headers : {
+            'accesstoken': accessToken
+          }
+        }).then((response)=>{
+          return response.json();
+        }).then((data) => {
+          // console.log(data)
+          // console.log(data.data[0]);
+          let empDetails = data.data[0];
+          setEmpData(empDetails);
+          console.log(empData);
+          // let empAddress = empDetails.stras + empDetails.ort02 + empDetails.pstlz + empDetails.land1;
+          // employeeProfile = {
+          //   id: 1,
+          //   name: empDetails.ename,
+          //   companyCode: empDetails.bukrs,
+          //   companyText : empDetails.butxt,
+          //   plantCode : empDetails.werks,
+          //   plantName : empDetails.name1,
+          //   departmentCode : empDetails.btrtl,
+          //   departmentName : empDetails.btext,
+          //   positionCode : empDetails.persk,
+          //   position : empDetails.persk,
+          //   payrollCode : empDetails.abkrs,
+          //   payrollText : empDetails.atext,
+          //   mobileNo : empDetails.telnr,
+          //   companyEmailId : empDetails.usrid_long,
+          //   personalEmailId : empDetails.usrid,
+          //   address : empAddress,
+          //   joiningDate : empDetails.begda,
+          //   dateOfBirth : empDetails.gbdat,
+          //   reportingManagerName : empDetails.f_ename,
+          //   reportingManagerPernr : empDetails.f_pernr,
+          //   nationality : empDetails.natio,
+          //   noOfChildrens : empDetails.anzkd,
+          //   maritalStatus : empDetails.ftext,
+          //   religion : empDetails.ktext 
+          // };
+        }).catch((error)=>{
+          console.log("Error", error);
+        });
+    }
     fetchData();
-  }, [])
+  }, []);
+
+
   return (
     <>
       <div className="page-wrapper">
@@ -64,17 +148,17 @@ const Profile = () => {
                         <div className="col-md-5">
                           <div className="profile-info-left">
                             <h3 className="user-name m-t-0 mb-0">
-                              {userData.name}
+                              {/* {userData.name} */} Hello
                             </h3>
-                            <h6 className="text-muted">{userData.role}</h6>
+                            <h6 className="text-muted">{employeeProfile.positionCode}</h6>
                             <small className="text-muted">
-                              {userData.jobTitle}
+                              {employeeProfile.positionCode}
                             </small>
                             <div className="staff-id">
-                              Employee ID : {userData.employeeId}
+                              Employee ID : 1 fetch employeeId
                             </div>
                             <div className="small doj text-muted">
-                              Date of Join : {userData.dateOfJoin}
+                              Date of Join : {employeeProfile.joiningDate}
                             </div>
                             <div className="staff-msg">
                               <Link className="btn btn-custom" to="/call/chat">
@@ -88,41 +172,50 @@ const Profile = () => {
                             <li>
                               <div className="title">Phone:</div>
                               <div className="text">
-                                <Link to={`tel:${userData.phone}`}>
-                                  {userData.phone}
+                                <Link to={`tel:${employeeProfile.mobileNo}`}>
+                                  {employeeProfile.mobileNo}
                                 </Link>
                               </div>
                             </li>
                             <li>
-                              <div className="title">Email:</div>
+                              <div className="title">Email Personal:</div>
                               <div className="text">
-                                <Link to={`mailto:${userData.email}`}>
-                                  {userData.email}
+                                <Link to={`mailto:${employeeProfile.personalEmailId}`}>
+                                  {employeeProfile.personalEmailId}
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="title">Email Shakti:</div>
+                              <div className="text">
+                                <Link to={`mailto:${employeeProfile.companyEmailId}`}>
+                                  {employeeProfile.companyEmailId}
                                 </Link>
                               </div>
                             </li>
                             <li>
                               <div className="title">Birthday:</div>
-                              <div className="text">{userData.birthday}</div>
+                              <div className="text">{employeeProfile.dateOfBirth}</div>
                             </li>
                             <li>
                               <div className="title">Address:</div>
-                              <div className="text">{userData.address}</div>
+                              <div className="text">{employeeProfile.address}</div>
                             </li>
                             <li>
                               <div className="title">Gender:</div>
-                              <div className="text">{userData.gender}</div>
+                              <div className="text">fetch gender</div>
                             </li>
                             <li>
                               <div className="title">Reports to:</div>
                               <div className="text">
                                 <div className="avatar-box">
                                   <div className="avatar avatar-xs">
-                                    <img src={Avatar_16} alt="User Image" />
+                                    {employeeProfile.reportingManagerPernr}
+                                    <img src={Avatar_16} alt="User Image | " />
                                   </div>
                                 </div>
                                 <Link to="profile">
-                                  {userData.supervisor.name}
+                                  {employeeProfile.reportingManagerName}
                                 </Link>
                               </div>
                             </li>

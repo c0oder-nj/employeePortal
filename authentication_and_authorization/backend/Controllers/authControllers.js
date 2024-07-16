@@ -5,12 +5,10 @@ const db = require('../databaseConnection')
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const axios = require('axios')
-const session = require('express-session')
 const otpGenerator = require('otp-generator')
 const crypto = require('crypto');
 const { json } = require('express');
 const { type } = require('os');
-const apiService = require('../Services/apiService')
 
 dotenv.config();
 
@@ -333,27 +331,5 @@ const verifyOtp = async(req,res) => {
 }
 
 
-const employeeProfile = async(req,res) =>{
-    // console.log(req.headers.accesstoken)
-    const accessToken = req.headers.accesstoken
-    console.log(accessToken);
-    if(accessToken != ''){
-        // console.log(jwt.verify(accessToken, process.env.JWT_SECRET_KEY))
-        const decoded_token = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
-        // console.log(jwt.verify(accessToken, process.env.JWT_SECRET_KEY))
-        console.log(decoded_token)
-        const sapId = decoded_token.empCode;
-        const apiResponse = await apiService.apiUsingFtech('/zhr_portal_new/employee_profile.htm', {sapid : sapId});
-        // const apiData = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_profile.htm?sapid=${sapId}`);
-        console.log(apiData.data)
-        // const jsonResponse = JSON.parse(apiData.data);
-        // console.log(jsonResponse, typeof jsonResponse);
-        // if(apiData.data.status === 'true'){
-        //     console.log(apiData.data.data);
-        // }
 
-    }
-    res.send("api hitted");
-}
-
-module.exports = { home, login, test, getData, encodePassword,setPassword,forgetPassword,verifyOtp,employeeProfile };
+module.exports = { home, login, test, getData, encodePassword,setPassword,forgetPassword,verifyOtp };
