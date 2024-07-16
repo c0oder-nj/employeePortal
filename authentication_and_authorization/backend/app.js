@@ -6,6 +6,7 @@ const session = require('express-session')
 const authControllers = require('./Controllers/authControllers')
 const empControllers = require('./Controllers/empControllers')
 const authUserThoughMiddleware = require('./middleware/authUserMiddle')
+const routes = require('./Routes/index')
 
 
 
@@ -55,17 +56,17 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 
 
 
-//For user login and jwt token creation
-app.post('/api/auth/login',authControllers.login)
-//Just for test
-app.get('/api/auth/test',authControllers.test)
+// //For user login and jwt token creation
+// app.post('/api/auth/login',authControllers.login)
+// //Just for test
+// app.get('/api/auth/test',authControllers.test)
 
-//For setting a password
-app.post('/api/auth/setPassword',authControllers.setPassword)
-// app.post('/api/auth/home',authControllers.home)
+// //For setting a password
+// app.post('/api/auth/setPassword',authControllers.setPassword)
+// // app.post('/api/auth/home',authControllers.home)
 
-//For dashboard content
-app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
+// //For dashboard content
+// app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
 
 //For Employee attendance need to add middleware
 app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
@@ -76,6 +77,13 @@ app.get('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUs
 
 
 
+app.use('/api',routes);
+
+// app.post('/api/auth/login',authControllers.login)
+// app.post('/api/auth/setPassword',authControllers.setPassword)
+// app.post('/api/auth/home',authControllers.home)
+// app.post('/api/auth/forget-password',authControllers.forgetPassword);
+// app.post('/api/auth/verify-otp', authControllers.verifyOtp);
 
 
 app.get('/get_cookie',(req,res)=>{

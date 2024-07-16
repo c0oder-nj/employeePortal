@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from "react";
+import React, { useEffect } from "react";
 import { Avatar_02, Avatar_16 } from "../../../Routes/ImagePath";
 import { Link } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
@@ -23,6 +23,19 @@ const Profile = () => {
       avatar: "assets/img/profiles/avatar-16.jpg",
     },
   };
+
+  const fetchApiRequest = (uri) => {
+    
+  }
+
+  const fetchData = async() => {
+
+  }
+
+
+  useEffect(()=>{
+    fetchData();
+  }, [])
   return (
     <>
       <div className="page-wrapper">

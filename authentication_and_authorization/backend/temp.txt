@@ -37,3 +37,8 @@ INSERT INTO [dbo].[userTable]
 GO
 
 afdsf
+
+
+app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
+app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
+app.get('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)

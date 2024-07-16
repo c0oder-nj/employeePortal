@@ -10,7 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { useDispatch } from "react-redux";
 import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
-// import { login } from "../../../user";
+import Error from './Error';
 
 const validationSchema = Yup.object({
   sapid: Yup
@@ -73,13 +73,7 @@ const Login = () => {
  
   const onSubmit = async (data) => {
         // when user enters the default password navigate it to set new password
-        if(data.password === "shakti@123"){
-          return navigate('/set-password')
-        }
 
-        
-        // console.log(JSON.stringify(data))
-        // console.log(data)
         try {
             const response = await fetch(`http://localhost:3000/api/auth/login`, {
                 method: "POST",
@@ -95,16 +89,17 @@ const Login = () => {
             if(response.status){
               document.cookie= 'accessToken='+response.accessToken;
               navigate("/admin-dashboard");
-            }else{
-              // console.log(response.message)
-             
+            }else if(response.newUser){
+              navigate('/set-password');
+            }
+            else{
               console.log(response.message);
               setErrorMessage({"status": true, "message":response.message});
               setDisplay('block');
               navigate("/")
             }
         } catch (error) {
-            
+            console.log("Error at login try block ::: ",error.data);
         }
 
   
@@ -143,7 +138,7 @@ const Login = () => {
     if(errorMessage.status){
       setTimeout(() => {
         setDisplay('none');
-      }, 5000);
+      }, 2500);
     }
   },[errorMessage])
 
@@ -169,14 +164,17 @@ const Login = () => {
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}
                   <div>
-                    {errorMessage.status && 
+                    {/* {errorMessage.status && 
 
                       <div id='alert-div' className="alert alert-warning alert-dismissible fade show" style={{display : display}}>
                         <strong>Errro:</strong> {errorMessage.message}
                         <button type="button" className="btn-close"></button>
                       </div>
+                   } */}
+                   
+                   {
+                    errorMessage.status && <Error message={errorMessage.message} display={display}/>
                    }
-
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
                         <label className="col-form-label">Enter You Sap Id</label>
