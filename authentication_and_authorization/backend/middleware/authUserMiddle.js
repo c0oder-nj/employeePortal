@@ -5,6 +5,7 @@ const db = require('../databaseConnection')
 const checkUser = async (req,res,next)=> {
 
     // console.log(req.query.value)
+    //Agar value pass nahi ki toh yeh undefiend wala code chalega
     if(req.query.value===undefined){
         return res.json({ "status": false, "message": "Unauthorized Access" });
     }

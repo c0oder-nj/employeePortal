@@ -68,8 +68,10 @@ app.post('/api/auth/setPassword',authControllers.setPassword)
 app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
 
 //For Employee attendance need to add middleware
+app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
 app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
-// app.get('/api/auth/emp',empControllers.employeeattendance)
+app.get('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)
+
 
 
 

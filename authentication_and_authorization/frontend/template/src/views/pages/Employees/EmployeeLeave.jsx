@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import axios from "axios";
+import axios, { all } from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
@@ -13,21 +13,20 @@ const EmployeeLeave = () => {
   const [users, setUsers] = useState([]);
   const [displayVariable, displayVariableSet] = useState("none");
   const [leaveInfo,leaveSet] = useState([]);
+  const [casualLeave,setCasualLeave]  = useState("");
+  const [allEmp,allEmpFunction]  = useState([]);
+  const [isFetchedData,isFetchedDataFunction] = useState(false);
   const navigate = useNavigate();
-  var dataFetchedThroughApi;
+  var dataFetchedThroughApi = null;
   
   function checkCookie(cookieName) {
-    // Split cookie string and iterate over each cookie pair
     const cookies = document.cookie.split(';');
     for(let i = 0; i < cookies.length; i++) {
       let cookie = cookies[i].trim();
-      // Check if the cookie name matches the parameter
       if(cookie.startsWith(cookieName + '=')) {
-        // Cookie found
         return true;
       }
     }
-    // Cookie not found
     return false;
   }
 
@@ -46,12 +45,14 @@ const EmployeeLeave = () => {
         //Fetching data for attendance
         const value = `${document.cookie}`;
         console.log(value)
-        let storeResponse
+        
         // const url = `http://localhost:3000/api/auth/home?value=${value}`;
+        //Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
         const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
         console.log(url);
         
-        dataFetchedThroughApi = await fetch(url).then((response)=>{
+        dataFetchedThroughApi = await fetch
+        (url).then((response)=>{
           return response.json();
         }).then((data) => {
           
@@ -59,16 +60,27 @@ const EmployeeLeave = () => {
           leaveSet(data.leave)
           console.log("Printing")
           setUsers(data.leaveInfo)
+          setCasualLeave(data.leave);
+          allEmpFunction(data.companyEmployee)
           displayVariableSet("block");
+          isFetchedDataFunction(true);
           return data;
-
+          
         }).catch((error)=>{
           console.log("Error");
         });
     }
     fetchData();
-    
   }, []);
+
+  if(dataFetchedThroughApi){
+    isFetchedDataFunction(true);
+    // console.log(dataFetchedThroughApi.companyEmployee)
+  }
+  console.log(casualLeave)
+  console.log("All emp value : ",allEmp)
+
+ 
   const userElements = users.map((user, index) => ({
     key: index,
     leavetype: user.lev_typ,
@@ -220,6 +232,8 @@ const EmployeeLeave = () => {
     },
   ];
 
+  
+
   return (
     <div className="blockingOrNot" style= {{display:displayVariable}}>
       <div className="page-wrapper">
@@ -259,7 +273,13 @@ const EmployeeLeave = () => {
         </div>
       </div>
       {/* Add Leave Modal */}
-      <EmployeeLeaveModelPopup />
+      
+      {
+        // isFetchedData && 
+        // <EmployeeLeaveModelPopup data={"Hello"}/>
+        casualLeave? <EmployeeLeaveModelPopup data1={casualLeave} data2={allEmp}/> : <p>Loading...</p>
+      }
+      {/* {dataFetchedThroughApi ? <EmployeeLeaveModelPopup data={dataFetchedThroughApi}/> : <p>Loading...</p>} */}
       {/* Add Leave Modal */}
       {/* Delete Modal */}
       <DeleteModal Name="Delete Leaves" />
