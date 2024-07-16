@@ -24,6 +24,8 @@ const creatUri = (uriEndpoint, queryObject) => {
 
 
 
+// testing changes in common branch
+
 const apiUsingFtech = async(uri, queryObject, type) => {
 
     const apiResponse = await axios.get()
