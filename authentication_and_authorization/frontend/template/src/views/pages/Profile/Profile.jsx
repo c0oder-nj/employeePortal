@@ -87,12 +87,12 @@ const Profile = () => {
                           <h3 className="user-name m-t-0 mb-0">
                             {empData.ename}
                           </h3>
-                          <h6 className="text-muted">{empData.btrtl}</h6>
-                          <small className="text-muted">
+                          <h6 className="text-muted">{empData.btext}</h6>
+                          {/* <small className="text-muted">
                             {empData.btext }
-                          </small>
+                          </small> */}
                           <div className="staff-id">
-                            Employee ID : {empData.id || 'fetch employeeId'}
+                            Employee ID : {empData.pernr}
                           </div>
                           <div className="small doj text-muted">
                             Date of Join : {empData.begda}
@@ -140,7 +140,7 @@ const Profile = () => {
                           </li>
                           <li>
                             <div className="title">Gender:</div>
-                            <div className="text">{empData.gender || 'fetch gender'}</div>
+                            <div className="text">{empData.gender_text}</div>
                           </li>
                           <li>
                             <div className="title">Reports to:</div>
@@ -215,7 +215,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <ProfileTab />
+        <ProfileTab profile={empData}/>
       </div>
     </div>
   );
