@@ -31,7 +31,12 @@ const home = async (req, res) => {
 
 
 const test = async (req, res) => {
-    console.log(req.cookies.token)
+    // console.log(req.cookies.token)
+
+    console.log("Your value",req.body)
+
+    const result = await axios.post(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+    console.log(result.data);
     console.log("Your cookie is working")
     res.status(200).send({message : "Working",key:"Value"})
     return;

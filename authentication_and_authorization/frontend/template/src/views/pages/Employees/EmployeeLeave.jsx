@@ -60,6 +60,7 @@ const EmployeeLeave = () => {
           leaveSet(data.leave)
           console.log("Printing")
           setUsers(data.leaveInfo)
+          // console.log()
           setCasualLeave(data.leave);
           allEmpFunction(data.companyEmployee)
           displayVariableSet("block");

@@ -26,7 +26,7 @@ const employeeattendance = async (req,res)=>{
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=4629',
+        // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5051',
         url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
@@ -51,7 +51,7 @@ const employeeattendance = async (req,res)=>{
     sendEmployeeData.leaveInfo = employeeAttendanceData.leaveemp
     sendEmployeeData.companyEmployee = employeeAttendanceData.activeemployee 
     console.log("szldvhlkzsjhvb;lzshvblksdzfhvblkzsdfvlkzsdfvblkzsdf")
-    console.log(sendEmployeeData)
+    // console.log(sendEmployeeData)
     return res.json(sendEmployeeData); 
 }
 
@@ -73,8 +73,8 @@ const employeeattendanceApply = async (req,res)=>{
   let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=4629',
-      url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+      url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=4629',
+      // url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -105,6 +105,17 @@ const employeeattendanceApply = async (req,res)=>{
 }
 
 
+// Create a leave application 
+const employeeLeaveCreation = async (req,res) =>{
+  console.log("Your value",req.body)
+
+  const result = await axios.post(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+  console.log(result.data);
+  console.log("Your cookie is working")
+  res.status(200).send({message : "Working",key:"Value"})
+  return;
+}
+
 const employeesapNumber = async (req,res)=>{
 
   // var value = 4629
@@ -122,4 +133,4 @@ const employeesapNumber = async (req,res)=>{
 
 
 
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber};
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation};

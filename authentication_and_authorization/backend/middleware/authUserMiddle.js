@@ -21,6 +21,7 @@ const checkUser = async (req,res,next)=> {
     // console.log(headerValue)
     var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
     // console.log(decodedValue);
+    console.log("In middle ware")
     next()
 }
 

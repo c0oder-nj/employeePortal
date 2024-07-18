@@ -75,7 +75,7 @@ const Login = () => {
         // when user enters the default password navigate it to set new password
 
         try {
-            const response = await fetch(`http://localhost:3000/api/auth/login`, {
+            const response = await fetch(`http://localhost:3000/api/auth/test`, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/json',

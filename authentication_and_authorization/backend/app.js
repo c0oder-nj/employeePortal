@@ -59,7 +59,7 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 // //For user login and jwt token creation
 // app.post('/api/auth/login',authControllers.login)
 // //Just for test
-// app.get('/api/auth/test',authControllers.test)
+app.post('/api/auth/test',authControllers.test)
 
 // //For setting a password
 // app.post('/api/auth/setPassword',authControllers.setPassword)
@@ -71,7 +71,8 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 //For Employee attendance need to add middleware
 app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
 app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
-app.get('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)
+//For Leave creation
+app.post('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeLeaveCreation)
 
 
 

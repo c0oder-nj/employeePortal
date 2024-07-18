@@ -2,13 +2,207 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import { TimePicker } from "antd";
+import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 
 const EmployeeLeaveModelPopup = (props) => {
   const [selectedDate1, setSelectedDate1] = useState(null);
   const [selectedDate2, setSelectedDate2] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [EndDate, setEndDate] = useState(null);
+  const form = useForm();
+  const {leaveName} = form;
+  const [formData,setFormData] = useState({
+    SapNumber : "",
+    LeaveType : "",
+    LeaveDuration :"",
+    LeaveFrom : "",
+    LeaveTo:"",
+    TimeFrom:"",
+    TimeTo:"",
+    LeaveReason : "",
+    LeaveCharge1:"",
+    LeaveCharge2: ""
+  })
+  const onChangeFunction =(event)=>{
+    console.log("Your are inside event function",event);
+    setFormData(()=>({
+      ...formData,
+      [event.value ]: event.label
+    }))
+  }
+
+  const onChangeFunctionTimeFrom = (event)=>{
+    console.log("Your are inside event function",event);
+    const padWithZero = (num) => (num < 10 ? `0${num}` : `${num}`);
+      setFormData(()=>({
+        ...formData,
+        
+      TimeFrom: `${padWithZero(event.$H)}:${padWithZero(event.$m)}:${padWithZero(event.$s)}`
+    }))
+  }
+  const onChangeFunctionTimeTo = (event)=>{
+    console.log("Your are inside event function",event);
+    const padWithZero = (num) => (num < 10 ? `0${num}` : `${num}`);
+      setFormData(()=>({
+        ...formData,
+      TimeTo: `${padWithZero(event.$H)}:${padWithZero(event.$m)}:${padWithZero(event.$s)}`
+    }))
+  }
+
+  const onChangeFunctionLeaveFrom = (event)=>{
+    console.log("Your are inside event function",event);
+      setFormData(()=>({
+        ...formData,
+        TimeFrom : event.$H + event.$m + event.$s
+    }))
+  }
+  const onChangeFunctionLeaveTo = (event)=>{
+    console.log("Your are inside event function",event);
+      setFormData(()=>({
+        ...formData,
+        TimeTo : event.$H + ":"+event.$m + ":"+event.$s
+    }))
+  }
+  const onChangeFunctionTextArea = (event)=>{
+    console.log("Your are inside event function",event);
+      setFormData(()=>({
+        ...formData,
+        LeaveReason : event.target.value
+    }))
+  }
+  const onChangeFunctionCharge1 = (event)=>{
+    console.log("Your are inside event function",event);
+      setFormData(()=>({
+        ...formData,
+        LeaveCharge1 : event.label
+    }))
+  }
+
+  const onChangeFunctionCharge2 = (event)=>{
+    console.log("Your are inside event function",event);
+      setFormData(()=>({
+        ...formData,
+        LeaveCharge2 : event.label
+    }))
+  }
+
+  var dataToBeSent ={};
+  // Form Data entry 
+  
+  // Leave Type (Working)
+  const [setName, setNameFunction] = useState("");
+  const NameFunction = (selectedOption)=>{
+    setNameFunction(selectedOption);
+  }
+  useEffect(()=>{
+    console.log(setName.label)
+    dataToBeSent.LeaveName = setName.label;
+    // console.log(setName.label)
+    // console.log("Printing Something",dataToBeSent.LeaveName)
+  },[setName]);
+
+
+  //Leave Duration (Working)
+  const [setDuration, setDurationFunction] = useState("");
+  const DurationFunction = (selectedOption)=>{
+    setDurationFunction(selectedOption);
+  }
+  useEffect(()=>{
+    console.log("Duration",setDuration.label)
+    dataToBeSent.Duration = setDuration.label
+    // console.log(dataToBeSent.Duration)
+  },[setDuration]);
+
+  //Date From (Working)
+  const [setDatefrom, setDatefromFunction] = useState("");
+  const DatefromFunction = (selectedOption)=>{
+    
+    console.log(selectedOption)
+    setDatefromFunction(selectedOption);
+  }
+  useEffect(()=>{
+    console.log(setDatefrom)
+    dataToBeSent.Datefrom = setDatefrom
+  },[setDatefrom]);
+
+  function handleDoubleChange(selectType){
+    handleDateChange1();
+    DatefromFunction(selectType);
+  }
+  //Date to (Working)
+  const [setDateto, setDatetoFunction] = useState("");
+  const DatetoFunction = (selectedOption)=>{
+    setDatetoFunction(selectedOption);
+  }
+  useEffect(()=>{
+    console.log(setDateto)
+    dataToBeSent.Dateto = setDateto
+  },[setDateto]);
+
+  function handleDoubleChange2(selectType){
+    handleDateChange2();
+    DatetoFunction(selectType);
+  }
+
+  // Time from
+  const [setTimefrom, setTimefromFunction] = useState("");
+  const setfromTime = (selectedOption)=>{
+    setTimefromFunction(selectedOption);
+    // const words = setTimefrom.$d.split(/(\s+)/);
+    // console.log(words)
+    
+  }
+  useEffect(()=>{
+    console.log(setTimefrom.$H)
+    dataToBeSent.Timefrom = setTimefrom
+    console.log(setTimefrom)
+  },[setTimefrom]);
+
+  // Time to
+  const [setTimeto, setTimetoFunction] = useState("");
+  const settoTime = (selectedOption)=>{
+    setTimetoFunction(selectedOption);
+    
+  }
+  useEffect(()=>{
+    console.log(setTimeto)
+    dataToBeSent.Dateto = setDateto
+  },[setTimeto]);
+
+  // //Leave reason (Working)
+  const [leaveReason, leaveReasonFunction] = useState("");
+  useEffect(()=>{
+    console.log(leaveReason)
+    dataToBeSent.leaveReason = leaveReason
+  },[leaveReason]);
+
+    //Charge 1
+    const [charge1, charge1Function] = useState("");
+    const setcharge1 = (selectedOption)=>{
+      charge1Function(selectedOption);
+      
+    }
+    useEffect(()=>{
+      console.log(charge1.label)
+      dataToBeSent.charge1 = charge1.label
+    },[charge1]);
+      //Charge 2
+  const [charge2, charge2Function] = useState("");
+  const charge2Reason = (selectedOption)=>{
+    charge2Function(selectedOption);
+    
+  }
+  useEffect(()=>{
+    console.log(charge2.label)
+    dataToBeSent.charge21 = charge2.label
+  },[charge2]);
+
   const { data1,data2 } = props;
   console.log(data1)
   console.log(data2)
@@ -22,23 +216,55 @@ const EmployeeLeaveModelPopup = (props) => {
     setSelectedDate2(date);
   };
 
+  // console.log(formData.leaveType)
+
+  async function sendData(e){
+    // e.preventDefault();
+    console.log("In send Data")
+    console.log(JSON.stringify(formData));
+    const value = `${document.cookie}`;
+    console.log(value)
+    const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            'content-type': 'application/json',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
+            'Access-Control-Allow-Methods': 'POST',
+        },
+        body: JSON.stringify(formData)
+    }).then((response)=>{
+        
+      // console.log(response.json()[0].name);
+      // Swal.fire({
+      //   title: "Message",
+      //   // text: "You clicked the button!",
+      //   text : response.json()[0].name,
+      //   icon: "success"
+      // });
+      // alert(response.json()[0].name);
+      alert("Got it");
+      return response.json();
+    }); 
+  }
+
   const leavetype = [
-    { value: 1, label: "Select Leave Type" },
-    { value: 2, label: "Casual Leave" },
-    { value: 3, label: "Medical Leave" },
-    { value: 4, label: "Earned Leave" },
-    { value: 5, label: "Leave without Pay"}
+    { value: "LeaveType", label: "Select Leave Type" },
+    { value: "LeaveType", label: "EARNED" },
+    { value: "LeaveType", label: "CASUAL" },
+    { value: "LeaveType", label: "MEDICAL" },
+    { value: "LeaveType", label: "WEDDING"},
+    { value: "LeaveType", label: "PATERNITY"},
+    { value: "LeaveType", label: "MATERNITY"},
+    { value: "LeaveType", label: "WITHOUT PAY"},
+    { value: "LeaveType", label: "OPTIONAL"}
   ];
 
   const leaveDuration = [
-    { value: 1, label: "Select Leave Duration" },
-    { value: 2, label: "Full day" },
-    { value: 3, label: "Half Day" }
+    { value: "LeaveDuration", label: "Select Leave Duration" },
+    { value: "LeaveDuration", label: "Full Day or More" },
+    { value: "LeaveDuration", label: "Half Day" }
   ];
-
- var empData = [
-
- ]
 
   const customStyles = {
     option: (provided, state) => ({
@@ -82,20 +308,26 @@ const EmployeeLeaveModelPopup = (props) => {
       (url).then((response)=>{
         return response.json();
       }).then((data) => {
+        
+        setFormData(()=>({
+          ...formData,
+          SapNumber: data
+        }))
+
         return data;
       }).catch((error)=>{
-        console.log("Error");
+        console.log(error);
       });
 
       console.log(sapNumber)
+      dataToBeSent.sapNumber = sapNumber
   }
   fetchSapNumber();
   },[])
 
-  //Fetching details of casual Leave
-  // var casualCount =data[0].leaveType; 
-  console.log(sapNumber)
   console.log(data1[0].leaveType)
+  dataToBeSent.sapNumber = sapNumber
+  console.log(sapNumber)
   console.log(data2)
   var counter = 1;
 
@@ -122,19 +354,22 @@ console.log(userPresent)
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <span aria-hidden="true">×</span>
+                <span aria-hidden="true">×</span>
                 </button>
               </div>
               <div className="modal-body">
-                <form>
+                <form onSubmit={sendData} >
+                {/* <form> */}
                   <div className="input-block mb-3">
                     <label className="col-form-label">
                       Leave Type <span className="text-danger">*</span>
-                    </label>
+                    </label>     
                     <Select
                       options={leavetype}
                       placeholder="Select"
                       styles={customStyles}
+                      name = "LeaveType"
+                      onChange={onChangeFunction}
                     />
                   </div>
                   <div className="input-block mb-3">
@@ -145,18 +380,24 @@ console.log(userPresent)
                       options={leaveDuration}
                       placeholder="Select"
                       styles={customStyles}
+                      name = "LeaveDuration"
+                      onChange={onChangeFunction}
                     />
-                    
                   </div>
                   <div className="input-block mb-3">
                     <label className="col-form-label">
                       From <span className="text-danger">*</span>
                     </label>
                     <div className="cal-icon">
-                      <DatePicker
-                        selected={selectedDate1}
-                        onChange={handleDateChange1}
-                        className="form-control datetimepicker"
+                      <DatePicker 
+                       className="form-control datetimepicker"
+                      selected={startDate} 
+                      onChange={(date) =>{setFormData(()=>({
+                        ...formData,
+                        LeaveFrom: format(date, 'dd/MM/yyyy')
+                      }))
+                      setStartDate(date)
+                    }}
                         type="date"
                         dateFormat="dd/MM/yyyy"
                       />
@@ -167,10 +408,15 @@ console.log(userPresent)
                       To <span className="text-danger">*</span>
                     </label>
                     <div className="cal-icon">
-                      <DatePicker
-                        selected={selectedDate2}
-                        onChange={handleDateChange2}
-                        className="form-control datetimepicker"
+                       <DatePicker 
+                       className="form-control datetimepicker"
+                       selected={EndDate} 
+                      onChange={(date) =>{setFormData(()=>({
+                        ...formData,
+                        LeaveTo: format(date, 'dd/MM/yyyy')
+                      }))
+                      setEndDate(date)
+                    }}
                         type="date"
                         dateFormat="dd/MM/yyyy"
                       />
@@ -182,7 +428,10 @@ console.log(userPresent)
                       Time from <span className="text-danger">*</span>
                     </label>
                     <div className="">
-                    <TimePicker label="Basic time picker" />
+                    <TimePicker
+                    placeholder="Select"
+                    styles={customStyles} 
+                    onChange={onChangeFunctionTimeFrom}/>
                     </div>
                   </div>
 
@@ -191,36 +440,21 @@ console.log(userPresent)
                       Time to <span className="text-danger">*</span>
                     </label>
                     <div className="">
-                    <TimePicker label="Basic time picker" />
+                    <TimePicker 
+                      placeholder="Select"
+                      styles={customStyles} 
+                      onChange={onChangeFunctionTimeTo}
+                     />
                     </div>
                   </div>
-
-                  
-                  {/* <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      Number of days <span className="text-danger">*</span>
-                    </label>
-                    <input className="form-control" readOnly type="text" />
-                  </div>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      Remaining Leaves <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      readOnly
-                      defaultValue={12}
-                      type="text"
-                    />
-                  </div> */}
                   <div className="input-block mb-3">
                     <label className="col-form-label">
                       Leave Reason <span className="text-danger">*</span>
                     </label>
                     <textarea
-                      rows={4}
-                      className="form-control"
-                      defaultValue={""}
+                    className="form-control"
+                    name = "LeaveReason"
+                    onChange={onChangeFunctionTextArea}
                     />
                   </div>
                   <div className="input-block mb-3">
@@ -231,6 +465,8 @@ console.log(userPresent)
                       options={userPresent}
                       placeholder="Select"
                       styles={customStyles}
+                      name = "LeaveCharge1"
+                      onChange={onChangeFunctionCharge1}
                     />
                   </div>
                   <div className="input-block mb-3">
@@ -241,6 +477,8 @@ console.log(userPresent)
                       options={userPresent}
                       placeholder="Select"
                       styles={customStyles}
+                      name = "LeaveCharge2"
+                      onChange={onChangeFunctionCharge2}
                     />
                   </div>
                   <div className="submit-section">
@@ -248,111 +486,11 @@ console.log(userPresent)
                       className="btn btn-primary submit-btn"
                       data-bs-dismiss="modal"
                       aria-label="Close"
-                      type="reset"
+                      type="submit"
+                      // onClick={()=> {
+                      //   sendData()}}
                     >
                       Submit
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <div id="edit_leave" className="modal custom-modal fade" role="dialog">
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Leave</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <form>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      Leave Type <span className="text-danger">*</span>
-                    </label>
-                    <Select
-                      options={leavetype}
-                      placeholder="Select"
-                      styles={customStyles}
-                    />
-                  </div>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      From <span className="text-danger">*</span>
-                    </label>
-                    <div className="cal-icon">
-                      <DatePicker
-                        selected={selectedDate2}
-                        onChange={handleDateChange2}
-                        className="form-control datetimepicker"
-                        type="date"
-                        dateFormat="dd-MM-yyyy"
-                      />
-                    </div>
-                  </div>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      To <span className="text-danger">*</span>
-                    </label>
-                    <div className="cal-icon">
-                      <DatePicker
-                        selected={selectedDate2}
-                        onChange={handleDateChange2}
-                        className="form-control datetimepicker"
-                        type="date"
-                        dateFormat="dd-MM-yyyy"
-                      />
-                    </div>
-                  </div>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      Number of days <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      readOnly
-                      type="text"
-                      defaultValue={2}
-                    />
-                  </div>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      Remaining Leaves <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      className="form-control"
-                      readOnly
-                      defaultValue={12}
-                      type="text"
-                    />
-                  </div>
-                  <div className="input-block mb-3">
-                    <label className="col-form-label">
-                      Leave Reason <span className="text-danger">*</span>
-                    </label>
-                    <textarea
-                      rows={4}
-                      className="form-control"
-                      defaultValue={"Going to hospital"}
-                    />
-                  </div>
-                  <div className="submit-section">
-                    <button
-                      className="btn btn-primary submit-btn"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                      type="reset"
-                    >
-                      Save
                     </button>
                   </div>
                 </form>
