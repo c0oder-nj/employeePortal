@@ -1,66 +1,29 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { useEffect, useState } from "react";
 import { Avatar_02, Avatar_16 } from "../../../Routes/ImagePath";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,  useLocation } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const [empData, setEmpData] = useState({});
-  const [displayVariable, displayVariableSet] = useState("none");
+  const location = useLocation();
+  const {empData} = location.state;
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        const accesstoken = cookie.split('=')[1];
-        return { status: true, accesstoken };
-      }
-    }
-    return { status: false, accesstoken: null };
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + '=')) {
+  //       const accesstoken = cookie.split('=')[1];
+  //       return { status: true, accesstoken };
+  //     }
+  //   }
+  //   return { status: false, accesstoken: null };
+  // }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("Fetching data...");
-      const tokenResult = checkCookie('accessToken');
-      if (!tokenResult.status) {
-        navigate('/react/template');
-        return;
-      }
-
-      try {
-        console.log(tokenResult.accesstoken);
-        const response = await fetch('http://localhost:3000/api/employee/employee_profile', {
-          method: 'GET',
-          headers: {
-            'accesstoken': tokenResult.accesstoken
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(data.data[0])
-        console.log("Before setting data in state")
-        displayVariableSet("block");
-        setEmpData(data.data[0]);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
-    fetchData();
-    console.log(empData);
-  }, [navigate]);
 
   return (
-    <div className="page-wrapper" style= {{display:displayVariable}}>
-      <div className="content container-fluid">
+    <div className="page-wrapper">
+       <div className="content container-fluid">
         <Breadcrumbs
           maintitle="Profile"
           title="Dashboard"
@@ -97,11 +60,11 @@ const Profile = () => {
                           <div className="small doj text-muted">
                             Date of Join : {empData.begda}
                           </div>
-                          {/* <div className="staff-msg">
+                           {/* <div className="staff-msg">
                             <Link className="btn btn-custom" to="/call/chat">
                               Send Message
                             </Link>
-                          </div> */}
+                          </div>  */}
                         </div>
                       </div>
                       <div className="col-md-7">
@@ -216,7 +179,7 @@ const Profile = () => {
           </div>
         </div>
         <ProfileTab profile={empData}/>
-      </div>
+      </div> 
     </div>
   );
 };

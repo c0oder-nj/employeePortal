@@ -121,12 +121,12 @@ const employeesapNumber = async (req,res)=>{
 }
 
 
-const employeeProfile = async(req,res) =>{
+const employeeDashboard = async(req,res) =>{
   console.log("Came under controller")
   const queryObject = {
-    sapid : req.sapid
+    pernr : req.sapid
   }
-  const response = await apiService.apiUsingFtech('/employee_profile.htm', queryObject, 'get' );
+  const response = await apiService.apiUsingFtech('/employee_dashboard1.htm', queryObject, 'get' );
   console.log("Before printing response || after getting response")
   console.log(response);
   if(response.status){
@@ -139,4 +139,4 @@ const employeeProfile = async(req,res) =>{
 
 
 
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeDashboard};

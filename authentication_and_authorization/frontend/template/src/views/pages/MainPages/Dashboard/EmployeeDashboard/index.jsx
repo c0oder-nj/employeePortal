@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { avatar1, avatar13, avatar16, avatar18, avatar19, avatar2, avatar20, avatar21, avatar23, avatar26, avatar4, avatar6, avatar8, clockin, employeeimg, holidaycalendar } from "../../../../../Routes/ImagePath";
 import Chart from "react-apexcharts";
 import Slider from "react-slick";
 import { ArrowRightCircle } from "react-feather";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import CompoundedSpace from "antd/es/space";
 
 const EmployeeDashboard = () => {
   const tooltip = (
@@ -94,11 +95,7 @@ const EmployeeDashboard = () => {
     Loren Gatlin
     </Tooltip>
   );
-  // const [menu, setMenu] = useState(false);
 
-  // const toggleMobileMenu = () => {
-  //   setMenu(!menu);
-  // };
   const [chartOptions] = useState({
     series: [
       {
@@ -183,10 +180,85 @@ const EmployeeDashboard = () => {
 
   };
 
+  // adding useEffect for api triggering before form loads for that create one state known as pageDisplya
+  const [pageDispaly, setPageDisplay] = useState('none');
+  const navigate = useNavigate();
+  const [empData, setEmpData] = useState({});
+  const [dashboardData, setDashboardData] = useState({});
+
+  function checkCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.startsWith(cookieName + '=')) {
+        const accesstoken = cookie.split('=')[1];
+        return { status: true, accesstoken };
+      }
+    }
+    return { status: false, accesstoken: null };
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("Fetching data...");
+      const tokenResult = checkCookie('accessToken');
+      if (!tokenResult.status) {
+        navigate('/react/template');
+        return false;
+      }
+
+      try {
+        console.log(tokenResult.accesstoken);
+        const response = await fetch('http://localhost:3000/api/employee/employee_dashboard', {
+          method: 'GET',
+          headers: {
+            'accesstoken': tokenResult.accesstoken
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+        
+      } catch (error) {
+        console.error("Error fetching data", error);
+        return false;
+      }
+    };
+
+    fetchData().then((data)=>{
+      console.log("Printing api response in fetchData.then function :: ",data);
+      setDashboardData(data);  
+      setEmpData(data.empDetails.at(0));
+      setPageDisplay('block')
+    });
+  }, []);
+
+
+  const atnAndLeaveCard = {
+    'total_leaves' : 0,
+    'withoutPay' : 0 ,
+    'pendingApproval': 0
+  }
+
+  
+  dashboardData && dashboardData.leaveemp.map((val,index)=>{
+    atnAndLeaveCard.total_leaves += parseInt(val.horo)
+    if(val.lev_typ === "WithoutPay Leave"){
+      atnAndLeaveCard.withoutPay += (parseInt(val.horo)*1)
+    }
+    if(val.apphod === ""){
+      atnAndLeaveCard.pendingApproval += (parseInt(val.horo)*1)
+    }
+  })
+
+  
   return (
     <>
       {/* Page Wrapper */}
-      <div className="page-wrapper">
+      <div className="page-wrapper" style={{display: pageDispaly}}>
         {/* Page Content */}
         <div className="content container-fluid pb-0">
           {/* Leave Alert */}
@@ -221,7 +293,7 @@ const EmployeeDashboard = () => {
                     <div className="card-body">
                       <div className="welcome-info">
                         <div className="welcome-content">
-                          <h4>Welcome Back, Darlee</h4>
+                          <h4>Welcome Back, {empData.ename}</h4>
                           <p>
                             You have <span>4 meetings</span> today,
                           </p>
@@ -235,7 +307,7 @@ const EmployeeDashboard = () => {
                         </div>
                       </div>
                       <div className="welcome-btn">
-                        <Link to="/profile" className="btn">
+                        <Link to="/profile" className="btn" state={{empData}}>
                           View Profile
                         </Link>
                       </div>
@@ -356,27 +428,46 @@ const EmployeeDashboard = () => {
                       </div>
                       <div className="attendance-list">
                         <div className="row">
-                          <div className="col-md-4">
+                        {/* loop based approach */}
+                        {dashboardData.leavebalance && dashboardData.leavebalance.map((val, index)=> (
+                          <div className="col-md-4" key={index}>
                             <div className="attendance-details">
-                              <h4 className="text-primary">9</h4>
+                              <h4 className="text-primary">{val.leaveBal}</h4>
+                              <p>{val.leaveType.split('-').at(0)}</p>
+                            </div>
+                          </div>
+                        ))}
+
+
+
+
+                          {/* <div className="col-md-4">
+                            <div className="attendance-details">
+                              <h4 className="text-primary">{atnAndLeave.total_leaves}</h4>
                               <p>Total Leaves</p>
                             </div>
                           </div>
                           <div className="col-md-4">
                             <div className="attendance-details">
-                              <h4 className="text-pink">5.5</h4>
+                              <h4 className="text-primary">{atnAndLeave.total_leaves}</h4>
+                              <p>Total Leaves</p>
+                            </div>
+                          </div> */}
+                          <div className="col-md-4">
+                            <div className="attendance-details">
+                              <h4 className="text-pink">{atnAndLeaveCard.total_leaves}</h4>
                               <p>Leaves Taken</p>
                             </div>
                           </div>
-                          <div className="col-md-4">
+                          {/* <div className="col-md-4">
                             <div className="attendance-details">
                               <h4 className="text-success">04</h4>
                               <p>Leaves Absent</p>
                             </div>
-                          </div>
+                          </div> */}
                           <div className="col-md-4">
                             <div className="attendance-details">
-                              <h4 className="text-purple">0</h4>
+                              <h4 className="text-purple">{atnAndLeaveCard.pendingApproval}</h4>
                               <p>Pending Approval</p>
                             </div>
                           </div>
@@ -388,7 +479,7 @@ const EmployeeDashboard = () => {
                           </div>
                           <div className="col-md-4">
                             <div className="attendance-details">
-                              <h4 className="text-danger">2</h4>
+                              <h4 className="text-danger">{atnAndLeaveCard.withoutPay}</h4>
                               <p>Loss of Pay</p>
                             </div>
                           </div>
