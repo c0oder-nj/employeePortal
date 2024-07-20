@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { avatar1, avatar13, avatar16, avatar18, avatar19, avatar2, avatar20, avatar21, avatar23, avatar26, avatar4, avatar6, avatar8, clockin, employeeimg, holidaycalendar } from "../../../../../Routes/ImagePath";
 import Chart from "react-apexcharts";
+import Pie from 'react-chartjs-2'
 import Slider from "react-slick";
 import { ArrowRightCircle } from "react-feather";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import CompoundedSpace from "antd/es/space";
 
 const EmployeeDashboard = () => {
   const tooltip = (
@@ -96,18 +96,29 @@ const EmployeeDashboard = () => {
     </Tooltip>
   );
 
-  const [chartOptions] = useState({
-    series: [
-      {
-        name: "Sales",
-        data: [-50, -120, -80, -180, -80, -70, -100],
-      },
-      {
-        name: "Purchase",
-        data: [200, 250, 200, 290, 220, 300, 250],
-      },
-    ],
-    colors: ['#FC133D', '#55CE63'],
+
+
+  // adding useEffect for api triggering before form loads for that create one state known as pageDisplya
+  const [pageDispaly, setPageDisplay] = useState('none');
+  const navigate = useNavigate();
+  const [empData, setEmpData] = useState({});
+  const [dashboardData, setDashboardData] = useState({});
+
+  function checkCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.startsWith(cookieName + '=')) {
+        const accesstoken = cookie.split('=')[1];
+        return { status: true, accesstoken };
+      }
+    }
+    return { status: false, accesstoken: null };
+  }
+
+  const [chartOptions, setChartOptions ] = useState({
+    series: [],
+    colors: [ '#55CE63'], //'#FC133D',
     chart: {
       type: 'bar',
       height: 210,
@@ -142,61 +153,40 @@ const EmployeeDashboard = () => {
       enabled: false,
     },
     yaxis: {
-      min: -200,
-      max: 300,
+      min: -0,
+      max: 10,
       tickAmount: 5,
     },
     xaxis: {
-      categories: [
-        "S",
-        "M",
-        "T",
-        "W",
-        "T",
-        "F",
-        "S",
-
-      ],
+      categories: [ ], // set day wise category from api
+      // categories: [ "S","M","T","W","T","F","S",],
     },
     legend: { show: false },
     fill: {
       opacity: 1,
     },
+    
   });
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-    marginrigth: 10,
-  };
-  const settingsprojectslide = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
 
-  };
 
-  // adding useEffect for api triggering before form loads for that create one state known as pageDisplya
-  const [pageDispaly, setPageDisplay] = useState('none');
-  const navigate = useNavigate();
-  const [empData, setEmpData] = useState({});
-  const [dashboardData, setDashboardData] = useState({});
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        const accesstoken = cookie.split('=')[1];
-        return { status: true, accesstoken };
-      }
-    }
-    return { status: false, accesstoken: null };
-  }
+const settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 2,
+  slidesToScroll: 1,
+  marginrigth: 10,
+};
+const settingsprojectslide = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+
+};
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -231,33 +221,122 @@ const EmployeeDashboard = () => {
     fetchData().then((data)=>{
       console.log("Printing api response in fetchData.then function :: ",data);
       setDashboardData(data);  
-      setEmpData(data.empDetails.at(0));
+      setEmpData(data.empDetails[0]);
+
+      // custom implementation of chart
+      const customChart = {
+        'last7DaysLateMin': [],
+        'last7DaysWorkingHour' : [],
+        'categories' : [],
+      }
+
+      if(data.status){
+        data.attendanceemp.map((val,index)=>{
+          if(index > 6){
+            return;
+          }else{
+            // let lateMin = val.late_min.split(':');
+            // let late_min_minutes =  ((parseInt(lateMin.at(0)) * 60) + parseInt(lateMin.at(1))) *-1 ;
+            // customChart.last7DaysLateMin.push(late_min_minutes);
+
+            let workingHours = val.totdz.split(':');
+            let workingHoursInMinutes = (parseFloat(workingHours.at(0))  + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
+            customChart.last7DaysWorkingHour.push(workingHoursInMinutes);
+
+            let day;
+            console.log(val.day)
+            switch (val.day) {  
+              case '1':
+                day = 'Monday';
+                break;
+              case '2':
+                day = 'Tuesday';
+                break;
+              case '3':
+                day = 'Wednesday';
+                break;
+              case '4':
+                day = 'Thursday';
+                break;
+              case '5':
+                day = 'Friday';
+                break;
+              case '6':
+                day = 'Saturday';
+            }
+            console.log(day)
+            customChart.categories.push(day)
+          }
+          return val;
+        })
+      }
+
+
+      
+
+      // set the values 
+      const updatedSeries = [
+        {
+          name: "Total Working Hours",
+          // data: [-50, -120, -80, -180, -80, -70, -100], // set last 7 days data here
+          data : customChart.last7DaysWorkingHour,
+        },
+
+        // {
+        //   name: "total working hours",
+        //   data: [200, 250, 200, 290, 220, 300, 250],
+        //   // data: customChart.last7DaysWorkingHour,
+        // },
+      ]
+
+      const updatedCategories = {
+        categories : customChart.categories
+      }
+
+      setChartOptions({
+        ...chartOptions,
+        series : updatedSeries,
+        xaxis : updatedCategories
+      })
       setPageDisplay('block')
     });
-  }, []);
+  },[]);
 
 
   const atnAndLeaveCard = {
     'total_leaves' : 0,
     'withoutPay' : 0 ,
-    'pendingApproval': 0
+    'pendingApproval': 0,
+    'total_workingDays' : 0
+  }
+
+
+  if(dashboardData.status){
+    dashboardData.leaveemp.map((val,index)=>{
+      atnAndLeaveCard.total_leaves += parseInt(val.horo)
+      if(val.lev_typ === "WithoutPay Leave"){
+        atnAndLeaveCard.withoutPay += (parseInt(val.horo)*1)
+      }
+      if(val.apphod === ""){
+        atnAndLeaveCard.pendingApproval += (parseInt(val.horo)*1)
+      }
+    })
+
+    atnAndLeaveCard.total_workingDays = dashboardData.working_days;
   }
 
   
-  dashboardData && dashboardData.leaveemp.map((val,index)=>{
-    atnAndLeaveCard.total_leaves += parseInt(val.horo)
-    if(val.lev_typ === "WithoutPay Leave"){
-      atnAndLeaveCard.withoutPay += (parseInt(val.horo)*1)
-    }
-    if(val.apphod === ""){
-      atnAndLeaveCard.pendingApproval += (parseInt(val.horo)*1)
-    }
-  })
 
   
   return (
     <>
       {/* Page Wrapper */}
+      { 
+        !dashboardData && <div className="loader">Loading Data</div>
+      }
+      {
+        dashboardData && 
+      
       <div className="page-wrapper" style={{display: pageDispaly}}>
         {/* Page Content */}
         <div className="content container-fluid pb-0">
@@ -473,7 +552,7 @@ const EmployeeDashboard = () => {
                           </div>
                           <div className="col-md-4">
                             <div className="attendance-details">
-                              <h4 className="text-info">214</h4>
+                              <h4 className="text-info">{atnAndLeaveCard.total_workingDays}</h4>
                               <p>Working Days</p>
                             </div>
                           </div>
@@ -836,6 +915,19 @@ const EmployeeDashboard = () => {
             </div>
             {/* /Employee Notifications */}
           </div>
+
+          {/* custom charts with loop */}
+          <div className="row">
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-body">
+                  <h3>chart one</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
           <div className="row">
             <div className="col-md-12">
               <div className="card">
@@ -1660,6 +1752,7 @@ const EmployeeDashboard = () => {
         </div>
         {/* /Page Content */}
       </div>
+      }
       {/* /Page Wrapper */}
     </>
 
