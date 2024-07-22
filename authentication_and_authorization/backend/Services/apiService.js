@@ -13,13 +13,22 @@ dotenv.config();
 */
 
 
-const creatUri = (uriEndpoint, queryObject) => {
+const creatUri = (uriEndpoint, queryObject, type) => {
     const baseUrl = process.env.BASE_URL;
-    const fullUrl = baseUrl + uriEndpoint;
-    for(const [key,value] of Object.entries(queryObject)){
-        fullUrl += '?' + key + '=' + value;
+    if(type == 'get'){
+        const modifiedUrl = baseUrl + uriEndpoint + '?';
+        var str = '';
+        for(const [key,value] of Object.entries(queryObject)){
+            if(str != ''){
+                str += '&';
+            }
+            str = str + key + '=' + value;
+        }
+        return (modifiedUrl + str);
+    }else{
+        return "need to implement";
     }
-
+    
 }
 
 
@@ -27,8 +36,31 @@ const creatUri = (uriEndpoint, queryObject) => {
 // testing changes in common branch
 
 const apiUsingFtech = async(uri, queryObject, type) => {
+    const endPoint = creatUri(uri, queryObject, type)
+    console.log("Came under api using fetch::");
+    console.log("Printing api endpoint before get request ::: ", endPoint);
 
-    const apiResponse = await axios.get()
+    const myPromise = new Promise((resolve, reject) => {
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: endPoint,
+            headers: { 
+              'Cookie': 'sap-usercontext=sap-client=900'
+            }
+          };
+
+          axios.request(config)
+          .then((response) => {
+            resolve(response.data)
+          })
+          .catch((error) => {
+            reject(error);
+          });
+    })
+
+    console.log(myPromise);
+    return myPromise;
 }
 
 

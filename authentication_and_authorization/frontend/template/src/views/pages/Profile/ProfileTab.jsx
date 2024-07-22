@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PersonalInformationModelPopup from "../../../components/modelpopup/PersonalInformationModelPopup";
 import { ListItem, ProjectDetails } from "./ProfileContent";
 
-const ProfileTab = () => {
+const ProfileTab = (props) => {
+  // const personalInfoData = [
+  //   { id: 1, title: "Passport No.", text: "9876543210" },
+  //   { id: 2, title: "Passport Exp Date.", text: "9876543210" },
+  //   { id: 3, title: "Tel", text: "9876543210" },
+  //   { id: 4, title: "Nationality", text: "Indian" },
+  //   { id: 5, title: "Religion", text: "Christian" },
+  //   { id: 6, title: "Marital status", text: "Married" },
+  //   { id: 7, title: "Employment of spouse", text: "No" },
+  //   { id: 8, title: "No. of children", text: "2" },
+  // ];
+
+
   const personalInfoData = [
-    { id: 1, title: "Passport No.", text: "9876543210" },
-    { id: 2, title: "Passport Exp Date.", text: "9876543210" },
-    { id: 3, title: "Tel", text: "9876543210" },
-    { id: 4, title: "Nationality", text: "Indian" },
-    { id: 5, title: "Religion", text: "Christian" },
-    { id: 6, title: "Marital status", text: "Married" },
-    { id: 7, title: "Employment of spouse", text: "No" },
-    { id: 8, title: "No. of children", text: "2" },
+    { id: 1, title: "Telephone", text: props.profile.telnr },
+    { id: 2, title: "Nationality", text: props.profile.natio === 'IN' ? 'INDIA' : props.profile.natio },
+    { id: 3, title: "Religion", text: props.profile.ktext },
+    { id: 4, title: "Marital status", text: props.profile.ftext },
+    { id: 5, title: "No. of children", text: props.profile.anzkd }
   ];
 
   const primaryContactData = [
@@ -26,11 +35,20 @@ const ProfileTab = () => {
     { id: 2, title: "Relationship", text: "Brother" },
     { id: 3, title: "Phone", text: "9876543210, 9876543210" },
   ];
+
+  // original
+  // const bankInfoData = [
+  //   { id: 1, title: "Bank name", text: "ICICI Bank" },
+  //   { id: 2, title: "Bank account No.", text: "159843014641" },
+  //   { id: 3, title: "IFSC Code", text: "ICI24504" },
+  //   { id: 4, title: "PAN No", text: "TC000Y56" },
+  // ];
+
+  // changed
   const bankInfoData = [
-    { id: 1, title: "Bank name", text: "ICICI Bank" },
-    { id: 2, title: "Bank account No.", text: "159843014641" },
-    { id: 3, title: "IFSC Code", text: "ICI24504" },
-    { id: 4, title: "PAN No", text: "TC000Y56" },
+    { id: 1, title: "Bank name", text: props.profile.banka },
+    { id: 2, title: "Bank account No.", text: props.profile.bankn },
+    { id: 3, title: "IFSC Code", text: props.profile.zweck }
   ];
   const familyInfoData = [
     {
@@ -89,14 +107,15 @@ const ProfileTab = () => {
                 <div className="card-body">
                   <h3 className="card-title">
                     Personal Informations{" "}
-                    <Link
+                    {/* commenting down edit icon for personal details */}
+                    {/* <Link
                       to="#"
                       className="edit-icon"
                       data-bs-toggle="modal"
                       data-bs-target="#personal_info_modal"
                     >
                       <i className="fa fa-pencil" />
-                    </Link>
+                    </Link> */}
                   </h3>
                   <ul className="personal-info">
                     {personalInfoData.map((item, index) => (
@@ -111,7 +130,26 @@ const ProfileTab = () => {
                 </div>
               </div>
             </div>
+            {/* bank information */}
             <div className="col-md-6 d-flex">
+              <div className="card profile-box flex-fill">
+                <div className="card-body">
+                  <h3 className="card-title">Bank information</h3>
+                  <ul className="personal-info">
+                    {bankInfoData.map((item, index) => (
+                      <ListItem
+                        id={item.id}
+                        key={index}
+                        title={item.title}
+                        text={item.text}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+            {/* <div className="col-md-6 d-flex">
               <div className="card profile-box flex-fill">
                 <div className="card-body">
                   <h3 className="card-title">
@@ -150,9 +188,11 @@ const ProfileTab = () => {
                   </ul>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="row">
+            </div> */}
+
+
+            {/* commenting all the data that we wont able to find in sap  */}
+          {/* <div className="row">
             <div className="col-md-6 d-flex">
               <div className="card profile-box flex-fill">
                 <div className="card-body">
@@ -306,7 +346,7 @@ const ProfileTab = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <ProjectDetails />
         {/* Bank Statutory Tab */}

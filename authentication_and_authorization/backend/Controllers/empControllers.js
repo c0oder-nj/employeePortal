@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const sql = require('mssql');
 const db = require('../databaseConnection')
 const cookieParser = require('cookie-parser')
+const apiService = require('../Services/apiService')
 const dotenv = require('dotenv')
 const axios = require('axios')
 dotenv.config();
@@ -179,3 +180,22 @@ const employeeLeaveStatus = async (req,res)=>{
 
 
 module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus};
+const employeeProfile = async(req,res) =>{
+  console.log("Came under controller")
+  const queryObject = {
+    sapid : req.sapid
+  }
+  const response = await apiService.apiUsingFtech('/employee_profile.htm', queryObject, 'get' );
+  console.log("Before printing response || after getting response")
+  console.log(response);
+  if(response.status){
+    return res.send(response);
+  }else{
+    return res.json({"status":false, "message" : response.message})
+  }
+}
+
+
+
+
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
