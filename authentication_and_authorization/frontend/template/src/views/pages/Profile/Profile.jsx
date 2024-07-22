@@ -6,7 +6,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 
 const Profile = () => {
   const location = useLocation();
-  const {empData} = location.state;
+  const {empData} = location.state; // destructred if pass multiple values in state attribute
 
   // function checkCookie(cookieName) {
   //   const cookies = document.cookie.split(';');
