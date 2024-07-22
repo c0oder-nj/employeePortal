@@ -71,9 +71,12 @@ app.post('/api/auth/test',authControllers.test)
 //For Employee attendance need to add middleware
 app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
 app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
+
 //For Leave creation
 app.post('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeLeaveCreation)
 
+//Leave showing to HOD
+app.get('/api/employee/employeeLeaveApproval',authUserThoughMiddleware.checkUser,empControllers.employeeLeaveStatus) 
 
 
 

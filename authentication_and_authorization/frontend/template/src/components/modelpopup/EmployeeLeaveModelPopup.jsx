@@ -94,114 +94,7 @@ const EmployeeLeaveModelPopup = (props) => {
 
   var dataToBeSent ={};
   // Form Data entry 
-  
-  // Leave Type (Working)
-  const [setName, setNameFunction] = useState("");
-  const NameFunction = (selectedOption)=>{
-    setNameFunction(selectedOption);
-  }
-  useEffect(()=>{
-    console.log(setName.label)
-    dataToBeSent.LeaveName = setName.label;
-    // console.log(setName.label)
-    // console.log("Printing Something",dataToBeSent.LeaveName)
-  },[setName]);
 
-
-  //Leave Duration (Working)
-  const [setDuration, setDurationFunction] = useState("");
-  const DurationFunction = (selectedOption)=>{
-    setDurationFunction(selectedOption);
-  }
-  useEffect(()=>{
-    console.log("Duration",setDuration.label)
-    dataToBeSent.Duration = setDuration.label
-    // console.log(dataToBeSent.Duration)
-  },[setDuration]);
-
-  //Date From (Working)
-  const [setDatefrom, setDatefromFunction] = useState("");
-  const DatefromFunction = (selectedOption)=>{
-    
-    console.log(selectedOption)
-    setDatefromFunction(selectedOption);
-  }
-  useEffect(()=>{
-    console.log(setDatefrom)
-    dataToBeSent.Datefrom = setDatefrom
-  },[setDatefrom]);
-
-  function handleDoubleChange(selectType){
-    handleDateChange1();
-    DatefromFunction(selectType);
-  }
-  //Date to (Working)
-  const [setDateto, setDatetoFunction] = useState("");
-  const DatetoFunction = (selectedOption)=>{
-    setDatetoFunction(selectedOption);
-  }
-  useEffect(()=>{
-    console.log(setDateto)
-    dataToBeSent.Dateto = setDateto
-  },[setDateto]);
-
-  function handleDoubleChange2(selectType){
-    handleDateChange2();
-    DatetoFunction(selectType);
-  }
-
-  // Time from
-  const [setTimefrom, setTimefromFunction] = useState("");
-  const setfromTime = (selectedOption)=>{
-    setTimefromFunction(selectedOption);
-    // const words = setTimefrom.$d.split(/(\s+)/);
-    // console.log(words)
-    
-  }
-  useEffect(()=>{
-    console.log(setTimefrom.$H)
-    dataToBeSent.Timefrom = setTimefrom
-    console.log(setTimefrom)
-  },[setTimefrom]);
-
-  // Time to
-  const [setTimeto, setTimetoFunction] = useState("");
-  const settoTime = (selectedOption)=>{
-    setTimetoFunction(selectedOption);
-    
-  }
-  useEffect(()=>{
-    console.log(setTimeto)
-    dataToBeSent.Dateto = setDateto
-  },[setTimeto]);
-
-  // //Leave reason (Working)
-  const [leaveReason, leaveReasonFunction] = useState("");
-  useEffect(()=>{
-    console.log(leaveReason)
-    dataToBeSent.leaveReason = leaveReason
-  },[leaveReason]);
-
-    //Charge 1
-    const [charge1, charge1Function] = useState("");
-    const setcharge1 = (selectedOption)=>{
-      charge1Function(selectedOption);
-      
-    }
-    useEffect(()=>{
-      console.log(charge1.label)
-      dataToBeSent.charge1 = charge1.label
-    },[charge1]);
-      //Charge 2
-  const [charge2, charge2Function] = useState("");
-  const charge2Reason = (selectedOption)=>{
-    charge2Function(selectedOption);
-    
-  }
-  useEffect(()=>{
-    console.log(charge2.label)
-    dataToBeSent.charge21 = charge2.label
-  },[charge2]);
 
   const { data1,data2 } = props;
   console.log(data1)
@@ -209,12 +102,7 @@ const EmployeeLeaveModelPopup = (props) => {
   // console.log(data)
   const navigate = useNavigate();
   var sapNumber;
-  const handleDateChange1 = (date) => {
-    setSelectedDate1(date);
-  };
-  const handleDateChange2 = (date) => {
-    setSelectedDate2(date);
-  };
+
 
   // console.log(formData.leaveType)
 
