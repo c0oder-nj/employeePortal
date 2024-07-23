@@ -4,6 +4,7 @@ import { Table } from "antd";
 import Breadcrumbs from "../../../../components/Breadcrumbs";
 import SearchBox from "../../../../components/SearchBox";
 import { base_url } from "../../../../base_urls";
+import { current } from "@reduxjs/toolkit";
 
 const DataTables = () => {
   const [users, setUsers] = useState([]);
@@ -44,6 +45,8 @@ const DataTables = () => {
       sorter: (a, b) => a.salary.length - b.salary.length,
     },
   ];
+
+
   return (
     <>
       <div className="page-wrapper">
@@ -68,7 +71,7 @@ const DataTables = () => {
                 </div>
                 <div className="card-body">
                   <div className="table-responsive">
-                    <SearchBox />
+                    {/* <SearchBox /> */}
                     <Table
                       className="table-stripped"
                       columns={columns}
@@ -81,6 +84,7 @@ const DataTables = () => {
                           : []
                       }
                     />
+                    
                   </div>
                 </div>
               </div>
