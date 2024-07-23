@@ -2,7 +2,7 @@ import React, {  useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
 import axios from 'axios';
-import Error from "./Error";
+import Error from './Error';
 
 const ForgotPassword = () => {
   const [data, setData] = useState({
