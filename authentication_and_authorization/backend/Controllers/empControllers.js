@@ -179,7 +179,7 @@ const employeeLeaveStatus = async (req,res)=>{
 }
 
 
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus};
+
 const employeeProfile = async(req,res) =>{
   console.log("Came under controller")
   const queryObject = {
@@ -198,4 +198,5 @@ const employeeProfile = async(req,res) =>{
 
 
 
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
+// module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeProfile};

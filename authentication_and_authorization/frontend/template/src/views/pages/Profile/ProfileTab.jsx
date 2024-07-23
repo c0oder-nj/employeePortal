@@ -1,40 +1,40 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+// import { Link } from "react-router-dom";
 import PersonalInformationModelPopup from "../../../components/modelpopup/PersonalInformationModelPopup";
 import { ListItem, ProjectDetails } from "./ProfileContent";
 
 const ProfileTab = (props) => {
+  const personalInfoData = [
+    { id: 1, title: "Passport No.", text: "9876543210" },
+    { id: 2, title: "Passport Exp Date.", text: "9876543210" },
+    { id: 3, title: "Tel", text: "9876543210" },
+    { id: 4, title: "Nationality", text: "Indian" },
+    { id: 5, title: "Religion", text: "Christian" },
+    { id: 6, title: "Marital status", text: "Married" },
+    { id: 7, title: "Employment of spouse", text: "No" },
+    { id: 8, title: "No. of children", text: "2" },
+  ];
+
+
   // const personalInfoData = [
-  //   { id: 1, title: "Passport No.", text: "9876543210" },
-  //   { id: 2, title: "Passport Exp Date.", text: "9876543210" },
-  //   { id: 3, title: "Tel", text: "9876543210" },
-  //   { id: 4, title: "Nationality", text: "Indian" },
-  //   { id: 5, title: "Religion", text: "Christian" },
-  //   { id: 6, title: "Marital status", text: "Married" },
-  //   { id: 7, title: "Employment of spouse", text: "No" },
-  //   { id: 8, title: "No. of children", text: "2" },
+  //   { id: 1, title: "Telephone", text: props.profile.telnr },
+  //   { id: 2, title: "Nationality", text: props.profile.natio === 'IN' ? 'INDIA' : props.profile.natio },
+  //   { id: 3, title: "Religion", text: props.profile.ktext },
+  //   { id: 4, title: "Marital status", text: props.profile.ftext },
+  //   { id: 5, title: "No. of children", text: props.profile.anzkd }
   // ];
 
+  // const primaryContactData = [
+  //   { id: 1, title: "Name", text: "John Doe" },
+  //   { id: 2, title: "Relationship", text: "Father" },
+  //   { id: 3, title: "Phone", text: "9876543210, 9876543210" },
+  // ];
 
-  const personalInfoData = [
-    { id: 1, title: "Telephone", text: props.profile.telnr },
-    { id: 2, title: "Nationality", text: props.profile.natio === 'IN' ? 'INDIA' : props.profile.natio },
-    { id: 3, title: "Religion", text: props.profile.ktext },
-    { id: 4, title: "Marital status", text: props.profile.ftext },
-    { id: 5, title: "No. of children", text: props.profile.anzkd }
-  ];
-
-  const primaryContactData = [
-    { id: 1, title: "Name", text: "John Doe" },
-    { id: 2, title: "Relationship", text: "Father" },
-    { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  ];
-
-  const secondaryContactData = [
-    { id: 1, title: "Name", text: "Karen Wills" },
-    { id: 2, title: "Relationship", text: "Brother" },
-    { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  ];
+  // const secondaryContactData = [
+  //   { id: 1, title: "Name", text: "Karen Wills" },
+  //   { id: 2, title: "Relationship", text: "Brother" },
+  //   { id: 3, title: "Phone", text: "9876543210, 9876543210" },
+  // ];
 
   // original
   // const bankInfoData = [
@@ -50,49 +50,49 @@ const ProfileTab = (props) => {
     { id: 2, title: "Bank account No.", text: props.profile.bankn },
     { id: 3, title: "IFSC Code", text: props.profile.zweck }
   ];
-  const familyInfoData = [
-    {
-      id: 1,
-      name: "Leo",
-      relationship: "Brother",
-      dob: "Feb 16th, 2019",
-      phone: "9876543210",
-    },
-  ];
+  // const familyInfoData = [
+  //   {
+  //     id: 1,
+  //     name: "Leo",
+  //     relationship: "Brother",
+  //     dob: "Feb 16th, 2019",
+  //     phone: "9876543210",
+  //   },
+  // ];
 
-  const educationData = [
-    {
-      id: 1,
-      name: "International College of Arts and Science (UG)",
-      description: "Bsc Computer Science",
-      time: "2020 - 2023",
-    },
-    {
-      id: 2,
-      name: "International College of Arts and Science (PG)",
-      description: "Msc Computer Science",
-      time: "2021 - 2023",
-    },
-    // Add more education info data as needed
-  ];
-  const experienceData = [
-    {
-      id: 1,
-      name: "Web Designer at Zen Corporation",
-      time: "Jan 2023 - Present (5 years 2 months)",
-    },
-    {
-      id: 2,
-      name: "Web Designer at Ron-tech",
-      time: "Jan 2023 - Present (5 years 2 months)",
-    },
-    {
-      id: 3,
-      name: "Web Designer at Dalt Technology",
-      time: "2023 2023 - Present (5 years 2 months)",
-    },
-    // Add more experience info data as needed
-  ];
+  // const educationData = [
+  //   {
+  //     id: 1,
+  //     name: "International College of Arts and Science (UG)",
+  //     description: "Bsc Computer Science",
+  //     time: "2020 - 2023",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "International College of Arts and Science (PG)",
+  //     description: "Msc Computer Science",
+  //     time: "2021 - 2023",
+  //   },
+  //   // Add more education info data as needed
+  // ];
+  // const experienceData = [
+  //   {
+  //     id: 1,
+  //     name: "Web Designer at Zen Corporation",
+  //     time: "Jan 2023 - Present (5 years 2 months)",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Web Designer at Ron-tech",
+  //     time: "Jan 2023 - Present (5 years 2 months)",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Web Designer at Dalt Technology",
+  //     time: "2023 2023 - Present (5 years 2 months)",
+  //   },
+  //   // Add more experience info data as needed
+  // ];
 
   return (
     <>

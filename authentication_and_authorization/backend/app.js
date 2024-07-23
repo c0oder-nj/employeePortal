@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const env = require('dotenv')
 const authControllers = require('./Controllers/authControllers')
 const empControllers = require('./Controllers/empControllers')
+const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 const routes = require('./Routes/index')
 
 
