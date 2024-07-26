@@ -107,7 +107,7 @@ const EmployeeLeaveModelPopup = (props) => {
   // console.log(formData.leaveType)
 
   async function sendData(e){
-    // e.preventDefault();
+    e.preventDefault();
     console.log("In send Data")
     console.log(JSON.stringify(formData));
     const value = `${document.cookie}`;

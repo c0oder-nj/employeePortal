@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const env = require('dotenv')
 const authControllers = require('./Controllers/authControllers')
 const empControllers = require('./Controllers/empControllers')
+const empAttnedanceControllers = require('./Controllers/empAttendanceControllers')
 const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 const routes = require('./Routes/index')
 
@@ -77,6 +78,8 @@ app.post('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkU
 //Leave showing to HOD
 app.get('/api/employee/employeeLeaveApproval',authUserThoughMiddleware.checkUser,empControllers.employeeLeaveStatus) 
 
+app.get('/api/DailyAttendance/employeeDailyAttendnceStatus',authUserThoughMiddleware.checkUser,empAttnedanceControllers.employeeDailyAttendnceStatus);
+app.post('/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus',empAttnedanceControllers.employeeDailyAttendnceCorrection);
 
 
 
