@@ -11,6 +11,7 @@ const AttendanceEmployee = () => {
   const [users, setUsers] = useState([]);
   const [activity, setActivity] = useState([]);
   const [data, setData] = useState([]);
+  const [sap, setSap] = useState(null);
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
 
@@ -45,6 +46,7 @@ const AttendanceEmployee = () => {
           return response.json();
         }).then((data) => {
           setData(data.employeeAttendance);
+          setSap(data.sapNumber);
           return data;
         }).catch((error)=>{
           console.log("Error");
@@ -273,7 +275,7 @@ const AttendanceEmployee = () => {
               </div>
             </div>
             
-            <AllEmployeeAddPopup />
+            <AllEmployeeAddPopup data = {sap}/>
             <div className="row">
               <div className="col-lg-12">
                 <div className="table-responsive">
