@@ -8,103 +8,18 @@ import Pie from 'react-chartjs-2'
 import Slider from "react-slick";
 import { ArrowRightCircle } from "react-feather";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import '../../../../../customFiles/customStyles.css';
 
 const EmployeeDashboard = () => {
-  const tooltip = (
-    <Tooltip id="tooltip-id">
-      Lesley Grauer
-    </Tooltip>
-  );
-  const tooltip1 = (
-    <Tooltip id="tooltip-id">
-      Richard Miles
-    </Tooltip>
-  );
-  const tooltip2 = (
-    <Tooltip id="tooltip-id">
-      Loren Gatlin
-    </Tooltip>
-  );
-  const tooltip3 = (
-    <Tooltip id="tooltip-id">
-      Jeffery Lalor
-    </Tooltip>
-  );
-  const tooltip4 = (
-    <Tooltip id="tooltip-id">
-      Tarah Shropshire
-    </Tooltip>
-  );
-  const tooltip5 = (
-    <Tooltip id="tooltip-id">
-      Catherine Manseau
-    </Tooltip>
-  );
-  const tooltip6 = (
-    <Tooltip id="tooltip-id">
-      Richard Miles
-    </Tooltip>
-  );
-  const tooltip7 = (
-    <Tooltip id="tooltip-id">
-      Jeffery Lalor
-    </Tooltip>
-  );
-  const tooltip8 = (
-    <Tooltip id="tooltip-id">
-      Lesley Grauer
-    </Tooltip>
-  );
-  const tooltip9 = (
-    <Tooltip id="tooltip-id">
-      Loren Gatlin
-    </Tooltip>
-  );
-  const tooltip10 = (
-    <Tooltip id="tooltip-id">
-      Tarah Shropshire
-    </Tooltip>
-  );
-  const tooltip11 = (
-    <Tooltip id="tooltip-id">
-      John Smith"
-    </Tooltip>
-  );
-  const tooltip12 = (
-    <Tooltip id="tooltip-id">
-      Richard Miles
-    </Tooltip>
-  );
-  const tooltip13 = (
-    <Tooltip id="tooltip-id">
-      Jeffery Lalor
-    </Tooltip>
-  );
-  const tooltip14 = (
-    <Tooltip id="tooltip-id">
-      Lesley Grauer
-    </Tooltip>
-  );
-  const tooltip15 = (
-    <Tooltip id="tooltip-id">
-      Tarah Shropshire
-    </Tooltip>
-  );
-  const tooltip16 = (
-    <Tooltip id="tooltip-id">
-    Loren Gatlin
-    </Tooltip>
-  );
-
-
-
-  // adding useEffect for api triggering before form loads for that create one state known as pageDisplya
   const [pageDispaly, setPageDisplay] = useState('none');
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
   const [holidays, setHolidays] = useState([]);
   const [dashboardData, setDashboardData] = useState({});
   const [completedTask, setCompletedTask] = useState([]);
+  const [pendingTask , setPendingTask] = useState([]);
+  const [empAttendance, setEmpAttendance] = useState([]);
+  const [timeFrame, setTimeFrame] = useState("Week");
 
   function checkCookie(cookieName) {
     const cookies = document.cookie.split(';');
@@ -182,12 +97,31 @@ const settings = {
 };
 const settingsprojectslide = {
   dots: false,
-  infinite: true,
+  infinite: false,
   speed: 500,
   slidesToShow: 3,
   slidesToScroll: 1,
 
 };
+const settingsprojectslide1 = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+
+};
+
+const handleTimeFrameChange  = (val) => {
+  setTimeFrame(val);
+}
+
+
+
+function parseDate(d) {
+  const [day, month, year] = d.split(".");
+  return new Date(`${year}-${month}-${day}T00:00:00Z`);
+}
 
 
   useEffect(() => {
@@ -226,6 +160,8 @@ const settingsprojectslide = {
       setEmpData(data.empDetails[0]);
       setHolidays(data.holidays);
       setCompletedTask(data.completedtask);
+      setPendingTask(data.pendingtask);
+      setEmpAttendance(data.attendanceemp);
 
       // custom implementation of chart
       const customChart = {
@@ -235,45 +171,99 @@ const settingsprojectslide = {
       }
 
       if(data.status){
-        data.attendanceemp.map((val,index)=>{
-          if(index > 26){
-            return;
-          }else{
-            // let lateMin = val.late_min.split(':');
-            // let late_min_minutes =  ((parseInt(lateMin.at(0)) * 60) + parseInt(lateMin.at(1))) *-1 ;
-            // customChart.last7DaysLateMin.push(late_min_minutes);
+          const today = new Date();
+          const currentDay = today.getDay();
+          const lastMon = new Date(today);
+          lastMon.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+          lastMon.setUTCHours(0, 0, 0, 0);
+
+          const endD = new Date(today);
+          endD.setDate(today.getDate() - 1);
+          endD.setUTCHours(0, 0, 0, 0);
+
+          const oneWeekOnly = data.attendanceemp.filter((val,index)=>{
+            const date = parseDate(val.begdat);
+            return date >= lastMon && date <= endD;
+          })
+
+          let day;
+          oneWeekOnly.map((val,index)=>{
+            console.log(val.day)
+            switch (val.day) {  
+              case '1':
+                day = 'Mon';
+                break;
+              case '2':
+                day = 'Tue';
+                break;
+              case '3':
+                day = 'Wed';
+                break;
+              case '4':
+                day = 'Thu';
+                break;
+              case '5':
+                day = 'Fri';
+                break;
+              case '6':
+                day = 'Sat';
+            }
+
+            console.log(day);
+            customChart.categories.push(day);
 
             let workingHours = val.totdz.split(':');
-            let workingHoursInMinutes = (parseFloat(workingHours.at(0))  + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
-            customChart.last7DaysWorkingHour.push(workingHoursInMinutes);
-            customChart.categories.push(val.begdat); // date wise showing working hour
+            workingHours = (parseFloat(workingHours.at(0))  + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
+            customChart.last7DaysWorkingHour.push(workingHours);
+            // customChart.categories.push(val.begdat); // date wise showing working hour
+          })
 
-            // let day;
-            // console.log(val.day)
-            // switch (val.day) {  
-            //   case '1':
-            //     day = 'Mon';
-            //     break;
-            //   case '2':
-            //     day = 'Tue';
-            //     break;
-            //   case '3':
-            //     day = 'Wed';
-            //     break;
-            //   case '4':
-            //     day = 'Thu';
-            //     break;
-            //   case '5':
-            //     day = 'Fri';
-            //     break;
-            //   case '6':
-            //     day = 'Sat';
-            // }
-            // console.log(day)
-            // customChart.categories.push(day)
-          }
-          return val;
-        })
+        // data.attendanceemp.map((val,index)=>{
+        //   if(val.begdat)
+        //   if(index > 26){
+        //     return;
+        //   }else{
+        //     // let lateMin = val.late_min.split(':');
+        //     // let late_min_minutes =  ((parseInt(lateMin.at(0)) * 60) + parseInt(lateMin.at(1))) *-1 ;
+        //     // customChart.last7DaysLateMin.push(late_min_minutes);
+
+        //     let workingHours = val.totdz.split(':');
+        //     let workingHoursInMinutes = (parseFloat(workingHours.at(0))  + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
+        //     customChart.last7DaysWorkingHour.push(workingHoursInMinutes);
+        //     customChart.categories.push(val.begdat); // date wise showing working hour
+
+        //     // let day;
+        //     // console.log(val.day)
+        //     // switch (val.day) {  
+        //     //   case '1':
+        //     //     day = 'Mon';
+        //     //     break;
+        //     //   case '2':
+        //     //     day = 'Tue';
+        //     //     break;
+        //     //   case '3':
+        //     //     day = 'Wed';
+        //     //     break;
+        //     //   case '4':
+        //     //     day = 'Thu';
+        //     //     break;
+        //     //   case '5':
+        //     //     day = 'Fri';
+        //     //     break;
+        //     //   case '6':
+        //     //     day = 'Sat';
+        //     // }
+        //     // console.log(day)
+        //     // customChart.categories.push(day)
+        //   }
+        //   return val;
+        // })
+
+
+
+
+        customChart.last7DaysWorkingHour = customChart.last7DaysWorkingHour.reverse();
+        customChart.categories = customChart.categories.reverse();
       }
 
 
@@ -286,12 +276,6 @@ const settingsprojectslide = {
           // data: [-50, -120, -80, -180, -80, -70, -100], // set last 7 days data here
           data : customChart.last7DaysWorkingHour,
         },
-
-        // {
-        //   name: "total working hours",
-        //   data: [200, 250, 200, 290, 220, 300, 250],
-        //   // data: customChart.last7DaysWorkingHour,
-        // },
       ]
 
       const updatedCategories = {
@@ -303,6 +287,32 @@ const settingsprojectslide = {
         series : updatedSeries,
         xaxis : updatedCategories
       })
+
+
+      setPendingTask([{
+        "asgnr1": "5053-Om Ganesh Khodke",
+        "asgnr": "5053",
+        "srno": "1",
+        "mrc_date1": "22.07.2024",
+        "com_date_from1": "22.07.2024",
+        "com_date_to1": "31.07.2024",
+        "mrct1": "DRC-Daily Review Committee (YTT)",
+        "chker1": "00000000-",
+        "dno": "10029534",
+        "dep_name": "SAP/IT",
+        "agenda": "TEST",
+        "agenda1": "",
+        "com_date_from": "22.07.2024",
+        "com_date_to": "31.07.2024",
+        "res_person_id": "00005053",
+        "rpn": "Om Ganesh Khodke",
+        "mrc_date": "22.07.2024",
+        "mrct": "DRC",
+        "status": "",
+        "sta": "",
+        "request": "Task",
+        "chker": "00000000"
+    }])
       setPageDisplay('block')
     });
   },[]);
@@ -360,6 +370,38 @@ const settingsprojectslide = {
     }
   })
 
+
+
+  const weeklyStatisticsCard = {
+    'in_time' : '',
+    'working_hour' : 0,
+    'used_late_min' : 0,
+    'remaining_late_min' : 0
+  }
+
+  if(empAttendance.length > 0) {
+    // calculate total working hour in week
+    let total_working_hour = 0;
+    let total_working_minutes = 0;
+    let total_late_min = 0;
+    empAttendance.map((val,index)=>{
+      if(index>6){
+        return;
+      }
+      total_working_hour += parseInt(val.totdz.split(':').at(0));
+      total_working_minutes += parseInt(val.totdz.split(':').at(1));
+      // total_late_min += (parseInt(val.late_min.split(':').)  parseInt(val.late_min.split(':').at(1)))
+    })
+
+    // if(total_working_minutes > 60){
+    //   total_working_hour += (total_working_minutes/60);
+    // }
+
+    // set total working hours of last 7 days
+    weeklyStatisticsCard.in_time = empAttendance[0].indz;
+    weeklyStatisticsCard.working_hour = total_working_hour;
+
+  }
   
 
   
@@ -376,7 +418,7 @@ const settingsprojectslide = {
         {/* Page Content */}
         <div className="content container-fluid pb-0">
           {/* Leave Alert */}
-          <div className="row">
+          {/* <div className="row">
             <div className="col-md-12">
               <div className="employee-alert-box">
                 <div className="alert alert-outline-success alert-dismissible fade show">
@@ -396,7 +438,7 @@ const settingsprojectslide = {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           {/* /Leave Alert */}
           <div className="row">
             <div className="col-xxl-8 col-lg-12 col-md-12">
@@ -409,7 +451,7 @@ const settingsprojectslide = {
                         <div className="welcome-content">
                           <h4>Welcome Back, {empData.ename}</h4>
                           <p>
-                            You have <span>4 meetings</span> today,
+                            You have been missed,
                           </p>
                         </div>
                         <div className="welcome-img">
@@ -437,49 +479,59 @@ const settingsprojectslide = {
                             data-bs-toggle="dropdown"
                             to="#"
                           >
-                            Today
+                            {timeFrame}
                           </Link>
                           <div className="dropdown-menu dropdown-menu-end">
-                            <Link to="#" className="dropdown-item">
+                            <button className="dropdown-item" onClick={() => {handleTimeFrameChange('Week')}} >
+                              Week
+                            </button>
+                            <button className="dropdown-item" onClick={() => {handleTimeFrameChange('Month')}}>
+                              Month
+                            </button>
+                            {/* <Link to="#" className="dropdown-item">
                               Week
                             </Link>
                             <Link to="#" className="dropdown-item">
                               Month
-                            </Link>
-                            <Link to="#" className="dropdown-item">
-                              Year
-                            </Link>
+                            </Link> */}
                           </div>
                         </div>
                       </div>
-                      <div className="clock-in-info">
-                        <div className="clock-in-content">
-                          <p>Work Time</p>
-                          <h4>6 Hrs : 54 Min</h4>
+                      {timeFrame==='Week' && 
+                        <div className="week-time-info">
+                          <div className="clock-in-info">
+                            <div className="clock-in-content">
+                              <p>Work Time</p>
+                              <h4>6 Hrs : 54 Min</h4>
+                            </div>
+                            <div className="clock-in-btn">
+                              <Link to="#" className="btn btn-primary">
+                                <img src={clockin} alt="Icon" />{" "}
+                                Clock-In
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="clock-in-list">
+                            <ul className="nav">
+                              <li>
+                                <p>Remaining</p>
+                                <h6>2 Hrs 36 Min</h6>
+                              </li>
+                              <li>
+                                <p>Overtime</p>
+                                <h6>0 Hrs 00 Min</h6>
+                              </li>
+                              <li>
+                                <p>Break</p>
+                                <h6>1 Hrs 20 Min</h6>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
-                        <div className="clock-in-btn">
-                          <Link to="#" className="btn btn-primary">
-                            <img src={clockin} alt="Icon" />{" "}
-                            Clock-In
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="clock-in-list">
-                        <ul className="nav">
-                          <li>
-                            <p>Remaining</p>
-                            <h6>2 Hrs 36 Min</h6>
-                          </li>
-                          <li>
-                            <p>Overtime</p>
-                            <h6>0 Hrs 00 Min</h6>
-                          </li>
-                          <li>
-                            <p>Break</p>
-                            <h6>1 Hrs 20 Min</h6>
-                          </li>
-                        </ul>
-                      </div>
+                      }
+                      {timeFrame==='Month' && 
+                        <p>Attendance Month Data</p>
+                      }
                       <div className="view-attendance">
                         <Link to="/adminattendance">
                           View Attendance <i className="fe fe-arrow-right-circle" />
@@ -520,14 +572,17 @@ const settingsprojectslide = {
                       <div className="statistic-header">
                         <h4>Attendance &amp; Leaves</h4>
                         <div className="dropdown statistic-dropdown">
-                          <Link
+                          {/* <span>2024</span> */}
+                          <div className="border rounded p-2 text-card-hover">
+                            2024
+                          </div>
+                          {/* <Link
                             className="dropdown-toggle"
-                            data-bs-toggle="dropdown"
                             to="#"
                           >
                             2024
-                          </Link>
-                          <div className="dropdown-menu dropdown-menu-end">
+                          </Link> */}
+                          {/* <div className="dropdown-menu dropdown-menu-end">
                             <Link to="#" className="dropdown-item">
                               2025
                             </Link>
@@ -537,7 +592,7 @@ const settingsprojectslide = {
                             <Link to="#" className="dropdown-item">
                               2027
                             </Link>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                       <div className="attendance-list">
@@ -973,701 +1028,145 @@ const settingsprojectslide = {
                   </div>
                   <Slider {...settingsprojectslide} className="project-slider owl-carousel">
                     {/* Project Grid */}
+                    
 
-                    <div className="project-grid">
-                      <div className="project-top">
-                        <h6>
-                          document Number
-                        </h6>
-                        <div className="mb-2"><b>MRC type</b> DRC dynamic </div>
-                        <h5>
-                          agenda
-                        </h5>
-                        <p>Remark - Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae quo quisquam natus voluptatum debitis, temporibus alias reiciendis laboriosam hic sequi.</p>
-                      </div>
-                      <div className="project-middle">
-                        <h4 className="text-decoration-underline mb-2">Assigner Info:</h4>
-                        <ul className="nav">
-                          <li>
-                            <div className="project-tasks">
-                              <div className="row">
-                                <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Assigner: </div>
-                                <div className="col-md-6 col-sm-12 col-lg-6">test name</div>
-                                <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">SAP: </div>
-                                <div className="col-md-6 col-sm-12 col-lg-6">test sap Code</div>
-                                <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Department</div>
-                                <div className="col-md-6 col-sm-12 col-lg-6 ">test Dept</div>
-                                <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Checked By: </div>
-                                <div className="col-md-6 col-sm-12 col-lg-6 ">test Checker</div>
+                    {completedTask && completedTask.map((task,index)=>(
+                        <div className="project-grid" key={index}>
+                        <div className="project-top">
+                          <h6>Doc number: {task.dno}</h6>
+                          <div className="mb-2"><b>Type:</b> {task.mrct1} </div>
+                          <div><b>Agenda: </b>{task.agenda}</div>
+                          <div><b>Status: </b>{task.status}</div>
+                          <div><b>Task/Request: </b>{task.request}</div>
+                        </div>
+                        <div className="project-middle">
+                          <h4 className="text-decoration-underline mb-2">Assigner Info:</h4>
+                          <ul className="nav">
+                            <li>
+                              <div className="project-tasks">
+                                <div className="row">
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Assigner: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.asgnr1.split('-').at(1)}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">SAP: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.asgnr}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Department</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.dep_name}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Checked By: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.chker1.split('-').at(0).replace(/^0+/,'')}-{task.chker1.split('-').at(1)}</div>
+                                </div>
                               </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="project-middle">
-                        <ul className="nav">
-                          <li>
-                            <div className="project-tasks">
-                              <div className="row">
-                                <div className="col-6 fw-bold">Assigner</div>
-                                <div className="col-6">test name</div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="project-middle">
+                          <h4 className="text-decoration-underline mb-2">Responsible Person info:</h4>
+                          <ul className="nav">
+                            <li>
+                              <div className="project-tasks">
+                                <div className="row">
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Name: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.rpn}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">SAP: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.res_person_id.replace(/^0+/, '')}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Task from date:</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.com_date_from1}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Task to date:</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.com_date_to1}</div>
+                                </div>
                               </div>
-                              <div className="row">
-                                <div className="col-6 fw-bold">SAP: </div>
-                                <div className="col-6">test sap Code</div>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="project-tasks">
-                              <div className="row">
-                                <div className="col-6 fw-bold">Responsible Person : </div>
-                                <div className="col-6">rpn</div>
-                              </div>
-                              <div className="row">
-                                <div className="col-6 fw-bold">Responsible Person ID: </div>
-                                <div className="col-6">TEST 5054</div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="project-bottom">
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Project Leader :</li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Jeffery Lalor"
-                                data-bs-original-title="Jeffery Lalor"
-                              >
-                                <img
-                                  src={avatar19}
-                                  alt="User"
-                                />
-                              </Link>
                             </li>
                           </ul>
                         </div>
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Members :</li>
-                            <li>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar20}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip1}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar19}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip2}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar20}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip3}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar16}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip4}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar23}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <Link
-                                to="#"
-                                className="more-team-members"
-                              >
-                                +16
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
+                        <div className="project-bottom"></div>
                       </div>
-                    </div>
-                    {/* /Project Grid */}
-                    {/* Project Grid */}
-                    <div className="project-grid">
-                      <div className="project-top">
-                        <h6>
-                          <Link to="/project-view">Deadline : 15 Feb 2024</Link>
-                        </h6>
-                        <h5>
-                          <Link to="/project-view">Video Calling App</Link>
-                        </h5>
-                        <p>
-                          Design and developing a software application that enables
-                          users to make video calls over the internet.
-                        </p>
-                      </div>
-                      <div className="project-middle">
-                        <ul className="nav">
-                          <li>
-                            <div className="project-tasks">
-                              <h4>30</h4>
-                              <p>Total Tasks</p>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="project-tasks">
-                              <h4>12</h4>
-                              <p>Total Completed</p>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="project-bottom">
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Project Leader :</li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip5}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar18}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Members :</li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip6}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar21}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip7}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar16}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip8}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar20}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip9}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar1}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip10}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar23}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <Link
-                                to="#"
-                                className="more-team-members"
-                              >
-                                +10
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    {/* /Project Grid */}
-                    {/* Project Grid */}
-                    <div className="project-grid">
-                      <div className="project-top">
-                        <h6>
-                          <Link to="/project-view">Deadline : 12 Apr 2024</Link>
-                        </h6>
-                        <h5>
-                          <Link to="/project-view">Hospital Administration</Link>
-                        </h5>
-                        <p>
-                          Creating an online platform that serves as a central hub
-                          for hospital admin, staff, patients.
-                        </p>
-                      </div>
-                      <div className="project-middle">
-                        <ul className="nav">
-                          <li>
-                            <div className="project-tasks">
-                              <h4>40</h4>
-                              <p>Total Tasks</p>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="project-tasks">
-                              <h4>02</h4>
-                              <p>Total Completed</p>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="project-bottom">
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Project Leader :</li>
-                            <li>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip11}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar4}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Members :</li>
-                            <li>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip12}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar6}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip13}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar13}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip14}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar18}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip15}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar23}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                             
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={tooltip16}
-                              >
-                                <Link to="/project-view">
-                                  <img
-                                    src={avatar1}
-                                    alt="User"
-                                  />
-                                </Link>
-                              </OverlayTrigger>
-                            </li>
-                            <li>
-                              <Link
-                                to="#"
-                                className="more-team-members"
-                              >
-                                +12
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    {/* /Project Grid */}
-                    {/* Project Grid */}
-                    <div className="project-grid">
-                      <div className="project-top">
-                        <h6>
-                          <Link to="/project-view">Deadline : 25 Apr 2024</Link>
-                        </h6>
-                        <h5>
-                          <Link to="/project-view">Digital Marketpace</Link>
-                        </h5>
-                        <p>
-                          Creating an online platform that connects sellers with
-                          buyers, facilitating the exchange of goods,
-                        </p>
-                      </div>
-                      <div className="project-middle">
-                        <ul className="nav">
-                          <li>
-                            <div className="project-tasks">
-                              <h4>50</h4>
-                              <p>Total Tasks</p>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="project-tasks">
-                              <h4>10</h4>
-                              <p>Total Completed</p>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="project-bottom">
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Project Leader :</li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Jeffery Lalor"
-                                data-bs-original-title="Jeffery Lalor"
-                              >
-                                <img
-                                  src={avatar1}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Members :</li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Loren Gatlin"
-                                data-bs-original-title="Loren Gatlin"
-                              >
-                                <img
-                                  src={avatar26}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Lesley Grauer"
-                                data-bs-original-title="Lesley Grauer"
-                              >
-                                <img
-                                  src={avatar18}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Richard Miles"
-                                data-bs-original-title="Richard Miles"
-                              >
-                                <img
-                                  src={avatar6}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Jeffery Lalor"
-                                data-bs-original-title="Jeffery Lalor"
-                              >
-                                <img
-                                  src={avatar13}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Tarah Shropshire"
-                                data-bs-original-title="Tarah Shropshire"
-                              >
-                                <img
-                                  src={avatar8}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="#"
-                                className="more-team-members"
-                              >
-                                +13
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    {/* /Project Grid */}
-                    {/* Project Grid */}
-                    <div className="project-grid">
-                      <div className="project-top">
-                        <h6>
-                          <Link to="/project-view">Deadline : 15 Feb 2024</Link>
-                        </h6>
-                        <h5>
-                          <Link to="/project-view">Video Calling App</Link>
-                        </h5>
-                        <p>
-                          Design and developing a software application that enables
-                          users to make video calls over the internet.
-                        </p>
-                      </div>
-                      <div className="project-middle">
-                        <ul className="nav">
-                          <li>
-                            <div className="project-tasks">
-                              <h4>30</h4>
-                              <p>Total Tasks</p>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="project-tasks">
-                              <h4>12</h4>
-                              <p>Total Completed</p>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="project-bottom">
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Project Leader :</li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Catherine Manseau"
-                                data-bs-original-title="Catherine Manseau"
-                              >
-                                <img
-                                  src={avatar18}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="project-leader">
-                          <ul className="nav">
-                            <li>Members :</li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Richard Miles"
-                                data-bs-original-title="Richard Miles"
-                              >
-                                <img
-                                  src={avatar21}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Jeffery Lalor"
-                                data-bs-original-title="Jeffery Lalor"
-                              >
-                                <img
-                                  src={avatar16}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Lesley Grauer"
-                                data-bs-original-title="Lesley Grauer"
-                              >
-                                <img
-                                  src={avatar20}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Loren Gatlin"
-                                data-bs-original-title="Loren Gatlin"
-                              >
-                                <img
-                                  src={avatar1}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="/project-view"
-                                data-bs-toggle="tooltip"
-                                aria-label="Tarah Shropshire"
-                                data-bs-original-title="Tarah Shropshire"
-                              >
-                                <img
-                                  src={avatar23}
-                                  alt="User"
-                                />
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                to="#"
-                                className="more-team-members"
-                              >
-                                +10
-                              </Link>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    {/* /Project Grid */}
+                    ))}
                   </Slider>
                 </div>
               </div>
             </div>
           </div>
-          {/* End completed Task */}
+          {/* End Completed Task */}
 
 
+
+          {/* Pending Task */}
           <div className="row">
+            <div className="col-md-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="row align-items-center">
+                    <div className="col-sm-8">
+                      <div className="statistic-header">
+                        <h4>Task Pending</h4>
+                      </div>
+                  </div>
+                    <div className="col-sm-4 text-sm-end">
+                      <div className="owl-nav project-nav nav-control" />
+                    </div>
+                  </div>
+                  <Slider {...settingsprojectslide1} className="project-slider owl-carousel">
+                    
+                    
+
+                    {pendingTask  && pendingTask.map((task,index)=>(
+                        <div className="project-grid" key={index}>
+                        <div className="project-top">
+                          <h6>Doc number: {task.dno}</h6>
+                          <div className="mb-2"><b>Type:</b> {task.mrct1} </div>
+                          <div><b>Agenda: </b>{task.agenda}</div>
+                          <div><b style={{color:'red'}}>Deadline: </b>{task.com_date_to1}</div>
+                          <div><b>Task/Request: </b>{task.request}</div>
+                        </div>
+                        <div className="project-middle">
+                          <h4 className="text-decoration-underline mb-2">Assigner Info:</h4>
+                          <ul className="nav">
+                            <li>
+                              <div className="project-tasks">
+                                <div className="row">
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Assigner: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.asgnr1.split('-').at(1)}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">SAP: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.asgnr}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Department</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.dep_name}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Checked By: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.chker1.split('-').at(0).replace(/^0+/,'')}-{task.chker1.split('-').at(1)}</div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="project-middle">
+                          <h4 className="text-decoration-underline mb-2">Responsible Person info:</h4>
+                          <ul className="nav">
+                            <li>
+                              <div className="project-tasks">
+                                <div className="row">
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Name: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.rpn}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">SAP: </div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6">{task.res_person_id.replace(/^0+/, '')}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Task from date:</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.com_date_from1}</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 fw-bold">Task to date:</div>
+                                  <div className="col-md-6 col-sm-12 col-lg-6 ">{task.com_date_to1}</div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="project-bottom"></div>
+                      </div>
+                    ))}
+                  </Slider>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* End pending Task */}
+
+
+          {/* <div className="row">
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
@@ -1683,7 +1182,7 @@ const settingsprojectslide = {
                   </div>
                   <Slider {...settingsprojectslide} className="project-slider owl-carousel">
                     {/* Project Grid */}
-                    <div className="project-grid">
+                    {/* <div className="project-grid">
                       <div className="project-top">
                         <h6>
                           <Link to="/project-view">Deadline : 10 Feb 2024</Link>
@@ -1811,10 +1310,10 @@ const settingsprojectslide = {
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* /Project Grid */}
                     {/* Project Grid */}
-                    <div className="project-grid">
+                    {/* <div className="project-grid">
                       <div className="project-top">
                         <h6>
                           <Link to="/project-view">Deadline : 15 Feb 2024</Link>
@@ -1942,10 +1441,10 @@ const settingsprojectslide = {
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* /Project Grid */}
                     {/* Project Grid */}
-                    <div className="project-grid">
+                    {/* <div className="project-grid">
                       <div className="project-top">
                         <h6>
                           <Link to="/project-view">Deadline : 12 Apr 2024</Link>
@@ -2077,10 +1576,10 @@ const settingsprojectslide = {
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* /Project Grid */}
                     {/* Project Grid */}
-                    <div className="project-grid">
+                    {/* <div className="project-grid">
                       <div className="project-top">
                         <h6>
                           <Link to="/project-view">Deadline : 25 Apr 2024</Link>
@@ -2207,10 +1706,10 @@ const settingsprojectslide = {
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* /Project Grid */}
                     {/* Project Grid */}
-                    <div className="project-grid">
+                    {/* <div className="project-grid">
                       <div className="project-top">
                         <h6>
                           <Link to="/project-view">Deadline : 15 Feb 2024</Link>
@@ -2337,13 +1836,15 @@ const settingsprojectslide = {
                           </ul>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* /Project Grid */}
-                  </Slider>
+                  {/*</Slider>
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
+
+
           <div className="row">
             {/* Employee Month */}
             <div className="col-xl-6 col-md-12 d-flex">
