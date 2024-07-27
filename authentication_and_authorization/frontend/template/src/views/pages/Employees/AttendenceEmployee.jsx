@@ -25,7 +25,173 @@ const AttendanceEmployee = () => {
     }
     return false;
   }
+  function fetchWeekData(){
 
+
+function parseDate(d) {
+    const [day, month, year] = d.split('.');
+    return new Date(`${year}-${month}-${day}T00:00:00Z`);
+}
+
+const today = new Date();
+const currentDay = today.getDay();
+const lastMon = new Date(today);
+lastMon.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+lastMon.setUTCHours(0, 0, 0, 0);
+
+const endD = new Date(today);
+endD.setDate(today.getDate() - 1);
+endD.setUTCHours(0, 0, 0, 0);
+
+const filtData = data.filter(entry => {
+    const entryDate = parseDate(entry.begdat);
+    const dayOfWeek = entryDate.getDay();
+    return entryDate >= lastMon && entryDate <= endD && dayOfWeek !== 0;
+});
+
+function parseTotSeconds(tot) {
+    const [h, m, s] = tot.split(':').map(Number);
+    return (h * 3600) + (m * 60) + s;
+}
+
+function calcTotalSeconds(filtData) {
+    let totSecs = 0;
+
+    filtData.forEach(entry => {
+        const workedSecs = parseTotSeconds(entry.totdz);
+        totSecs += workedSecs;
+    });
+
+    return totSecs;
+}
+
+const totSecs = calcTotalSeconds(filtData);
+const totHours = Math.floor(totSecs / 3600);
+const remSecsAfterHours = totSecs % 3600;
+const totMins = Math.floor(remSecsAfterHours / 60);
+const remSecs = remSecsAfterHours % 60;
+
+console.log(`Total hours worked this week: ${String(totHours).padStart(2, '0')}:${String(totMins).padStart(2, '0')}:${String(remSecs).padStart(2, '0')}`);
+  users.push({
+    title: "This Week",
+    value: String(totHours).padStart(2, '0'),
+    valuespan: "/48 hrs",
+    // progressWidth: "30%",
+    // progressBarColor: "bg-success"
+    progressWidth: String((totHours/48)*100)+"%",
+      progressBarColor: ((totHours/48)*100)>75 ? "bg-success":(((totHours/48)*100)>50?"bg-primary":"bg-danger")
+  });
+}
+
+function fetchMonthData(){
+
+
+function parseDate(d) {
+    const [day, month, year] = d.split('.');
+    return new Date(`${year}-${month}-${day}T00:00:00Z`);
+}
+
+const today = new Date();
+const currentMonth = today.getMonth();
+const currentYear = today.getFullYear();
+
+const filtData = data.filter(entry => {
+    const entryDate = parseDate(entry.begdat);
+    return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear && entryDate < today;
+});
+
+function parseTotSeconds(tot) {
+    const [h, m, s] = tot.split(':').map(Number);
+    return (h * 3600) + (m * 60) + s;
+}
+
+function calcTotalSeconds(filtData) {
+    let totSecs = 0;
+
+    filtData.forEach(entry => {
+        const workedSecs = parseTotSeconds(entry.totdz);
+        totSecs += workedSecs;
+    });
+
+    return totSecs;
+}
+
+const totSecs = calcTotalSeconds(filtData);
+const totHours = Math.floor(totSecs / 3600);
+const remSecsAfterHours = totSecs % 3600;
+const totMins = Math.floor(remSecsAfterHours / 60);
+const remSecs = remSecsAfterHours % 60;
+
+// console.log(`Total hours worked this month (excluding today): ${String(totHours).padStart(2, '0')}:${String(totMins).padStart(2, '0')}:${String(remSecs).padStart(2, '0')}`);
+    users.push({
+      title: "This Month",
+      value: String(totHours).padStart(2, '0'),
+      valuespan: "/240 hrs",
+      // progressWidth: "30%",
+      progressWidth: String((totHours/240)*100)+"%",
+      progressBarColor: ((totHours/240)*100)>75 ? "bg-success":(((totHours/240)*100)>50?"bg-primary":"bg-danger")
+    });
+}
+
+function fetchreaminingtime(){
+    
+function parseDate(d) {
+  const [day, month, year] = d.split('.');
+  return new Date(`${year}-${month}-${day}T00:00:00Z`);
+}
+
+const today = new Date();
+const currentMonth = today.getMonth();
+const currentYear = today.getFullYear();
+
+const filtData = data.filter(entry => {
+  const entryDate = parseDate(entry.begdat);
+  return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear && entryDate < today;
+});
+
+function parseTotSeconds(tot) {
+  const [h, m, s] = tot.split(':').map(Number);
+  return (h * 3600) + (m * 60) + s;
+}
+
+function calcTotalSeconds(filtData) {
+  let totSecs = 0;
+  let bucket = 120 * 60; // 120 minutes in seconds
+
+  filtData.forEach(entry => {
+      const workedSecs = parseTotSeconds(entry.totdz);
+      const expectedSecs = 8 * 3600; // 8 hours in seconds
+
+      if (workedSecs>0 && workedSecs < expectedSecs) {
+          const deficit = expectedSecs - workedSecs;
+          if (bucket >= deficit) {
+              bucket -= deficit;
+          }
+      }
+      totSecs += workedSecs;
+  });
+
+  return { totSecs, bucket };
+}
+
+const { totSecs, bucket } = calcTotalSeconds(filtData);
+const totHours = Math.floor(totSecs / 3600);
+const remSecsAfterHours = totSecs % 3600;
+const totMins = Math.floor(remSecsAfterHours / 60);
+const remSecs = remSecsAfterHours % 60;
+const remBucketMins = Math.floor(bucket / 60);
+
+console.log(`Total hours worked this month (excluding today): ${String(totHours).padStart(2, '0')}:${String(totMins).padStart(2, '0')}:${String(remSecs).padStart(2, '0')}`);
+console.log(`Remaining minutes in the bucket: ${remBucketMins}`);
+users.push({
+  title: "Remaining Time",
+  value: String(remBucketMins).padStart(2, '0'),
+  valuespan: "/120 hrs",
+  // progressWidth: "30%",
+  progressWidth: String((remBucketMins/120)*100)+"%",
+  progressBarColor: ((totHours/120)*100)>75 ? "bg-success":(((totHours/120)*100)>50?"bg-primary":"bg-danger")
+});
+}
   useEffect(() => {
     let cookieExists = checkCookie('accessToken');
     if(!cookieExists){
@@ -47,6 +213,7 @@ const AttendanceEmployee = () => {
         }).then((data) => {
           setData(data.employeeAttendance);
           setSap(data.sapNumber);
+          
           return data;
         }).catch((error)=>{
           console.log("Error");
@@ -55,6 +222,12 @@ const AttendanceEmployee = () => {
     fetchData();
   }, []);
   
+  if(data.length > 0){
+    fetchWeekData();
+    fetchMonthData();
+    fetchreaminingtime();
+  }
+
   // const userElements = data?.map((user, index) => ({
   //   key: index,
   //   id: user.id,
