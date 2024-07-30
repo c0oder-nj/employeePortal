@@ -6,6 +6,8 @@ import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import { TimePicker } from "antd";
 import { useForm } from "react-hook-form";
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
@@ -122,17 +124,25 @@ const EmployeeLeaveModelPopup = (props) => {
         },
         body: JSON.stringify(formData)
     }).then((response)=>{
-        
-      // console.log(response.json()[0].name);
-      // Swal.fire({
-      //   title: "Message",
-      //   // text: "You clicked the button!",
-      //   text : response.json()[0].name,
-      //   icon: "success"
+      // console.log(response);
+      response.json().then(body => {console.log(body)
+        // alert(body.message);
+        Toastify({
+          text: body.message,
+          duration: 3000,
+          close: true,
+          gravity: "top", // `top` or `bottom`
+          position: "center", // `left`, `center` or `right`
+          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        }).showToast();
+      //   toast(body.message, {
+      //     position: toast.POSITION.TOP_LEFT,
       // });
-      // alert(response.json()[0].name);
-      alert("Got it");
-      return response.json();
+      })
+      // console.log(JSON.stringify(response));
+      
+      return ;
+      // return response.json();
     }); 
   }
 

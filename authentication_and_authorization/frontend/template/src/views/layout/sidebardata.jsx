@@ -149,6 +149,30 @@ export const SidebarData = [
         ],
       },
       {
+        menuValue: 'Travel Allownace',
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-rocket",
+        subMenus: [
+          {
+            menuValue: 'Domestic Travel Allownace',
+            route: "/excel-file-upload",
+          },
+          {
+            menuValue: 'Domestic Travel Allownace(Working on it)',
+            route: "/excel-info-file-upload",
+          },
+          {
+            menuValue: 'International Travel Allowance',
+            // route: "/tasks",
+          },
+          {
+            menuValue: 'Travel Reports',
+            // route: "/task-board",
+          },
+        ],
+      },
+      {
         menuValue: 'Clients',
         hasSubRoute: false,
         showSubRoute: false,
