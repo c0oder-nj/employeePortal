@@ -5,6 +5,7 @@ const env = require('dotenv')
 const authControllers = require('./Controllers/authControllers')
 const empControllers = require('./Controllers/empControllers')
 const empAttnedanceControllers = require('./Controllers/empAttendanceControllers')
+const empTravelExpense = require('./Controllers/travelExpense')
 const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 const routes = require('./Routes/index')
 
@@ -81,7 +82,8 @@ app.get('/api/employee/employeeLeaveApproval',authUserThoughMiddleware.checkUser
 app.get('/api/DailyAttendance/employeeDailyAttendnceStatus',authUserThoughMiddleware.checkUser,empAttnedanceControllers.employeeDailyAttendnceStatus);
 app.post('/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus',empAttnedanceControllers.employeeDailyAttendnceCorrection);
 
-
+//Employee's domestic leave approval 
+app.post('/api/TravelExpense/domesticTravelExpens',authUserThoughMiddleware.checkUser,empTravelExpense.domesticTravelAllowance);
 
 app.use('/api',routes);
 
