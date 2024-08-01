@@ -1,52 +1,47 @@
 import React, { Fragment } from "react";
-// import randomcolor from "randomcolor";
-// import './oc_style.css';
-// import call from "./icons8-call-50.png";
-// import video from "./icons8-video-24.png";
-// import chat from "./icons8-chat-50.png";
-// import data from "./data.json";
-function randomIntFromInterval(min, max) { // min and max included 
-  return Math.floor(Math.random() * (max - min + 1) + min)
+import './oc_style.css'
+
+function randomIntFromInterval(min, max) { 
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
-const Card = (props) => {
-    console.log("Printing props:: ", props)
-    console.log("Printing props data:: ", props.data)
-  const levelColor = '#1b1b1b';
+
+const OrgCard = (props) => {
+  // const levelColor = randomcolor();
+  const levelColor = '#0dcaf0';
 
   return (
     <ul>
-      {props.data.map((item,index) => (
+      {props.data.map((item, index) => (
         <Fragment key={item.name}>
           <li>
-            <div className="card">
-              <div className="image">
+            <div className="org-card">
+              <div className="org-image">
                 <img
-                  src={"https://randomuser.me/api/portraits/men/"+randomIntFromInterval(1,100)+".jpg"}
+                  src={
+                    "https://randomuser.me/api/portraits/men/" +
+                    randomIntFromInterval(1, 100) +
+                    ".jpg"
+                  }
                   alt="Profile"
-                  style={{ borderColor: levelColor }}
+                  // className="org-card-dynamic-bg"
+                  style={{background: levelColor}}
                 />
               </div>
-              <div className="card-body">
+              <div className="org-card-body" style={{zIndex : 1}}>
                 <h4>{item.ename}</h4>
-                <p>dummy text</p>
+                <p style={{marginBottom : '0px'}}>
+                  <b>Designation - </b>
+                  {item.ptext}
+                </p>
+                <p style={{marginBottom : '0px'}}>
+                  <b>SAP - </b>
+                  {item.pernr.replace(/^0+/,'')}
+                </p>
+                {/* <p>{faker.name.jobTitle()}</p> */}
               </div>
-              {/* <div className="card-footer" style={{ background: levelColor }}>
-                <img
-                  src={chat}
-                  alt="Chat"
-                />
-                <img
-                  src={call}
-                  alt="Call"
-                />
-                <img
-                  src={video}
-                  alt="Video"
-                />
-              </div> */}
-              <div></div>
+              <div className="org-card-footer org-card-footer-bg " style={{background: levelColor}}></div>
             </div>
-            {item.children?.length && <Card data={item.children} />}
+            {item.children?.length && <OrgCard data={item.children} />}
           </li>
         </Fragment>
       ))}
@@ -54,16 +49,12 @@ const Card = (props) => {
   );
 };
 
-
-
-const ChartHeirarichy = (props) => {
-    console.log("Printing root props:: ", props)
+const ChartHeirarchy = (props) => {
   return (
     <div className="org-tree">
-        <p>Showgin oc card details</p>
-        {props.data && <Card data={props.data} /> }
+      <OrgCard data={props.data} />
     </div>
   );
 };
 
-export default ChartHeirarichy;
+export default ChartHeirarchy;

@@ -199,7 +199,7 @@ import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
-    localStorage.setItem("colorschema", "orange");
+    localStorage.setItem("colorschema", "blue");
     localStorage.setItem("layout", "vertical");
     localStorage.setItem("layoutwidth", "fixed");
     localStorage.setItem("layoutpos", "fluid");

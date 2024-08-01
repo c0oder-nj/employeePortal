@@ -7,6 +7,7 @@ import Slider from "react-slick";
 import { ArrowRightCircle } from "react-feather";
 import '../../../../../customFiles/customStyles.css';
 import ChartHeirarichy from "./ChartHeirarichy";
+import './oc_style.css'
 
 const EmployeeDashboard = () => {
   const [pageDispaly, setPageDisplay] = useState('none');
@@ -203,37 +204,6 @@ function buildHierarchy(data, parentPernr = "00000000") {
           };
       });
 }
-
-
-
-
-
-
-
-// const heirarchyApiCall = async (sapid) => {
-
-//   const myPromise = new Promise((resolve,reject)=>{
-//     // console.log("Inside heirarchy logic");
-//       const requestOptions = {
-//         method: "GET",
-//         redirect: "follow"
-//       };
-//     fetch(`http://localhost:3000/api/employee/empUpperHeirarchy?sapid=${sapid}`, requestOptions)
-//     .then((response) => response.json())
-//     .then((result) => {
-//       heirarchy = buildHierarchy(result.data);
-//       // console.log("Printing Heirarchy in desired format:: ",JSON.stringify(heirarchy, null, 2));
-//       // buildHierarchy(result.data)
-//       resolve(heirarchy);
-//     })
-//     .catch((error) => {
-//       reject(error);
-//       console.error("Printing Error::",error)
-//     });
-//   })
-
-//   return myPromise;
-// }
 // --------- heirarchy building function which changes the response--------------------------
 
 
@@ -970,7 +940,9 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
 
               {/* start organization chart */}
-              {/* <ChartHeirarichy data={heirarchy[0]} /> */}
+              <div className="card col-xxl-4 col-lg-4 col-md-12 d-flex justify-content-center" style={{flexDirection: "row", paddingBottom : '20px'}}>
+                <ChartHeirarichy data={heirarchy} /> 
+              </div>
               {/* end organization chart */}
 
 
