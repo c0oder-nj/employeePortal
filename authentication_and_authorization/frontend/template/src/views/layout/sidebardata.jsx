@@ -157,6 +157,37 @@ export const SidebarData = [
       //   route: "/clients",
       //   icon: "la la-users",
       // },
+      {
+        menuValue: 'Travel Allownace',
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-rocket",
+        subMenus: [
+          {
+            menuValue: 'Domestic Travel Allownace',
+            route: "/excel-file-upload",
+          },
+          {
+            menuValue: 'Domestic Travel Allownace(Working on it)',
+            route: "/excel-info-file-upload",
+          },
+          {
+            menuValue: 'International Travel Allowance',
+            // route: "/tasks",
+          },
+          {
+            menuValue: 'Travel Reports',
+            route: "/travel_expense_table",
+          },
+        ],
+      },
+      {
+        menuValue: 'Clients',
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/clients",
+        icon: "la la-users",
+      },
     
       // commenting projects menu below
       // {

@@ -148,6 +148,10 @@ import ProjectView from "../../views/pages/Employees/Projects/ProjectView";
 import OffCanvas from "../../components/OffCanvas";
 import FormSelectTwo from "../../views/pages/Ui_Interface/Forms/FormSelectTwo.jsx";
 import FileUpload from "../../views/pages/Ui_Interface/Forms/FileUpload.jsx";
+// import ExcelFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelFileUpload.jsx";
+import TravelExpenseTable from "../../views/pages/Ui_Interface/Forms/TravelExpenseTable.jsx"
+import ExcelFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelFileUpload.jsx";
+import ExcelInfoFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelInfoFileUpload.jsx";
 import Ribbon from "../../views/pages/Ui_Interface/Elements/Ribbon.jsx";
 import Clipboard from "../../views/pages/Ui_Interface/Elements/Clipboard.jsx";
 import Dragdrop from "../../views/pages/Ui_Interface/Elements/Dragdrop.jsx";
@@ -909,6 +913,21 @@ const AppContainer = () => {
       path: "deals-details",
       element: <DealsDetails />,
     },
+    {
+      id: 132,
+      path: "excel-file-upload",
+      element: <ExcelFileUpload />,
+    },
+    {
+      id: 133,
+      path: "excel-info-file-upload",
+      element: <ExcelInfoFileUpload />,
+    },
+    {
+      id: 134,
+      path: "travel_expense_table",
+      element: <TravelExpenseTable />,
+    }
   ];
 
   const ChatRoutingeObjects = [

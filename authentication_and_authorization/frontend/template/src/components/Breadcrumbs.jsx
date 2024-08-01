@@ -4,7 +4,55 @@ import { Link, useLocation } from "react-router-dom";
 const Breadcrumbs = (props) => {
   const location = useLocation();
   let addButton = null;
-  if (
+  if (location.pathname === "/attendance-employee") {
+    console.log(props)
+    addButton = (
+      <div className="row align-items-center">
+        {/* <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/admin-dashboard">{props.title}</Link>
+            </li>
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
+        </div> */}
+        <div className="col-auto float-end ms-auto">
+          <Link
+            to="#"
+            className="btn add-btn"
+            data-bs-toggle="modal"
+            data-bs-target={props.modal}
+          >
+            <i className="fa fa-plus" /> {props.name}
+          </Link>
+          {/* <div className="view-icons">
+            <Link
+              to={props.Linkname}
+              className="grid-view btn btn-link active mx-2"
+            >
+              <i className="fa fa-th" />
+            </Link>
+            <Link to={props.Linkname1} className="list-view btn btn-link">
+              <i className="fa fa-bars" />
+            </Link>
+          </div> */}
+        </div>
+      </div>
+    );
+  }else if(location.pathname === "/travel_expense_table"){
+    addButton = (
+      <div className="row">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+        </div>
+      </div>
+    );
+}
+  else if(location.pathname === "/domestic-travel-allowance"){
+      console.log("Hello",props);
+  }
+  else if (
     location.pathname === "/form-basic-inputs" ||
     location.pathname === "/form-input-groups" ||
     location.pathname === "/form-horizontal" ||
@@ -17,7 +65,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/payments" ||
     location.pathname === "/ui/components" ||
     location.pathname === "/adminattendance" ||
-    location.pathname === "/attendance-employee" ||
+    // location.pathname === "/attendance-employee" ||
     location.pathname === "/task-board" ||
     location.pathname === "/leads" ||
     location.pathname === "/create-estimate" ||
@@ -107,6 +155,7 @@ const Breadcrumbs = (props) => {
     addButton = (
       <div className="row">
         <div className="col-sm-12">
+          
           <h3 className="page-title">{props.maintitle}</h3>
         </div>
       </div>
@@ -314,7 +363,7 @@ const Breadcrumbs = (props) => {
             data-bs-target={props.modalone}
           >
             <i className="fa fa-plus" />
-            {props.nameone}
+            Hello {props.nameone}
           </Link>
 
           <Link

@@ -9,7 +9,7 @@ const FileUpload = () => {
         {/* Page Header */}
         <div className="page-header">
           <div className="content-page-header">
-            <h5>File Upload</h5>
+            <h5>File Upload in file</h5>
           </div>
         </div>
         {/* /Page Header */}

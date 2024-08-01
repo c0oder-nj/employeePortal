@@ -4,6 +4,9 @@ const cookieParser = require('cookie-parser')
 const env = require('dotenv')
 const authControllers = require('./Controllers/authControllers')
 const empControllers = require('./Controllers/empControllers')
+const empAttnedanceControllers = require('./Controllers/empAttendanceControllers')
+const empTravelExpense = require('./Controllers/travelExpense')
+const authUserThoughMiddleware = require('./middleware/authUserMiddle')
 const routes = require('./Routes/index')
 
 
@@ -52,6 +55,38 @@ app.post('/TestAPI',express.raw({ type: '*/*' }),(req,res)=>{
 
 
 
+
+
+// //For user login and jwt token creation
+// app.post('/api/auth/login',authControllers.login)
+// //Just for test
+app.post('/api/auth/test',authControllers.test)
+
+// //For setting a password
+// app.post('/api/auth/setPassword',authControllers.setPassword)
+// // app.post('/api/auth/home',authControllers.home)
+
+// //For dashboard content
+// app.get('/api/auth/home',authUserThoughMiddleware.checkUser,authControllers.home)
+
+//For Employee attendance need to add middleware
+app.get('/api/employee/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
+app.get('/api/employee/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
+
+//For Leave creation
+app.post('/api/employee/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeLeaveCreation)
+
+//Leave showing to HOD
+app.get('/api/employee/employeeLeaveApproval',authUserThoughMiddleware.checkUser,empControllers.employeeLeaveStatus) 
+
+app.get('/api/DailyAttendance/employeeDailyAttendnceStatus',authUserThoughMiddleware.checkUser,empAttnedanceControllers.employeeDailyAttendnceStatus);
+app.post('/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus',empAttnedanceControllers.employeeDailyAttendnceCorrection);
+
+//Information about country code and cost center
+app.get('/api/TravelExpense/countryAndCostCenterCode',empTravelExpense.countryCodeAndCostCenter)
+
+//Employee's domestic leave approval 
+app.post('/api/TravelExpense/domesticTravelExpens',authUserThoughMiddleware.checkUser,empTravelExpense.domesticTravelAllowance);
 
 
 
