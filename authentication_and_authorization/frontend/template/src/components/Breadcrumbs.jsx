@@ -54,7 +54,6 @@ const Breadcrumbs = (props) => {
     location.pathname === "/archived-jobs" ||
     location.pathname === "/subscriptions-company" ||
     location.pathname === "/subscribed-companies" ||
-    location.pathname === "/profile" ||
     location.pathname === "/job-list" ||
     location.pathname === "/job-view" ||
     location.pathname === "/search" ||
@@ -78,7 +77,22 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  } else if (
+  } else if (location.pathname === '/profile'){
+    addButton = (
+      <div className="row">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/employee-dashboard">{props.title}</Link>
+            </li>
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+  else if (
     location.pathname === "/settings/company-settings" ||
     location.pathname === "/settings/localization" ||
     location.pathname === "/settings/theme-settings" ||

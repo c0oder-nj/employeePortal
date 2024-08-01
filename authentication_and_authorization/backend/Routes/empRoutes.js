@@ -8,6 +8,7 @@ router.get('/employee_dashboard',authUserThoughMiddleware.checkUserNeeraj, empCo
 router.get('/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
 router.get('/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
 router.get('/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)
+router.get('/empUpperHeirarchy',empControllers.empUpHeirarchy)
 
 
 module.exports = router;
