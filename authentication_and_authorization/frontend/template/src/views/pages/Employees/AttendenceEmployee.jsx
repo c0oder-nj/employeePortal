@@ -10,6 +10,7 @@ import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrec
 const AttendanceEmployee = () => {
   const [users, setUsers] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
   const [sap, setSap] = useState(null);
   const navigate = useNavigate();
@@ -370,6 +371,28 @@ const AttendanceEmployee = () => {
       .then((res) => setActivity(res.data));
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = `http://localhost:3002/emp-todays-punch?sapId=5054`;
+      console.log(url);
+      await fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Daily pucnh in data", data);
+          setDailyPunchIn(data);
+          return data;
+        })
+        .catch((error) => {
+          console.log("Error");
+        });
+    };
+    fetchData();
+  }, []);
+  const date = new Date();
+  const showTime =
+    date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
   return (
     <>
       <div className="page-wrapper">
@@ -398,34 +421,43 @@ const AttendanceEmployee = () => {
               <div className="card punch-status">
                 <div className="card-body">
                   <h5 className="card-title">
-                    Timesheet <small className="text-muted">11 Mar 2023</small>
+                    Timesheet{" "}
+                    <small className="text-muted">
+                      {dailyPunchIn.punch1_date}
+                    </small>
                   </h5>
                   <div className="punch-det">
                     <h6>Punch In at</h6>
-                    <p>Wed, 11th Mar 2023 10.00 AM</p>
+                    {/* <p>Wed, 11th Mar 2023 10.00 AM</p> */}
+                    <p>Date : {dailyPunchIn.punch1_date}</p>
+                    <p>Time : {dailyPunchIn.punch1_time}</p>
                   </div>
-                  <div className="punch-info">
-                    <div className="punch-hours">
-                      <span>3.45 hrs</span>
+                  <div className="punch-info" >
+                    <div className="punch-hours" style={{color: "red",border:"5px solid #E2E536"}}>
+                      <span>
+                        {parseInt(showTime) -
+                          parseInt(dailyPunchIn.punch1_time)}{" "}
+                        hrs
+                      </span>
                     </div>
                   </div>
-                  <div className="punch-btn-section">
+                  {/* <div className="punch-btn-section">
                     <button type="button" className="btn btn-primary punch-btn">
                       Punch Out
                     </button>
-                  </div>
+                  </div> */}
                   <div className="statistics">
                     <div className="row">
                       <div className="col-md-6 col-6 text-center">
                         <div className="stats-box">
-                          <p>Break</p>
-                          <h6>1.21 hrs</h6>
+                          <p>Lunch Break</p>
+                          <h6>30 min</h6>
                         </div>
                       </div>
                       <div className="col-md-6 col-6 text-center">
                         <div className="stats-box">
-                          <p>Overtime</p>
-                          <h6>3 hrs</h6>
+                          <p>Office hrs</p>
+                          <h6>8 hrs</h6>
                         </div>
                       </div>
                     </div>
@@ -472,7 +504,7 @@ const AttendanceEmployee = () => {
                 <div className="card-body">
                   <h5 className="card-title">Today Activity</h5>
                   <ul className="res-activity-list">
-                    {Array.isArray(activity) && activity.length > 0 ? (
+                    {/* {Array.isArray(activity) && activity.length > 0 ? (
                       activity.map((activity, index) => (
                         <li key={index}>
                           <p className="mb-0">{activity.title}</p>
@@ -484,7 +516,28 @@ const AttendanceEmployee = () => {
                       ))
                     ) : (
                       <p>No activities available.</p>
-                    )}
+                    )} */}
+
+                    <li>
+                      <p className="mb-0">Punch In Time</p>
+                      <p className="res-activity-time">
+                        <i className="fa-regular fa-clock"></i>{" "}
+                        {dailyPunchIn.punch1_time}
+                      </p>
+                    </li>
+                    <li>
+                      <p className="mb-0"> Lunch Break</p>
+                      <p className="res-activity-time">
+                        <i className="fa-regular fa-clock"></i> 1:00 pm
+                      </p>
+                    </li>
+                    <li>
+                      <p className="mb-0"> Punch Out</p>
+                      <p className="res-activity-time">
+                        <i className="fa-regular fa-clock"></i>{" "}
+                        {dailyPunchIn.outpunch_time}
+                      </p>
+                    </li>
                   </ul>
                 </div>
               </div>

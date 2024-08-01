@@ -82,8 +82,13 @@ app.get('/api/employee/employeeLeaveApproval',authUserThoughMiddleware.checkUser
 app.get('/api/DailyAttendance/employeeDailyAttendnceStatus',authUserThoughMiddleware.checkUser,empAttnedanceControllers.employeeDailyAttendnceStatus);
 app.post('/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus',empAttnedanceControllers.employeeDailyAttendnceCorrection);
 
+//Information about country code and cost center
+app.get('/api/TravelExpense/countryAndCostCenterCode',empTravelExpense.countryCodeAndCostCenter)
+
 //Employee's domestic leave approval 
 app.post('/api/TravelExpense/domesticTravelExpens',authUserThoughMiddleware.checkUser,empTravelExpense.domesticTravelAllowance);
+
+
 
 app.use('/api',routes);
 

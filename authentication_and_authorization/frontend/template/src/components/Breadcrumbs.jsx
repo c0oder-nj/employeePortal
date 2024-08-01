@@ -40,7 +40,15 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  }
+  }else if(location.pathname === "/travel_expense_table"){
+    addButton = (
+      <div className="row">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+        </div>
+      </div>
+    );
+}
   else if(location.pathname === "/domestic-travel-allowance"){
       console.log("Hello",props);
   }

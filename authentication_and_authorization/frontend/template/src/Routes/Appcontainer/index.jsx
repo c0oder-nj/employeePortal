@@ -149,6 +149,7 @@ import OffCanvas from "../../components/OffCanvas";
 import FormSelectTwo from "../../views/pages/Ui_Interface/Forms/FormSelectTwo.jsx";
 import FileUpload from "../../views/pages/Ui_Interface/Forms/FileUpload.jsx";
 // import ExcelFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelFileUpload.jsx";
+import TravelExpenseTable from "../../views/pages/Ui_Interface/Forms/TravelExpenseTable.jsx"
 import ExcelFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelFileUpload.jsx";
 import ExcelInfoFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelInfoFileUpload.jsx";
 import Ribbon from "../../views/pages/Ui_Interface/Elements/Ribbon.jsx";
@@ -921,6 +922,11 @@ const AppContainer = () => {
       id: 133,
       path: "excel-info-file-upload",
       element: <ExcelInfoFileUpload />,
+    },
+    {
+      id: 134,
+      path: "travel_expense_table",
+      element: <TravelExpenseTable />,
     }
   ];
 
