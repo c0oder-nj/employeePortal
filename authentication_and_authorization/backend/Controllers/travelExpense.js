@@ -43,6 +43,27 @@ const domesticTravelAllowance = async (req, res) => {
   res.status(200).send(result.data);
 };
 
+//Function to fetch all the travel report of a given sap
+
+const travelExpenseUsingSap = async(req,res)=>{
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing.htm?sapid=285`);
+  console.log(result);
+  console.log("Show travel")
+  res.status(200).send({travel_data : result.data})
+  // res.status(200).send({country_code : result.data.country_code, 
+  //                           cost_center : result.data.cost_center });
+}
+
+//Function to fetch employee travel expense on the basis of sapCode and travel code
+
+const travelExpenseUsingSapAndTravelCode = async(req,res)=>{
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_details_api.htm?sapid=285&tripno=2743`);
+  console.log(result);
+  console.log("Show travel")
+  res.status(200).send({travel_data : result.data})
+  // res.status(200).send({country_code : result.data.country_code, 
+  //                           cost_center : result.data.cost_center });
+}
 
 
-module.exports = { domesticTravelAllowance ,countryCodeAndCostCenter };
+module.exports = { travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode };

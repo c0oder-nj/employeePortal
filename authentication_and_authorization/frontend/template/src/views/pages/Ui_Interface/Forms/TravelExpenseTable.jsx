@@ -6,6 +6,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddSalaryModal from "../../../../components/modelpopup/AddSalaryModal";
+import TravelAllwowanceExcelSubmitionPopup from "../../../../components/modelpopup/TravelAllwowanceExcelSubmitionPopup";
 import TravelExpenseDataTable from "./TravelExpenseDataTable";
 
 const TravelExpenseTable = () => {
@@ -86,7 +87,9 @@ const TravelExpenseTable = () => {
           <Breadcrumbs
             maintitle="Travel Expense"
             title="Travel Dashboard"
-            
+            // modal = "#add_salary"
+            name = "Add Travel Expense"
+            modal = "#travel_allwowance"
           />
 
           <div className="row filter-row">
@@ -184,7 +187,8 @@ const TravelExpenseTable = () => {
           <TravelExpenseDataTable />
         </div>
       </div>
-      <AddSalaryModal />
+      {/* <AddSalaryModal/> */}
+      <TravelAllwowanceExcelSubmitionPopup/>
     </>
   );
 };

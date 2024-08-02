@@ -5,7 +5,7 @@ const Breadcrumbs = (props) => {
   const location = useLocation();
   let addButton = null;
   if (location.pathname === "/attendance-employee") {
-    console.log(props)
+    console.log(props);
     addButton = (
       <div className="row align-items-center">
         {/* <div className="col">
@@ -40,19 +40,36 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  }else if(location.pathname === "/travel_expense_table"){
-    addButton = (
-      <div className="row">
-        <div className="col">
-          <h3 className="page-title">{props.maintitle}</h3>
+  } else if (location.pathname === "/travel_expense_table") {
+    // addButton = (
+    //   <div className="row">
+    //     <div className="col">
+    //       <h3 className="page-title">{props.maintitle}</h3>
+    //     </div>
+    //   </div>
+    // );
+    addButton =
+      (console.log("Printing props here", props),
+      (
+        <div className="row align-items-center">
+          <div className="col">
+    <h3 className="page-title">{props.maintitle}</h3>
+         </div>
+          <div className="col-auto float-end ms-auto">
+            <Link
+              to="#"
+              className="btn add-btn"
+              data-bs-toggle="modal"
+              data-bs-target={props.modal}
+            >
+              <i className="fa fa-plus" /> {props.name}
+            </Link>
+          </div>
         </div>
-      </div>
-    );
-}
-  else if(location.pathname === "/domestic-travel-allowance"){
-      console.log("Hello",props);
-  }
-  else if (
+      ));
+  } else if (location.pathname === "/domestic-travel-allowance") {
+    console.log("Hello", props);
+  } else if (
     location.pathname === "/form-basic-inputs" ||
     location.pathname === "/form-input-groups" ||
     location.pathname === "/form-horizontal" ||
@@ -141,7 +158,6 @@ const Breadcrumbs = (props) => {
     addButton = (
       <div className="row">
         <div className="col-sm-12">
-          
           <h3 className="page-title">{props.maintitle}</h3>
         </div>
       </div>

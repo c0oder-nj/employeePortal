@@ -88,7 +88,11 @@ app.get('/api/TravelExpense/countryAndCostCenterCode',empTravelExpense.countryCo
 //Employee's domestic leave approval 
 app.post('/api/TravelExpense/domesticTravelExpens',authUserThoughMiddleware.checkUser,empTravelExpense.domesticTravelAllowance);
 
+//Show all travel expense using sap only
+app.get('/api/TravelExpense/showExpenseUsingSap',authUserThoughMiddleware.checkUser,empTravelExpense.travelExpenseUsingSap)
 
+//Show travel expense using sap and travel code
+app.get('/api/TravelExpense/showExpenseUsingSapAndCode',authUserThoughMiddleware.checkUser,empTravelExpense.travelExpenseUsingSapAndTravelCode)
 
 app.use('/api',routes);
 
