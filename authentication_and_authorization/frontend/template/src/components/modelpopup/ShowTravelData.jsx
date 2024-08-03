@@ -4,11 +4,14 @@ import Salary from "../../assets/json/employeeSalary";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 
-const ShowTravelData = () => {
+const ShowTravelData = (props) => {
+  console.log("Your data in showTable",props)
+  const [sapNumber,tripNumber] = [props.data.id.pernr, props.data.id.reinr]
+  console.log("Sap and trip number",sapNumber,tripNumber)
   const [setselectOne] = useState(null);
   const [dataFetched, setDataFetched] = useState([]);
   //   const [checkData,setCheckData] = useState();
-  const data = Salary.Salary;
+  // const data = Salary.Salary;
   const columns = [
     {
       title: "Name",
@@ -277,7 +280,9 @@ const ShowTravelData = () => {
     const fetchData = async () => {
       const value = `${document.cookie}`;
       console.log(value);
-      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}`;
+
+      console.log("Printing values in useEffect",sapNumber,tripNumber)
+      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
       await fetch(url)
         .then((response) => {
@@ -293,7 +298,8 @@ const ShowTravelData = () => {
         });
     };
     fetchData();
-  }, []);
+  }, [sapNumber,tripNumber]);
+
 
   return (
     <>
@@ -301,6 +307,7 @@ const ShowTravelData = () => {
         id="show_travel_data"
         className="modal custom-modal fade"
         role="dialog"
+        
       >
         <div
           className="modal-dialog modal-dialog-centered modal-lg"

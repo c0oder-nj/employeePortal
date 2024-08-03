@@ -94,6 +94,8 @@ app.get('/api/TravelExpense/showExpenseUsingSap',authUserThoughMiddleware.checkU
 //Show travel expense using sap and travel code
 app.get('/api/TravelExpense/showExpenseUsingSapAndCode',authUserThoughMiddleware.checkUser,empTravelExpense.travelExpenseUsingSapAndTravelCode)
 
+//Delete Travel expense using sap and trip number
+app.get('/api/TravelExpense/deleteExpenseUsingSapAndCode',authUserThoughMiddleware.checkUser,empTravelExpense.travelExpenseDelete)
 app.use('/api',routes);
 
 

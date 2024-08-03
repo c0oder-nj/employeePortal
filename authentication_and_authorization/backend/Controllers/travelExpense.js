@@ -46,7 +46,11 @@ const domesticTravelAllowance = async (req, res) => {
 //Function to fetch all the travel report of a given sap
 
 const travelExpenseUsingSap = async(req,res)=>{
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing.htm?sapid=285`);
+  const newValue = req.query.value;
+  headerValue = newValue.split("=")[1];
+  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  var sapNumber = decodedValue.empCode;
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing.htm?sapid=${sapNumber}`);
   console.log(result);
   console.log("Show travel")
   res.status(200).send({travel_data : result.data})
@@ -57,13 +61,32 @@ const travelExpenseUsingSap = async(req,res)=>{
 //Function to fetch employee travel expense on the basis of sapCode and travel code
 
 const travelExpenseUsingSapAndTravelCode = async(req,res)=>{
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_details_api.htm?sapid=285&tripno=2743`);
-  console.log(result);
+
+  console.log("You are in sap and trip code")
+  console.log(req.query.sapNumber,req.query.tripNumber)
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_details_api.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}`);
+  // console.log(result);
   console.log("Show travel")
   res.status(200).send({travel_data : result.data})
+  
+  // res.status(200).send({"Hello":"Message"});
+  // res.status(200).send({country_code : result.data.country_code, 
+  //                           cost_center : result.data.cost_center });
+}
+
+const travelExpenseDelete = async(req,res)=>{
+
+  console.log("You are in delete section sap and trip code")
+  console.log(req.query.sapNumber,req.query.tripNumber)
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_delete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}`);
+  console.log(result);
+  console.log("Show travel")
+  res.status(200).send({messageType : result.data.msgtype,message:result.data.msg})
+  
+  // res.status(200).send({"Hello":"Message"});
   // res.status(200).send({country_code : result.data.country_code, 
   //                           cost_center : result.data.cost_center });
 }
 
 
-module.exports = { travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode };
+module.exports = { travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };

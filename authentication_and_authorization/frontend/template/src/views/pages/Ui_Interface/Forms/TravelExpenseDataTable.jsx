@@ -1,12 +1,209 @@
-import React ,{useState, useEffect}from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Salary from "../../../../assets/json/employeeSalary";
 import { Table } from "antd";
-import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
-import DeleteModal from "../../../../components/modelpopup/deletePopup";
-import ShowTravelData from "../../../../components/modelpopup/ShowTravelData";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
+// import Breadcrumbs from "../../../../components/Breadcrumbs";
+// import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
+// import DeleteModal from "../../../../components/modelpopup/deletePopup";
+// import ShowTravelData from "../../../../components/modelpopup/ShowTravelData";
+
 const TravelExpenseDataTable = () => {
   const data = Salary.Salary;
+  const [ddataFetched, setDdataFetched] = useState([]);
+  const [checkData, setCheckData] = useState(false);
+  const [setDelete, setDeleteData] = useState([]);
+  const setColums = [
+    // {
+    //     title: "Sap Number",
+    //     dataIndex: "pernr",
+    //     sorter: (a, b) => a.employeeId.length - b.employeeId.length,
+    // },
+    {
+      title: "Employee Number",
+      dataIndex: "pernr",
+      sorter: (a, b) => a.pernr.length - b.pernr.length,
+    },
+    {
+      title: "Reimbursement Number",
+      dataIndex: "reinr",
+      sorter: (a, b) => a.reinr.length - b.reinr.length,
+    },
+    {
+      title: "Receipt Number",
+      dataIndex: "receipt_no", // Adjust according to your actual JSON structure
+      sorter: (a, b) => a.receipt_no.length - b.receipt_no.length,
+    },
+    {
+      title: "Receipt Number",
+      dataIndex: "receiptno", // Adjust according to your actual JSON structure
+      sorter: (a, b) => a.receiptno.length - b.receiptno.length,
+    },
+    {
+      title: "Expense Type",
+      dataIndex: "exp_type",
+      sorter: (a, b) => a.exp_type.length - b.exp_type.length,
+    },
+    {
+      title: "Description",
+      dataIndex: "sptxt",
+      sorter: (a, b) => a.sptxt.length - b.sptxt.length,
+    },
+    {
+      title: "Received Amount",
+      dataIndex: "rec_amount",
+      sorter: (a, b) => a.rec_amount.length - b.rec_amount.length,
+    },
+    {
+      title: "Received Currency",
+      dataIndex: "rec_curr",
+      sorter: (a, b) => a.rec_curr.length - b.rec_curr.length,
+    },
+    {
+      title: "Local Amount",
+      dataIndex: "loc_amount",
+      sorter: (a, b) => a.loc_amount.length - b.loc_amount.length,
+    },
+    {
+      title: "Local Currency",
+      dataIndex: "loc_curr",
+      sorter: (a, b) => a.loc_curr.length - b.loc_curr.length,
+    },
+    {
+      title: "Receipt Date",
+      dataIndex: "rec_date",
+      sorter: (a, b) => a.rec_date.length - b.rec_date.length,
+    },
+    {
+      title: "Tax Code",
+      dataIndex: "tax_code",
+      sorter: (a, b) => a.tax_code.length - b.tax_code.length,
+    },
+    {
+      title: "From Date (Old Format)",
+      dataIndex: "from_date",
+      sorter: (a, b) => a.from_date.length - b.from_date.length,
+    },
+    {
+      title: "To Date (Old Format)",
+      dataIndex: "to_date",
+      sorter: (a, b) => a.to_date.length - b.to_date.length,
+    },
+    {
+      title: "From Date",
+      dataIndex: "from_date1",
+      sorter: (a, b) => a.from_date1.length - b.from_date1.length,
+    },
+    {
+      title: "To Date",
+      dataIndex: "to_date1",
+      sorter: (a, b) => a.to_date1.length - b.to_date1.length,
+    },
+    {
+      title: "Location Description",
+      dataIndex: "descript",
+      sorter: (a, b) => a.descript.length - b.descript.length,
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      sorter: (a, b) => a.location.length - b.location.length,
+    },
+    {
+      title: "Document Number",
+      dataIndex: "p_doc",
+      sorter: (a, b) => a.p_doc.length - b.p_doc.length,
+    },
+    {
+      title: "Region",
+      dataIndex: "region",
+      sorter: (a, b) => a.region.length - b.region.length,
+    },
+    {
+      title: "Manager Remark",
+      dataIndex: "rm_remark",
+      sorter: (a, b) => a.rm_remark.length - b.rm_remark.length,
+    },
+    {
+      title: "Head of Department Remark",
+      dataIndex: "hod_remark",
+      sorter: (a, b) => a.hod_remark.length - b.hod_remark.length,
+    },
+    {
+      title: "Financial Remark",
+      dataIndex: "fi_remark",
+      sorter: (a, b) => a.fi_remark.length - b.fi_remark.length,
+    },
+  ];
+
+  
+
+  const ShowTravelData = (props) => {
+    console.log("Your data in showTable", props);
+    const [sapNumber, tripNumber] = [props.pernr, props.reinr];
+    console.log("Sap and trip number", sapNumber, tripNumber);
+    const fetchData = async () => {
+      const value = `${document.cookie}`;
+      console.log(value);
+
+      console.log("Printing values in useEffect", sapNumber, tripNumber);
+      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      console.log(url);
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Helo data", data.travel_data);
+          setDdataFetched(data.travel_data);
+
+          return data;
+        })
+        .catch((error) => {
+          console.log("Error");
+        });
+    };
+    fetchData();
+  };
+  
+  const DeleteData = (props) => {
+    console.log(props)
+    console.log("Your data in showTable", props);
+    const [sapNumber, tripNumber] = [props.pernr, props.reinr];
+    console.log("Sap and trip number", sapNumber, tripNumber);
+    const fetchData = async () => {
+      const value = `${document.cookie}`;
+      console.log(value);
+
+      console.log("Printing values in useEffect", sapNumber, tripNumber);
+      const url = `http://localhost:3000/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      console.log(url);
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          // console.log("Helo data", data.travel_data);
+          // setDdataFetched(data.travel_data);
+          console.log(data)
+          Toastify({
+            text: data.message,
+            duration: 3000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          }).showToast();
+          return data;
+        })
+        .catch((error) => {
+          console.log("Error");
+        });
+    };
+    fetchData();
+  };
+  
   const [dataFetched, setDataFetched] = useState([]);
   const columns = [
     {
@@ -86,21 +283,43 @@ const TravelExpenseDataTable = () => {
     },
     {
       title: "Show Expense",
-      render: () => (
-        // <Link className="btn btn-sm btn-primary" to="/salary-view">
+      id: "pernr",
+      render: (id) => (
+        // <Link
+        //   className="btn btn-sm btn-primary"
+        //   to="#"
+        //   data-bs-toggle="modal"
+        //   data-bs-target="#show_travel_data"
+
+        // >
         //   Show Travel Info
+        //   <ShowTravelData data={{ id }} />
         // </Link>
-        <Link
+
+        <button
           className="btn btn-sm btn-primary"
-          to="#"
           data-bs-toggle="modal"
           data-bs-target="#show_travel_data"
-        >Show Travel Info</Link>
+          onClick={() => ShowTravelData(id)}
+        >
+          Show Travel
+        </button>
+
+        // <Link
+        //   className="btn btn-sm btn-primary"
+        //   to="#"
+        //   data-bs-toggle="modal"
+        //   data-bs-target="#show_travel_data"
+        //   state="demo txt"
+        // >
+        //   Show Travel Info
+        // </Link>
       ),
     },
     {
       title: "Action",
-      render: () => (
+      id: "pernr",
+      render: (id) => (
         <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
@@ -119,14 +338,15 @@ const TravelExpenseDataTable = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete"
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+            
+            <button className="dropdown-item"
+            data-bs-toggle="modal"
+            data-bs-target="#delete"
+            onClick={()=>{
+              setDeleteData(id);
+            }}
+            > Delete
+            </button>
           </div>
         </div>
       ),
@@ -154,7 +374,7 @@ const TravelExpenseDataTable = () => {
     };
     fetchData();
   }, []);
-  
+
   return (
     <>
       <div className="row">
@@ -170,10 +390,87 @@ const TravelExpenseDataTable = () => {
           </div>
         </div>
       </div>
-
-      <EditSalaryModal />
-      <ShowTravelData />
-      <DeleteModal Name="Delete Salary" />
+      {/* <Breadcrumbs
+        maintitle="Travel Expense"
+        title="Travel Dashboard"
+        // modal = "#add_salary"
+        name="Add Travel Expense"
+        modal="#show_travel_data"
+      /> */}
+      {/* <EditSalaryModal /> */}
+      {/* <ShowTravelData /> */}
+      <div
+        id="show_travel_data"
+        className="modal custom-modal fade"
+        role="dialog"
+      >
+        <div
+          className="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Show Travel Data</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              {
+                <Table
+                  className="table-striped"
+                  style={{ overflowX: "auto" }}
+                  columns={setColums}
+                  dataSource={ddataFetched.data}
+                  
+                  rowKey={(record) => record.id}
+                />
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Pop up for delete */}
+      <div className="modal custom-modal fade" id="delete" role="dialog">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="form-header">
+                <h3>Hello</h3>
+                <p>Are you sure want to delete?</p>
+              </div>
+              <div className="modal-btn delete-action">
+                <div className="row">
+                  <div className="col-6">
+                    {/* <Link to="#" className="btn btn-primary continue-btn">
+                      Delete
+                    </Link> */}
+                    <button className="btn btn-primary continue-btn" 
+                    onClick={()=>{
+                      DeleteData(setDelete);
+                    }}
+                    >New Delete</button>
+                  </div>
+                  <div className = "col-6">
+                    <Link
+                      to="#"
+                      data-bs-dismiss = "modal"
+                      className="btn btn-primary cancel-btn"
+                    >
+                      Cancel
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

@@ -48,25 +48,34 @@ const Breadcrumbs = (props) => {
     //     </div>
     //   </div>
     // );
+    if(props.modal=="#travel_allwowance"){
     addButton =
-      (console.log("Printing props here", props),
       (
-        <div className="row align-items-center">
-          <div className="col">
-    <h3 className="page-title">{props.maintitle}</h3>
-         </div>
-          <div className="col-auto float-end ms-auto">
-            <Link
-              to="#"
-              className="btn add-btn"
-              data-bs-toggle="modal"
-              data-bs-target={props.modal}
-            >
-              <i className="fa fa-plus" /> {props.name}
-            </Link>
-          </div>
-        </div>
-      ));
+
+        console.log("In travel props",props),
+          
+          (
+            <div className="row align-items-center">
+              <div className="col">
+        <h3 className="page-title">{props.maintitle}</h3>
+             </div>
+              <div className="col-auto float-end ms-auto">
+                <Link
+                  to="#"
+                  className="btn add-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target={props.modal}
+                >
+                  <i className="fa fa-plus" /> {props.name}
+                </Link>
+              </div>
+            </div>
+          )
+        
+    );}
+    else if(props.modal=="#show_travel_data"){
+          console.log("In show table props",props)
+    }
   } else if (location.pathname === "/domestic-travel-allowance") {
     console.log("Hello", props);
   } else if (
