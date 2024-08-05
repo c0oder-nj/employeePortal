@@ -78,7 +78,23 @@ const Breadcrumbs = (props) => {
     }
   } else if (location.pathname === "/domestic-travel-allowance") {
     console.log("Hello", props);
-  } else if (
+  } 
+  else if(location.pathname === "/hod_travel_expense_approval"){
+    addButton = (
+      <div className="row">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            {/* <li className="breadcrumb-item">
+              <Link to="/admin-dashboard">{props.title}</Link>
+            </li> */}
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+  else if (
     location.pathname === "/form-basic-inputs" ||
     location.pathname === "/form-input-groups" ||
     location.pathname === "/form-horizontal" ||

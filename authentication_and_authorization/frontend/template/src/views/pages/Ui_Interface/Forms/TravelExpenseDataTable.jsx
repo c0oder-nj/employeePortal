@@ -9,11 +9,17 @@ import "toastify-js/src/toastify.css";
 // import DeleteModal from "../../../../components/modelpopup/deletePopup";
 // import ShowTravelData from "../../../../components/modelpopup/ShowTravelData";
 
-const TravelExpenseDataTable = () => {
+const TravelExpenseDataTable = (props) => {
   const data = Salary.Salary;
+  console.log(props);
   const [ddataFetched, setDdataFetched] = useState([]);
   const [checkData, setCheckData] = useState(false);
   const [setDelete, setDeleteData] = useState([]);
+  const [createTrip,setCreateTrip] = useState([]);
+  const [formData, setFormData] = useState({
+    purposeText:"",
+    outComingText : ""
+  });
   const setColums = [
     // {
     //     title: "Sap Number",
@@ -137,8 +143,6 @@ const TravelExpenseDataTable = () => {
     },
   ];
 
-  
-
   const ShowTravelData = (props) => {
     console.log("Your data in showTable", props);
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
@@ -166,9 +170,9 @@ const TravelExpenseDataTable = () => {
     };
     fetchData();
   };
-  
+
   const DeleteData = (props) => {
-    console.log(props)
+    console.log(props);
     console.log("Your data in showTable", props);
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
@@ -186,7 +190,7 @@ const TravelExpenseDataTable = () => {
         .then((data) => {
           // console.log("Helo data", data.travel_data);
           // setDdataFetched(data.travel_data);
-          console.log(data)
+          console.log(data);
           Toastify({
             text: data.message,
             duration: 3000,
@@ -203,13 +207,96 @@ const TravelExpenseDataTable = () => {
     };
     fetchData();
   };
-  
+
+  const CreateTripData = (props,purposeText,outComingText) => {
+    
+    if(purposeText=='' || outComingText==''){
+      Toastify({
+        text: "Some field is Remaing",
+        duration: 3000,
+        close: true,
+        gravity: "top", 
+        position: "center",
+        backgroundColor: "linear-gradient(to right, #ff4e4e, #c60000)",
+      }).showToast();
+    }
+    else
+    {console.log(typeof props);
+    console.log("Your data in CreateTrip", props,purposeText,outComingText);
+    const [sapNumber, tripNumber] = [props.pernr, props.reinr];
+    console.log("Sap and trip number", sapNumber, tripNumber);
+    const fetchData = async () => {
+      const value = `${document.cookie}`;
+      console.log(value);
+
+      console.log("Printing values in useEffect", sapNumber, tripNumber);
+      const url = `http://localhost:3000/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
+      console.log(url);
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          Toastify({
+            text: data.message,
+            duration: 3000,
+            close: true,
+            gravity: "top", 
+            position: "center",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          }).showToast();
+          return data;
+        })
+        .catch((error) => {
+          console.log("Error");
+        });
+    };
+    fetchData();}
+  };
+
+
   const [dataFetched, setDataFetched] = useState([]);
   const columns = [
     {
       title: "Employee Number",
       dataIndex: "pernr",
       sorter: (a, b) => a.pernr.length - b.pernr.length,
+    },
+    {
+      title: "Show Expense",
+      id: "pernr",
+      render: (id) => (
+        // <Link
+        //   className="btn btn-sm btn-primary"
+        //   to="#"
+        //   data-bs-toggle="modal"
+        //   data-bs-target="#show_travel_data"
+
+        // >
+        //   Show Travel Info
+        //   <ShowTravelData data={{ id }} />
+        // </Link>
+
+        <button
+          className="btn btn-sm btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#show_travel_data"
+          onClick={() => ShowTravelData(id)}
+        >
+          Show Travel
+        </button>
+
+        // <Link
+        //   className="btn btn-sm btn-primary"
+        //   to="#"
+        //   data-bs-toggle="modal"
+        //   data-bs-target="#show_travel_data"
+        //   state="demo txt"
+        // >
+        //   Show Travel Info
+        // </Link>
+      ),
     },
     {
       title: "Reimbursement Number",
@@ -281,41 +368,7 @@ const TravelExpenseDataTable = () => {
       dataIndex: "out_txt",
       sorter: (a, b) => a.out_txt.length - b.out_txt.length,
     },
-    {
-      title: "Show Expense",
-      id: "pernr",
-      render: (id) => (
-        // <Link
-        //   className="btn btn-sm btn-primary"
-        //   to="#"
-        //   data-bs-toggle="modal"
-        //   data-bs-target="#show_travel_data"
-
-        // >
-        //   Show Travel Info
-        //   <ShowTravelData data={{ id }} />
-        // </Link>
-
-        <button
-          className="btn btn-sm btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#show_travel_data"
-          onClick={() => ShowTravelData(id)}
-        >
-          Show Travel
-        </button>
-
-        // <Link
-        //   className="btn btn-sm btn-primary"
-        //   to="#"
-        //   data-bs-toggle="modal"
-        //   data-bs-target="#show_travel_data"
-        //   state="demo txt"
-        // >
-        //   Show Travel Info
-        // </Link>
-      ),
-    },
+    
     {
       title: "Action",
       id: "pernr",
@@ -330,22 +383,36 @@ const TravelExpenseDataTable = () => {
             <i className="material-icons">more_vert</i>
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            <Link
+            {/* <Link
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
               data-bs-target="#edit_salary"
             >
               <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            
-            <button className="dropdown-item"
-            data-bs-toggle="modal"
-            data-bs-target="#delete"
-            onClick={()=>{
-              setDeleteData(id);
-            }}
-            > Delete
+            </Link> */}
+            <button
+              className="dropdown-item "
+              data-bs-toggle="modal"
+              data-bs-target="#create"
+              onClick={() => {
+                setCreateTrip(id);
+                // setDeleteData(id);
+              }}
+            >
+              {" "}
+              Create trip
+            </button>
+            <button
+              className="dropdown-item"
+              data-bs-toggle="modal"
+              data-bs-target="#delete"
+              onClick={() => {
+                setDeleteData(id);
+              }}
+            >
+              {" "}
+              Delete
             </button>
           </div>
         </div>
@@ -374,6 +441,17 @@ const TravelExpenseDataTable = () => {
     };
     fetchData();
   }, []);
+
+//   const filteredData = data.filter((el) => {
+//     //if no input the return the original
+//     if (props.input === '') {
+//         return el;
+//     }
+//     //return the item which contains the user input
+//     else {
+//         return el.text.toLowerCase().includes(props.input)
+//     }
+// })
 
   return (
     <>
@@ -427,7 +505,6 @@ const TravelExpenseDataTable = () => {
                   style={{ overflowX: "auto" }}
                   columns={setColums}
                   dataSource={ddataFetched.data}
-                  
                   rowKey={(record) => record.id}
                 />
               }
@@ -441,8 +518,8 @@ const TravelExpenseDataTable = () => {
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
-                <h3>Hello</h3>
-                <p>Are you sure want to delete?</p>
+                <h3>Are you sure want to delete?</h3>
+                <p>Reimbursement Number : {setDelete.reinr}</p>
               </div>
               <div className="modal-btn delete-action">
                 <div className="row">
@@ -450,16 +527,20 @@ const TravelExpenseDataTable = () => {
                     {/* <Link to="#" className="btn btn-primary continue-btn">
                       Delete
                     </Link> */}
-                    <button className="btn btn-primary continue-btn" 
-                    onClick={()=>{
-                      DeleteData(setDelete);
-                    }}
-                    >New Delete</button>
+                    <button
+                      className="btn btn-primary continue-btn"
+                      onClick={() => {
+                        console.log(setDelete);
+                        DeleteData(setDelete);
+                      }}
+                    >
+                      Delete Expense
+                    </button>
                   </div>
-                  <div className = "col-6">
+                  <div className="col-6">
                     <Link
                       to="#"
-                      data-bs-dismiss = "modal"
+                      data-bs-dismiss="modal"
                       className="btn btn-primary cancel-btn"
                     >
                       Cancel
@@ -471,6 +552,94 @@ const TravelExpenseDataTable = () => {
           </div>
         </div>
       </div>
+      {/* Pop up for trip create start*/}
+      <div className="modal custom-modal fade" id="create" role="dialog">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-body">
+              <div className="form-header">
+                <h3>Are you sure want to create trip for?</h3>
+                <p>Reimbursement Number : {setDelete.reinr}</p>
+              </div>
+              <div className="modal-btn delete-action">
+
+                <div className="row">
+                <div className="input-block mb-3 row">
+                      Purpose Text
+                      <input
+                        type="text"
+                        className="form-control"
+                        required
+                        placeholder="type your purpose"
+                        
+                        onChange={(event) => {
+                          setFormData(
+                            () => (
+                              console.log(event.target.value),
+                              {
+                                ...formData,
+                                purposeText: event.target.value,
+                              }
+                            )
+                          );
+                        }}
+                      />
+                    </div>
+                </div>
+                <div className="row">
+                <div className="input-block mb-3 row">
+                      Outcoming Text 
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="type your outcome"
+                        required
+                        onChange={(event) => {
+                          setFormData(
+                            () => (
+                              console.log(event.target.value),
+                              {
+                                ...formData,
+                                outComingText: event.target.value,
+                              }
+                            )
+                          );
+                        }}
+                      />
+                    </div>
+                </div>
+                <div className="row">
+                  <div className="col-6">
+                    {/* <Link to="#" className="btn btn-primary continue-btn">
+                      Delete
+                    </Link> */}
+                    
+                    <button
+                      className="btn btn-primary continue-btn"
+                      onClick={() => {
+                        // console.log(setDelete);
+                        CreateTripData(createTrip,formData.purposeText,formData.outComingText);
+                      }}
+                    >
+                      Create Trip
+                    </button>
+                  </div>
+                  <div className="col-6">
+                    <Link
+                      to="#"
+                      data-bs-dismiss="modal"
+                      className="btn btn-primary cancel-btn"
+                    >
+                      Cancel
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Pop up for trip create end */}
     </>
   );
 };

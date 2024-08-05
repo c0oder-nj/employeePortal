@@ -170,6 +170,10 @@ export const SidebarData = [
             menuValue: 'Travel Reports',
             route: "/travel_expense_table",
           },
+          {
+            menuValue: 'HOD travel approval',
+            route: "/hod_travel_expense_approval",
+          },
         ],
       },
       {

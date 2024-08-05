@@ -152,6 +152,7 @@ import FileUpload from "../../views/pages/Ui_Interface/Forms/FileUpload.jsx";
 import TravelExpenseTable from "../../views/pages/Ui_Interface/Forms/TravelExpenseTable.jsx"
 import ExcelFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelFileUpload.jsx";
 import ExcelInfoFileUpload from "../../views/pages/Ui_Interface/Forms/ExcelInfoFileUpload.jsx";
+import HodTravelExpenseShow from "../../views/pages/Ui_Interface/Forms/HodTravelExpenseShow.jsx"
 import Ribbon from "../../views/pages/Ui_Interface/Elements/Ribbon.jsx";
 import Clipboard from "../../views/pages/Ui_Interface/Elements/Clipboard.jsx";
 import Dragdrop from "../../views/pages/Ui_Interface/Elements/Dragdrop.jsx";
@@ -927,7 +928,12 @@ const AppContainer = () => {
       id: 134,
       path: "travel_expense_table",
       element: <TravelExpenseTable />,
-    }
+    },
+    {
+      id: 135,
+      path: "hod_travel_expense_approval",
+      element: <HodTravelExpenseShow/>,
+    },
   ];
 
   const ChatRoutingeObjects = [

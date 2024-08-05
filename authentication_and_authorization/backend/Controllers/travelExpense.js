@@ -88,5 +88,22 @@ const travelExpenseDelete = async(req,res)=>{
   //                           cost_center : result.data.cost_center });
 }
 
+//Function to create trip trip by employe  whci has been submitted before. 
 
-module.exports = { travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };
+
+const travelExpenseCreate = async(req,res)=>{
+
+  console.log("You are in create section sap and trip code")
+  console.log(req.query.sapNumber,req.query.tripNumber)
+  const result = await axios.get(`http://spquasrvr1.shaktipumps.com:8000/sap/bc/bsp/sap/zhr_portal_new/emp_trip_complete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}&obj_txt=${req.query.purposeText}&out_txt=${req.query.outComingText}`);
+  console.log(result);
+  // console.log("Show travel")
+  res.status(200).send({messageType : result.data.msg_type,message:result.data.msg})
+  
+  // res.status(200).send({"Hello":"Message"});
+  // res.status(200).send({country_code : result.data.country_code, 
+  //                           cost_center : result.data.cost_center });
+}
+
+
+module.exports = {travelExpenseCreate, travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };

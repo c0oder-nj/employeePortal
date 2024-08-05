@@ -96,6 +96,10 @@ app.get('/api/TravelExpense/showExpenseUsingSapAndCode',authUserThoughMiddleware
 
 //Delete Travel expense using sap and trip number
 app.get('/api/TravelExpense/deleteExpenseUsingSapAndCode',authUserThoughMiddleware.checkUser,empTravelExpense.travelExpenseDelete)
+
+//Create travel expense using sap and trip number
+app.get('/api/TravelExpense/createRequestExpenseUsingSapAndCode',authUserThoughMiddleware.checkUser,empTravelExpense.travelExpenseCreate)
+
 app.use('/api',routes);
 
 

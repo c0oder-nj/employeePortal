@@ -10,7 +10,6 @@ import TravelAllwowanceExcelSubmitionPopup from "../../../../components/modelpop
 import TravelExpenseDataTable from "./TravelExpenseDataTable";
 
 const TravelExpenseTable = () => {
-
   const [setSelectedOption] = useState(null);
   const [setSelecttwo] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -83,7 +82,6 @@ const TravelExpenseTable = () => {
   };
   return (
     <>
-
       {/* custom modal */}
       {/* <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -109,8 +107,8 @@ const TravelExpenseTable = () => {
             maintitle="Travel Expense"
             title="Travel Dashboard"
             // modal = "#add_salary"
-            name = "Add Travel Expense"
-            modal = "#travel_allwowance"
+            name="Add Travel Expense"
+            modal="#travel_allwowance"
           />
 
           <div className="row filter-row">
@@ -131,11 +129,11 @@ const TravelExpenseTable = () => {
                   onChange={handleInputChange}
                 />
                 <label className="focus-label" onClick={handleLabelClick}>
-                  Employee Name
+                  Reimbur. Number
                 </label>
               </div>
             </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div className="input-block mb-3 form-focus select-focus">
                 <Select
                   placeholder="--Select--"
@@ -146,8 +144,8 @@ const TravelExpenseTable = () => {
                 />
                 <label className="focus-label">Purchased By</label>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            </div> */}
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div className="input-block mb-3 form-focus select-focus">
                 <Select
                   placeholder="--Select--"
@@ -158,7 +156,7 @@ const TravelExpenseTable = () => {
                 />
                 <label className="focus-label">Paid By</label>
               </div>
-            </div>
+            </div> */}
             <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={`input-block mb-3 form-focus ${
@@ -209,7 +207,7 @@ const TravelExpenseTable = () => {
         </div>
       </div>
       {/* <AddSalaryModal/> */}
-      <TravelAllwowanceExcelSubmitionPopup/>
+      <TravelAllwowanceExcelSubmitionPopup />
     </>
   );
 };
