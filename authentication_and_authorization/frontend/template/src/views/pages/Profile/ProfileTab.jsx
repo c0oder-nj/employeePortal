@@ -24,17 +24,17 @@ const ProfileTab = (props) => {
     { id: 5, title: "No. of children", text: props.profile.anzkd }
   ];
 
-  const primaryContactData = [
-    { id: 1, title: "Name", text: "John Doe" },
-    { id: 2, title: "Relationship", text: "Father" },
-    { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  ];
+  // const primaryContactData = [
+  //   { id: 1, title: "Name", text: "John Doe" },
+  //   { id: 2, title: "Relationship", text: "Father" },
+  //   { id: 3, title: "Phone", text: "9876543210, 9876543210" },
+  // ];
 
-  const secondaryContactData = [
-    { id: 1, title: "Name", text: "Karen Wills" },
-    { id: 2, title: "Relationship", text: "Brother" },
-    { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  ];
+  // const secondaryContactData = [
+  //   { id: 1, title: "Name", text: "Karen Wills" },
+  //   { id: 2, title: "Relationship", text: "Brother" },
+  //   { id: 3, title: "Phone", text: "9876543210, 9876543210" },
+  // ];
 
   // original
   // const bankInfoData = [
