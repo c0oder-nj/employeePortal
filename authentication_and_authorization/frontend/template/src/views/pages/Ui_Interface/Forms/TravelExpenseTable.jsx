@@ -196,14 +196,16 @@ const TravelExpenseTable = () => {
               </div>
             </div>
             <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-              <Link to="#" className="btn btn-success w-100">
+              {/* <Link to="#" className="btn btn-success w-100">
                 {" "}
                 Search{" "}
-              </Link>
+              </Link> */}
+
+              <button className="btn btn-success w-100" type="button" >Search</button>
             </div>
           </div>
 
-          <TravelExpenseDataTable />
+          <TravelExpenseDataTable data={{}}/>
         </div>
       </div>
       {/* <AddSalaryModal/> */}

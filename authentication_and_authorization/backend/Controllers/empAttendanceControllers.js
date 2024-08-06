@@ -71,4 +71,20 @@ const employeeDailyAttendnceCorrection = async (req,res)=>{
   res.status(200).send(result.data)
 }
 
-module.exports = {employeesapNumber,employeeDailyAttendnceStatus,employeeDailyAttendnceCorrection};
+//Funtion for attendance correction of logged in employee
+const allEmployeeDailyAttendnceCorrection = async (req,res)=>{
+  // console.log("Your value",req.body)
+  console.log(req.query.value)
+  const newValue = req.query.value;
+  headerValue = newValue.split("=")[1];
+  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  var sapNumber = decodedValue.empCode;
+
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/hod_emp_attendance.htm?sapid=5089`);
+  console.log(result.data);
+  console.log("All employee attendance ")
+  res.status(200).send(result.data)
+}
+
+
+module.exports = {allEmployeeDailyAttendnceCorrection,employeesapNumber,employeeDailyAttendnceStatus,employeeDailyAttendnceCorrection};

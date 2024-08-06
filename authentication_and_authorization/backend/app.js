@@ -82,6 +82,8 @@ app.get('/api/employee/employeeLeaveApproval',authUserThoughMiddleware.checkUser
 app.get('/api/DailyAttendance/employeeDailyAttendnceStatus',authUserThoughMiddleware.checkUser,empAttnedanceControllers.employeeDailyAttendnceStatus);
 app.post('/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus',empAttnedanceControllers.employeeDailyAttendnceCorrection);
 
+//Api to show all the previous day daily attendance of all the employees who are under HOD
+app.get('/api/DailyAttendance/allEmployeeDailyAttendnceCorrection',authUserThoughMiddleware.checkUser,empAttnedanceControllers.allEmployeeDailyAttendnceCorrection)
 //Information about country code and cost center
 app.get('/api/TravelExpense/countryAndCostCenterCode',empTravelExpense.countryCodeAndCostCenter)
 

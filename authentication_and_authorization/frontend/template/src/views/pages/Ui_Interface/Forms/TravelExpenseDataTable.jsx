@@ -10,6 +10,7 @@ import "toastify-js/src/toastify.css";
 // import ShowTravelData from "../../../../components/modelpopup/ShowTravelData";
 
 const TravelExpenseDataTable = (props) => {
+  console.log(props);
   const data = Salary.Salary;
   console.log(props);
   const [ddataFetched, setDdataFetched] = useState([]);
