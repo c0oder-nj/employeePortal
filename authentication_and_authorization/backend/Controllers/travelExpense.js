@@ -89,8 +89,6 @@ const travelExpenseDelete = async(req,res)=>{
 }
 
 //Function to create trip trip by employe  whci has been submitted before. 
-
-
 const travelExpenseCreate = async(req,res)=>{
 
   console.log("You are in create section sap and trip code")
@@ -106,4 +104,19 @@ const travelExpenseCreate = async(req,res)=>{
 }
 
 
-module.exports = {travelExpenseCreate, travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };
+//Function to show travel expense hod approval  
+const showTravelExpenseHodApproval = async(req,res)=>{
+
+  console.log("You are in create section sap and trip code")
+  // console.log(req.query.sapNumber)
+  const newValue = req.query.value;
+  headerValue = newValue.split("=")[1];
+  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  var sapNumber = decodedValue.empCode;
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing_hod_approval.htm?sapid=5089`);
+  console.log(result);
+  // res.status(200).send({messageType : result.data.msg_type,message:result.data.msg})
+  res.status(200).send({status : "True",data : result.data})
+}
+
+module.exports = {showTravelExpenseHodApproval,travelExpenseCreate, travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };

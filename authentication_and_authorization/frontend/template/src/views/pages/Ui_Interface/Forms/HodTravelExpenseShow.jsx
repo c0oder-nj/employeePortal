@@ -7,7 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 // import ExpenseReportTable from "./ExpenseReportTable";
-import ExpenseReportTable from "../../HR/Reports/ExpenseReport/ExpenseReportTable";
+import TravelExpenseReportTable from "../../HR/Reports/ExpenseReport/TravelExpenseReportTable";
+import { Input } from "antd";
 
 const HodTravelExpenseShow = ()=>{
     const [selectedDate, setSelectedDate] = useState(null);
@@ -15,7 +16,7 @@ const HodTravelExpenseShow = ()=>{
   
     const [isFocused, setIsFocused] = useState(false);
     const [dateTwo, setdateTwo] = useState(false);
-    const [setSelectedOption] = useState(null);
+    const [select,setSelectedOption] = useState(null);
   
     const handleFocus = () => {
       setIsFocused(true);
@@ -66,52 +67,12 @@ const HodTravelExpenseShow = ()=>{
           {/* <div className="row filter-row">
             <div className="col-sm-6 col-md-3">
               <div className="input-block form-focus select-focus">
-                <Select
-                  placeholder="Select Buyer"
-                  onChange={setSelectedOption}
-                  options={options}
-                  className="select floating"
-                  styles={customStyles}
+                <Input 
+                  type="text"
+                  className="form-control"
+                 
                 />
                 <label className="focus-label">Purchased By</label>
-              </div>
-            </div>
-            <div className="col-sm-6 col-md-3">
-              <div
-                className={`input-block mb-3 form-focus ${
-                  isFocused ? "focused" : ""
-                }`}
-              >
-                <div className="cal-icon focused ">
-                  <DatePicker
-                    className="form-control floating datetimepicker"
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    dateFormat="dd-MM-yyyy"
-                  />
-                </div>
-                <label className="focus-label">From</label>
-              </div>
-            </div>
-            <div className="col-sm-6 col-md-3">
-              <div
-                className={`input-block mb-3 form-focus ${
-                  dateTwo ? "focused" : ""
-                }`}
-              >
-                <div className="cal-icon">
-                  <DatePicker
-                    className="form-control floating datetimepicker"
-                    selected={selectedDateTwo}
-                    onChange={handleDateChangeTwo}
-                    onFocus={handleFocustwo}
-                    onBlur={handleBlurtwo}
-                    dateFormat="dd-MM-yyyy"
-                  />
-                </div>
-                <label className="focus-label">To</label>
               </div>
             </div>
             <div className="col-sm-6 col-md-3">
@@ -122,7 +83,7 @@ const HodTravelExpenseShow = ()=>{
             </div>
           </div> */}
   
-          <ExpenseReportTable />
+          <TravelExpenseReportTable />
         </div>
       </div>
     );

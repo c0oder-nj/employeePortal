@@ -458,6 +458,7 @@ const TravelExpenseDataTable = (props) => {
     <>
       <div className="row">
         <div className="col-md-12">
+          
           <div className="table-responsive">
             <Table
               className="table-striped"

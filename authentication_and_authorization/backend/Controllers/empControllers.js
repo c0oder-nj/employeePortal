@@ -179,6 +179,7 @@ const employeeLeaveStatus = async (req,res)=>{
 
   // console.log(employeeAttendanceData.leavebalance)
   sendEmployeeData.employeePendingLeave = employeeAttendanceData.pendingleave
+  sendEmployeeData.sapNumber = sapNumber
   // sendEmployeeData.leaveInfo = employeeAttendanceData.leaveemp
   
   // console.log(sendEmployeeData.companyEmployee)

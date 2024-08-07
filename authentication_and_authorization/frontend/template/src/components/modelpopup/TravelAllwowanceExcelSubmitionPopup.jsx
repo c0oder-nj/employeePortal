@@ -281,7 +281,36 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
 
   async function sendDataDomestic(e) {
     e.preventDefault();
-    console.log("In send Data");
+    function getDate() {
+      const today = new Date();
+      const month = today.getMonth() + 1;
+      const year = today.getFullYear();
+      const date = today.getDate();
+      return `${year}${month}${date}`;
+    }
+    //For todays date
+    if(new Date().toLocaleDateString()<formData.TimeStart || new Date().toLocaleDateString()<formData.TimeEnd){
+      console.log("Printing todays date",getDate())
+      Toastify({
+        text: "End Date or Start date is later then today ",
+        duration: 3000,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+      }).showToast();
+    }
+    else if(formData.TimeStart > formData.TimeEnd){
+      Toastify({
+        text: "End Date is earlier then start date",
+        duration: 3000,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+      }).showToast();
+    }
+    else {console.log("In send Data");
     console.log(JSON.stringify(formData));
     const value = `${document.cookie}`;
     console.log(value);
@@ -310,7 +339,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       });
       return;
       // return response.json();
-    });
+    });}
   }
   async function sendDataInternational(e) {
     e.preventDefault();

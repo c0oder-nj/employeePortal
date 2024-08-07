@@ -205,7 +205,7 @@ const TravelExpenseTable = () => {
             </div>
           </div>
 
-          <TravelExpenseDataTable data={{}}/>
+          <TravelExpenseDataTable />
         </div>
       </div>
       {/* <AddSalaryModal/> */}
