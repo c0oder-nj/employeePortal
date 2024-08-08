@@ -88,7 +88,7 @@ const Login = () => {
             });   
             if(response.status){
               document.cookie= 'accessToken='+response.accessToken;
-              navigate("/admin-dashboard");
+              navigate("/employee-dashboard");
             }else if(response.newUser){
               navigate('/set-password');
             }

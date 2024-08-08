@@ -281,19 +281,22 @@ const forgetPassword = async(req,res) => {
         
 
         
-        const msg = `Hey there, your otp for login is ${otp} use it wisely as it expired in five minutes.`;
-        // const smsResponse = await axios.get('http://control.yourbulksms.com/api/sendhttp.php', {
-        //     params: {
-        //         'authkey' : process.env.AUTH_KEY,
-        //         'mobiles' : mobileNo,
-        //         'message' : msg,
-        //         'sender' : process.env.SENDER,
-        //         'route' : process.env.ROUTE,
-        //         'country' : 91,
-        //         'DLT_TE_ID' : process.env.DLT_TE_ID,
-        //         'unicode' : 1
-        //     }
-        // })
+        const msg = `Enter The Following OTP To Verify Your Account <b>${otp}</b> SHAKTI`;
+        const smsResponse = await axios.get('http://control.yourbulksms.com/api/sendhttp.php', {
+            params: {
+                'authkey' : process.env.AUTH_KEY,
+                'mobiles' : mobileNo,
+                'message' : msg,
+                'sender' : process.env.SENDER,
+                'route' : process.env.ROUTE,
+                'country' : 91,
+                'DLT_TE_ID' : process.env.DLT_TE_ID,
+                'unicode' : 1
+            }
+        })
+        if(smsResponse.status === 200){
+            console.log("OTP Send Successfully");
+        }
         // console.log(smsResponse);
         console.log(otp);
         return res.json({"status":true, "message":"OTP send successfully", "hash":fullhash, "mobileNo": mobileNo})
