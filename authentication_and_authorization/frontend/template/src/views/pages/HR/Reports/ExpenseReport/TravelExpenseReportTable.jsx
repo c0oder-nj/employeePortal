@@ -1,12 +1,15 @@
-import { Table,Input } from "antd";
-import React,{useEffect,useState,} from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Table, Input } from "antd";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar_03, Avatar_04 } from "../../../../../Routes/ImagePath";
-
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
+import DatePicker from "react-datepicker";
 
 const TravelExpenseReportTable = () => {
   const navigate = useNavigate();
-  const [apiData,setApiData] = useState([]);
+  const [apiData, setApiData] = useState([]);
+  const [setApprove, setApproveData] = useState([]);
   function checkCookie(cookieName) {
     const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
@@ -39,7 +42,12 @@ const TravelExpenseReportTable = () => {
     };
     fetchData();
   }, []);
-  const [filterData,setFilterData] = useState([]);
+
+  useEffect(() => {
+    console.log("At line 45", setApprove);
+  }, [setApprove]);
+
+  const [filterData, setFilterData] = useState([]);
   const data = [
     // {
     //   id: 1,
@@ -64,21 +72,21 @@ const TravelExpenseReportTable = () => {
     //   status: "Approved",
     // },
     {
-      "REINR": 7441,
-      "DATV1": "2024-04-10",
-      "UHRV1": "00:00:00",
-      "DATB1": "2024-04-12",
-      "UHRB1": "00:00:00",
-      "ZORT1": "DIG Office Chindwara",
-      "KUNDE": "",
-      "HDVRS": 99,
-      "ANTRG": "3",
-      "ANTRG_TEXT": "Trip Completed",
-      "WAERS": "INR",
-      "TRIP_TOTAL": 15077.00,
-      "PUR_TXT": "Meeting with DIG",
-      "OUT_TXT": "Meeting Done and Required  information shared"
-  }
+      REINR: 7441,
+      DATV1: "2024-04-10",
+      UHRV1: "00:00:00",
+      DATB1: "2024-04-12",
+      UHRB1: "00:00:00",
+      ZORT1: "DIG Office Chindwara",
+      KUNDE: "",
+      HDVRS: 99,
+      ANTRG: "3",
+      ANTRG_TEXT: "Trip Completed",
+      WAERS: "INR",
+      TRIP_TOTAL: 15077.0,
+      PUR_TXT: "Meeting with DIG",
+      OUT_TXT: "Meeting Done and Required  information shared",
+    },
   ];
 
   // const columns = [
@@ -186,10 +194,11 @@ const TravelExpenseReportTable = () => {
       render: (text) => (
         <div className="dropdown action-label">
           <Link
-            className="btn btn-white btn-sm btn-rounded dropdown-toggle"
+            className="btn btn-white btn-sm btn-rounded "
             to="#"
-            data-bs-toggle="dropdown"
-            aria-expanded="false">
+            // data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
             <i
               className={
                 text === "Pending"
@@ -199,14 +208,6 @@ const TravelExpenseReportTable = () => {
             />{" "}
             {text}
           </Link>
-          <div className="dropdown-menu">
-            <Link className="dropdown-item" to="#">
-              <i className="far fa-dot-circle text-success" /> Approved
-            </Link>
-            <Link className="dropdown-item" to="#">
-              <i className="far fa-dot-circle text-danger" /> Pending
-            </Link>
-          </div>
         </div>
       ),
       sorter: (a, b) => a.status.length - b.status.length,
@@ -295,47 +296,171 @@ const TravelExpenseReportTable = () => {
       dataIndex: "OUT_TXT",
       sorter: (a, b) => a.OUT_TXT.length - b.OUT_TXT.length,
     },
-    
+
+    // {
+    //   title: "Action",
+    //   render: () => (
+    //     <div className="dropdown dropdown-action text-end">
+    //       <Link
+    //         to="#"
+    //         className="action-icon dropdown-toggle"
+    //         data-bs-toggle="dropdown"
+    //         aria-expanded="false">
+    //         <i className="material-icons">more_vert</i>
+    //       </Link>
+    //       <div className="dropdown-menu dropdown-menu-right">
+    //         <Link className="dropdown-item" to="#">
+    //           <i className="fa fa-pencil m-r-5" /> Edit
+    //         </Link>
+    //         <Link className="dropdown-item" to="#">
+    //           <i className="fa fa-trash m-r-5" /> Delete
+    //         </Link>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
     {
       title: "Action",
-      render: () => (
+      id: "PERNR",
+      render: (id) => (
         <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
             className="action-icon dropdown-toggle"
             data-bs-toggle="dropdown"
-            aria-expanded="false">
+            aria-expanded="false"
+          >
             <i className="material-icons">more_vert</i>
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            <Link className="dropdown-item" to="#">
+            {/* <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#edit_salary"
+            >
               <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link className="dropdown-item" to="#">
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+            </Link> */}
+            <button
+              className="dropdown-item "
+              data-bs-toggle="modal"
+              data-bs-target="#approvedtrip"
+              onClick={() => {
+                console.log(id);
+                setApproveData(id);
+              }}
+            >
+              {" "}
+              Create trip
+            </button>
           </div>
         </div>
       ),
     },
   ];
-  
-  const handleFilter = (value)=>{
-    console.log(value)
-    console.log(filterData)
-      const res = filterData.filter(f=>f.ENAME.toLowerCase().includes(value));
-      console.log(res)
-      setApiData(res);
+
+  const handleFilter = (value) => {
+    console.log(value);
+    console.log(filterData);
+    const res = filterData.filter((f) => f.ENAME.toLowerCase().includes(value));
+    console.log(res);
+    setApiData(res);
+  };
+
+  const approveTrip = (props) => {
+    const [sapNumber, tripNumber] = [props.PERNR, props.REINR];
+    console.log("In hod travel approval", sapNumber, tripNumber);
+    const fetchData = async () => {
+      const value = `${document.cookie}`;
+      console.log(value);
+      const url = `http://localhost:3000/api/TravelExpense/approveTravelExpenseByHOD?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      console.log(url);
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          Toastify({
+            text: data.message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          }).showToast();
+          return data;
+        })
+        .catch((error) => {
+          console.log("Error");
+        });
+    };
+    fetchData();
+  };
+
+  const handleDateFilterFrom = (dateValue) => {
+    console.log(dateValue);
+    console.log(apiData);
+    console.log(dateValue);
+    // console.log(dataFetched);
+
+    if (!Array.isArray(apiData)) {
+      console.error("api Data is not an array");
+      return;
     }
+    const formatDate = (date) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = `0${d.getMonth() + 1}`.slice(-2);
+      const day = `0${d.getDate()}`.slice(-2);
+      return `${year}-${month}-${day}`;
+    };
+
+    const formattedDate = formatDate(dateValue);
+    console.log("Formatted Date:", formattedDate);
+
+    const res = apiData.filter((f) => f.DATV1 >= formattedDate);
+
+    console.log(res);
+    setApiData(res);
+  };
+  const handleDateFilterTo = (dateValue) => {
+    console.log(dateValue);
+    console.log(apiData);
+    console.log(dateValue);
+    // console.log(dataFetched);
+
+    if (!Array.isArray(apiData)) {
+      console.error("api Data is not an array");
+      return;
+    }
+    const formatDate = (date) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = `0${d.getMonth() + 1}`.slice(-2);
+      const day = `0${d.getDate()}`.slice(-2);
+      return `${year}-${month}-${day}`;
+    };
+
+    const formattedDate = formatDate(dateValue);
+    console.log("Formatted Date:", formattedDate);
+
+    const res = apiData.filter((f) => f.DATB1 <= formattedDate);
+
+    console.log(res);
+    setApiData(res);
+  };
+  const [start, setStart] = useState();
+  const [end, setEnd] = useState();
   return (
-    
-    <div className="row">
-      <div className="col-md-12">
-        <div className="table-responsive" style={{"overflow-x": "hidden"}}>
-          {/* <input type="text" placeholder="search here ..." className="form-control" onChange={e=>{
+    <>
+      <div className="row">
+        <div className="col-md-12">
+          <div className="table-responsive" style={{ "overflow-x": "hidden" }}>
+            {/* <input type="text" placeholder="search here ..." className="form-control" onChange={e=>{
                 handleFilter(e.target.value)
           }}></input> */}
-          {/* <Table
+            {/* <Table
             className="table-striped"
             style={{ overflowX: "auto" }}
             columns={columns}
@@ -343,7 +468,7 @@ const TravelExpenseReportTable = () => {
             rowKey={(record) => record.id}
           /> */}
 
-          {/* {
+            {/* {
             apiData.forEach((d,i)=>(
                 // console.log(d)
                 <Table
@@ -355,39 +480,120 @@ const TravelExpenseReportTable = () => {
           />
             ))
           } */}
-          <div className="row filter-row">
-            <div className="col-sm-6 col-md-3">
-              <div className="input-block form-focus select-focus">
-                <input type="text" placeholder="search here ..." className="form-control" onChange={e=>{
-                handleFilter(e.target.value)
-          }}></input>
-                <label className="focus-label">Employee Name</label>
+            <div className="row filter-row">
+              <div className="col-sm-6 col-md-3">
+                <div className="input-block form-focus select-focus">
+                  <input
+                    type="text"
+                    placeholder="search here ..."
+                    className="form-control"
+                    onChange={(e) => {
+                      handleFilter(e.target.value);
+                    }}
+                  ></input>
+                  <label className="focus-label">Employee Name</label>
+                </div>
               </div>
+              <div className="col-sm-6 col-md-3">
+                <div className="input-block  form-focus focused">
+                  <div className="cal-icon focused ">
+                    <DatePicker
+                      className="form-control floating datetimepicker"
+                      selected={start}
+                      // onChange={handleDateChange}
+                      onChange={(e) => {
+                        setStart(e);
+                        handleDateFilterFrom(e);
+                      }}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                  </div>
+                  <label className="focus-label">From</label>
+                </div>
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <div className="input-block  form-focus focused">
+                  <div className="cal-icon focused ">
+                    <DatePicker
+                      className="form-control floating datetimepicker"
+                      selected={end}
+                      // onChange={handleDateChange}
+                      onChange={(e) => {
+                        setEnd(e);
+                        handleDateFilterTo(e);
+                      }}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                  </div>
+                  <label className="focus-label">To</label>
+                </div>
+              </div>
+              
+
+              {/* <div className="col-sm-6 col-md-3">
+                <Link to="#" className="btn btn-success btn-block w-100">
+                  {" "}
+                  Search{" "}
+                </Link>
+              </div> */}
             </div>
-            <div className="col-sm-6 col-md-3">
-              <Link to="#" className="btn btn-success btn-block w-100">
-                {" "}
-                Search{" "}
-              </Link>
-            </div>
+
+            <Table
+              className="table-striped"
+              style={{ overflowX: "auto" }}
+              columns={columns}
+              dataSource={apiData}
+              rowKey={(record) => record.id}
+            />
           </div>
-
-          <Table
-            className="table-striped"
-            style={{ overflowX: "auto" }}
-            columns={columns}
-            dataSource={apiData}
-            rowKey={(record) => record.id}
-          />
-          {/* {
-            apiData.forEach((ele)=>{
-              console.log(ele);
-            })
-          } */}
-
         </div>
       </div>
-    </div>
+      <>
+        {/* Delete Performance Indicator Modal */}
+        <div
+          className="modal custom-modal fade"
+          id="approvedtrip"
+          role="dialog"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-body">
+                <div className="form-header">
+                  <h3>Trip Approving</h3>
+                  <p>Are you sure want to Approve trip : {setApprove.REINR}?</p>
+                </div>
+                <div className="modal-btn delete-action">
+                  <div className="row">
+                    <div className="col-6">
+                      <button
+                        className="btn btn-primary continue-btn"
+                        onClick={() => {
+                          console.log(setApprove);
+                          approveTrip(setApprove);
+                          // CreateTripData(createTrip,formData.purposeText,formData.outComingText);
+                        }}
+                      >
+                        Approve Trip
+                      </button>
+                    </div>
+                    <div className="col-6">
+                      <Link
+                        to="#"
+                        data-bs-dismiss="modal"
+                        className="btn btn-primary cancel-btn"
+                      >
+                        Cancel
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* /Delete Performance Indicator Modal */}
+      </>
+    </>
   );
 };
 

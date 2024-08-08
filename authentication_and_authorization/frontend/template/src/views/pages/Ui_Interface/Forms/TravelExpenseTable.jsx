@@ -112,7 +112,7 @@ const TravelExpenseTable = () => {
           />
 
           <div className="row filter-row">
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={
                   focused || inputValue !== ""
@@ -132,7 +132,7 @@ const TravelExpenseTable = () => {
                   Reimbur. Number
                 </label>
               </div>
-            </div>
+            </div> */}
             {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div className="input-block mb-3 form-focus select-focus">
                 <Select
@@ -157,7 +157,7 @@ const TravelExpenseTable = () => {
                 <label className="focus-label">Paid By</label>
               </div>
             </div> */}
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={`input-block mb-3 form-focus ${
                   isFocused ? "focused" : ""
@@ -175,8 +175,8 @@ const TravelExpenseTable = () => {
                 </div>
                 <label className="focus-label">From</label>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            </div> */}
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={`input-block mb-3 form-focus ${
                   dateTwo ? "focused" : ""
@@ -194,14 +194,14 @@ const TravelExpenseTable = () => {
                 </div>
                 <label className="focus-label">To</label>
               </div>
-            </div>
+            </div> */}
             <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               {/* <Link to="#" className="btn btn-success w-100">
                 {" "}
                 Search{" "}
               </Link> */}
 
-              <button className="btn btn-success w-100" type="button" >Search</button>
+              {/* <button className="btn btn-success w-100" type="button" >Search</button> */}
             </div>
           </div>
 

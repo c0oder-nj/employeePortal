@@ -146,6 +146,14 @@ app.get(
   empTravelExpense.showTravelExpenseHodApproval
 );
 
+//Approve travel expense by HOD
+app.get(
+  "/api/TravelExpense/approveTravelExpenseByHOD",
+  authUserThoughMiddleware.checkUser,
+  empTravelExpense.travelExpenseHodApproval
+);
+
+
 app.use("/api", routes);
 
 app.get("/get_cookie", (req, res) => {

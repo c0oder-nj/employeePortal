@@ -4,6 +4,7 @@ import Salary from "../../../../assets/json/employeeSalary";
 import { Table } from "antd";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import DatePicker from "react-datepicker";
 // import Breadcrumbs from "../../../../components/Breadcrumbs";
 // import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
 // import DeleteModal from "../../../../components/modelpopup/deletePopup";
@@ -16,10 +17,10 @@ const TravelExpenseDataTable = (props) => {
   const [ddataFetched, setDdataFetched] = useState([]);
   const [checkData, setCheckData] = useState(false);
   const [setDelete, setDeleteData] = useState([]);
-  const [createTrip,setCreateTrip] = useState([]);
+  const [createTrip, setCreateTrip] = useState([]);
   const [formData, setFormData] = useState({
-    purposeText:"",
-    outComingText : ""
+    purposeText: "",
+    outComingText: "",
   });
   const setColums = [
     // {
@@ -209,53 +210,51 @@ const TravelExpenseDataTable = (props) => {
     fetchData();
   };
 
-  const CreateTripData = (props,purposeText,outComingText) => {
-    
-    if(purposeText=='' || outComingText==''){
+  const CreateTripData = (props, purposeText, outComingText) => {
+    if (purposeText == "" || outComingText == "") {
       Toastify({
         text: "Some field is Remaing",
         duration: 3000,
         close: true,
-        gravity: "top", 
+        gravity: "top",
         position: "center",
         backgroundColor: "linear-gradient(to right, #ff4e4e, #c60000)",
       }).showToast();
+    } else {
+      console.log(typeof props);
+      console.log("Your data in CreateTrip", props, purposeText, outComingText);
+      const [sapNumber, tripNumber] = [props.pernr, props.reinr];
+      console.log("Sap and trip number", sapNumber, tripNumber);
+      const fetchData = async () => {
+        const value = `${document.cookie}`;
+        console.log(value);
+
+        console.log("Printing values in useEffect", sapNumber, tripNumber);
+        const url = `http://localhost:3000/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
+        console.log(url);
+        fetch(url)
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            Toastify({
+              text: data.message,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "center",
+              backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            }).showToast();
+            return data;
+          })
+          .catch((error) => {
+            console.log("Error");
+          });
+      };
+      fetchData();
     }
-    else
-    {console.log(typeof props);
-    console.log("Your data in CreateTrip", props,purposeText,outComingText);
-    const [sapNumber, tripNumber] = [props.pernr, props.reinr];
-    console.log("Sap and trip number", sapNumber, tripNumber);
-    const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
-
-      console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `http://localhost:3000/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
-      console.log(url);
-      fetch(url)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          Toastify({
-            text: data.message,
-            duration: 3000,
-            close: true,
-            gravity: "top", 
-            position: "center",
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-          }).showToast();
-          return data;
-        })
-        .catch((error) => {
-          console.log("Error");
-        });
-    };
-    fetchData();}
   };
-
 
   const [dataFetched, setDataFetched] = useState([]);
   const columns = [
@@ -268,35 +267,14 @@ const TravelExpenseDataTable = (props) => {
       title: "Show Expense",
       id: "pernr",
       render: (id) => (
-        // <Link
-        //   className="btn btn-sm btn-primary"
-        //   to="#"
-        //   data-bs-toggle="modal"
-        //   data-bs-target="#show_travel_data"
-
-        // >
-        //   Show Travel Info
-        //   <ShowTravelData data={{ id }} />
-        // </Link>
-
         <button
           className="btn btn-sm btn-primary"
           data-bs-toggle="modal"
           data-bs-target="#show_travel_data"
           onClick={() => ShowTravelData(id)}
         >
-          Show Travel
+        Show Travel
         </button>
-
-        // <Link
-        //   className="btn btn-sm btn-primary"
-        //   to="#"
-        //   data-bs-toggle="modal"
-        //   data-bs-target="#show_travel_data"
-        //   state="demo txt"
-        // >
-        //   Show Travel Info
-        // </Link>
       ),
     },
     {
@@ -369,7 +347,6 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "out_txt",
       sorter: (a, b) => a.out_txt.length - b.out_txt.length,
     },
-    
     {
       title: "Action",
       id: "pernr",
@@ -384,21 +361,13 @@ const TravelExpenseDataTable = (props) => {
             <i className="material-icons">more_vert</i>
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            {/* <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_salary"
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link> */}
+            
             <button
               className="dropdown-item "
               data-bs-toggle="modal"
               data-bs-target="#create"
               onClick={() => {
                 setCreateTrip(id);
-                // setDeleteData(id);
               }}
             >
               {" "}
@@ -420,7 +389,7 @@ const TravelExpenseDataTable = (props) => {
       ),
     },
   ];
-
+  const [setApi, setApiData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const value = `${document.cookie}`;
@@ -433,7 +402,8 @@ const TravelExpenseDataTable = (props) => {
         })
         .then((data) => {
           console.log(data.travel_data);
-          setDataFetched(data.travel_data);
+          setDataFetched(data.travel_data.data);
+          setApiData(data.travel_data.data);
           return data;
         })
         .catch((error) => {
@@ -442,29 +412,134 @@ const TravelExpenseDataTable = (props) => {
     };
     fetchData();
   }, []);
+  const [selectedDate, setSelectedDate] = useState([]);
+  const handleFilter = (value) => {
+    console.log(value);
+    console.log(dataFetched);
+    const res = setApi.filter((f) =>
+      f.reinr.toLowerCase().includes(value.toLowerCase())
+    );
+    console.log(res);
+    setDataFetched(res);
+  };
+  const handleDateFilterFrom = (dateValue) => {
+    console.log(dateValue);
+    console.log(dataFetched);
 
-//   const filteredData = data.filter((el) => {
-//     //if no input the return the original
-//     if (props.input === '') {
-//         return el;
-//     }
-//     //return the item which contains the user input
-//     else {
-//         return el.text.toLowerCase().includes(props.input)
-//     }
-// })
+    if (!Array.isArray(dataFetched)) {
+      console.error("dataFetched is not an array");
+      return;
+    }
+    const formatDateForComparison = (date) => {
+      const d = new Date(date);
+      const day = `0${d.getDate()}`.slice(-2);
+      const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+      const year = d.getFullYear();
+      return `${year}${month}${day}`;
+    };
+    const convertJsonDateForComparison = (jsonDate) => {
+      const [day, month, year] = jsonDate.split(".");
+      return `${year}${month}${day}`;
+    };
+    const formattedDate = formatDateForComparison(dateValue);
+    console.log("Formatted Date for Comparison:", formattedDate);
+    const res = dataFetched.filter((f) => {
+      const startDate = convertJsonDateForComparison(f.datv1);
+      return startDate >= formattedDate;
+    });
+    console.log(res);
+    setDataFetched(res);
+  };
 
+  const handleDateFilterTo = (dateValue) => {
+    console.log(dateValue);
+    console.log(dataFetched);
+
+    if (!Array.isArray(dataFetched)) {
+      console.error("dataFetched is not an array");
+      return;
+    }
+    const formatDateForComparison = (date) => {
+      const d = new Date(date);
+      const day = `0${d.getDate()}`.slice(-2);
+      const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+      const year = d.getFullYear();
+      return `${year}${month}${day}`;
+    };
+    const convertJsonDateForComparison = (jsonDate) => {
+      const [day, month, year] = jsonDate.split(".");
+      return `${year}${month}${day}`;
+    };
+    const formattedDate = formatDateForComparison(dateValue);
+    console.log("Formatted Date for Comparison:", formattedDate);
+    const res = dataFetched.filter((f) => {
+      const startDate = convertJsonDateForComparison(f.datb1);
+      return startDate <= formattedDate;
+    });
+    console.log(res);
+    setDataFetched(res);
+  };
+  const [start,setStart] = useState();
+  const [end,setEnd] = useState();
   return (
     <>
       <div className="row">
+        <div className="row filter-row">
+          <div className="col-sm-6 col-md-3">
+            <div className="input-block form-focus select-focus">
+              <input
+                type="text"
+                placeholder="search here ..."
+                className="form-control"
+                onChange={(e) => {
+                  handleFilter(e.target.value);
+                }}
+              ></input>
+              <label className="focus-label">Trip number</label>
+            </div>
+          </div>
+          <div className="col-sm-6 col-md-3">
+            <div className="input-block  form-focus focused">
+              <div className="cal-icon focused ">
+                <DatePicker
+                  className="form-control floating datetimepicker"
+                  selected={start}
+                  // onChange={handleDateChange}
+                  onChange={(e) => {
+                    setStart(e);
+                    handleDateFilterFrom(e);
+                  }}
+                  dateFormat="dd-MM-yyyy"
+                />
+              </div>
+              <label className="focus-label">From</label>
+            </div>
+          </div>
+          <div className="col-sm-6 col-md-3">
+            <div className="input-block  form-focus focused">
+              <div className="cal-icon focused ">
+                <DatePicker
+                  className="form-control floating datetimepicker"
+                  selected={end}
+                  // onChange={handleDateChange}
+                  onChange={(e) => {
+                    setEnd(e);
+                    handleDateFilterTo(e);
+                  }}
+                  dateFormat="dd-MM-yyyy"
+                />
+              </div>
+              <label className="focus-label">To</label>
+            </div>
+          </div>
+        </div>
         <div className="col-md-12">
-          
           <div className="table-responsive">
             <Table
               className="table-striped"
               style={{ overflowX: "auto" }}
               columns={columns}
-              dataSource={dataFetched.data}
+              dataSource={dataFetched}
               rowKey={(record) => record.id}
             />
           </div>
@@ -564,63 +639,65 @@ const TravelExpenseDataTable = (props) => {
                 <p>Reimbursement Number : {setDelete.reinr}</p>
               </div>
               <div className="modal-btn delete-action">
-
                 <div className="row">
-                <div className="input-block mb-3 row">
-                      Purpose Text
-                      <input
-                        type="text"
-                        className="form-control"
-                        required
-                        placeholder="type your purpose"
-                        
-                        onChange={(event) => {
-                          setFormData(
-                            () => (
-                              console.log(event.target.value),
-                              {
-                                ...formData,
-                                purposeText: event.target.value,
-                              }
-                            )
-                          );
-                        }}
-                      />
-                    </div>
+                  <div className="input-block mb-3 row">
+                    Purpose Text
+                    <input
+                      type="text"
+                      className="form-control"
+                      required
+                      placeholder="type your purpose"
+                      onChange={(event) => {
+                        setFormData(
+                          () => (
+                            console.log(event.target.value),
+                            {
+                              ...formData,
+                              purposeText: event.target.value,
+                            }
+                          )
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
                 <div className="row">
-                <div className="input-block mb-3 row">
-                      Outcoming Text 
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="type your outcome"
-                        required
-                        onChange={(event) => {
-                          setFormData(
-                            () => (
-                              console.log(event.target.value),
-                              {
-                                ...formData,
-                                outComingText: event.target.value,
-                              }
-                            )
-                          );
-                        }}
-                      />
-                    </div>
+                  <div className="input-block mb-3 row">
+                    Outcoming Text
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="type your outcome"
+                      required
+                      onChange={(event) => {
+                        setFormData(
+                          () => (
+                            console.log(event.target.value),
+                            {
+                              ...formData,
+                              outComingText: event.target.value,
+                            }
+                          )
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
                 <div className="row">
                   <div className="col-6">
                     {/* <Link to="#" className="btn btn-primary continue-btn">
                       Delete
                     </Link> */}
-                    
+
                     <button
                       className="btn btn-primary continue-btn"
                       onClick={() => {
                         // console.log(setDelete);
-                        CreateTripData(createTrip,formData.purposeText,formData.outComingText);
+                        CreateTripData(
+                          createTrip,
+                          formData.purposeText,
+                          formData.outComingText
+                        );
                       }}
                     >
                       Create Trip

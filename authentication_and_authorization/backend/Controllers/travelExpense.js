@@ -91,9 +91,9 @@ const travelExpenseDelete = async(req,res)=>{
 //Function to create trip trip by employe  whci has been submitted before. 
 const travelExpenseCreate = async(req,res)=>{
 
-  console.log("You are in create section sap and trip code")
-  console.log(req.query.sapNumber,req.query.tripNumber)
-  const result = await axios.get(`http://spquasrvr1.shaktipumps.com:8000/sap/bc/bsp/sap/zhr_portal_new/emp_trip_complete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}&obj_txt=${req.query.purposeText}&out_txt=${req.query.outComingText}`);
+  console.log("You are in create showing undefined section sap and trip code")
+  console.log(req.query.sapNumber,req.query.tripNumber,req.query.objectText,req.query.outcomeText)
+  const result = await axios.get(`http://spquasrvr1.shaktipumps.com:8000/sap/bc/bsp/sap/zhr_portal_new/emp_trip_complete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}&obj_txt=${req.query.objectText}&out_txt=${req.query.outcomeText}`);
   console.log(result);
   // console.log("Show travel")
   res.status(200).send({messageType : result.data.msg_type,message:result.data.msg})
@@ -119,4 +119,21 @@ const showTravelExpenseHodApproval = async(req,res)=>{
   res.status(200).send({status : "True",data : result.data})
 }
 
-module.exports = {showTravelExpenseHodApproval,travelExpenseCreate, travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };
+//Function to approve travel allowance by the Hod for particular sapNumber and Trip number
+const travelExpenseHodApproval = async(req,res)=>{
+
+  console.log("You are in approve by hod section sap and trip code")
+  // console.log(req.query.sapNumber)
+  const newValue = req.query.value;
+  const sapNumber = req.query.sapNumber;
+  const tripNumber = req.query.tripNumber;
+  headerValue = newValue.split("=")[1];
+  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  var sapNumberOfApprover = decodedValue.empCode;
+  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/emp_trip_hod_approval.htm?sapid=${sapNumber}&tripno=${tripNumber}&hodid=${sapNumberOfApprover}`);
+  console.log(result.data);
+  res.status(200).send({messageType : result.data.msg_type,message:result.data.message})
+  // res.status(200).send({status : "True",data : result.data})
+}
+
+module.exports = {travelExpenseHodApproval,showTravelExpenseHodApproval,travelExpenseCreate, travelExpenseUsingSap,domesticTravelAllowance ,countryCodeAndCostCenter,travelExpenseUsingSapAndTravelCode,travelExpenseDelete };
