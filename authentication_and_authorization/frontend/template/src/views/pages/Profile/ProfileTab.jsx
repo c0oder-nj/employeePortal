@@ -4,16 +4,16 @@ import PersonalInformationModelPopup from "../../../components/modelpopup/Person
 import { ListItem, ProjectDetails } from "./ProfileContent";
 
 const ProfileTab = (props) => {
-  const personalInfoData = [
-    { id: 1, title: "Passport No.", text: "9876543210" },
-    { id: 2, title: "Passport Exp Date.", text: "9876543210" },
-    { id: 3, title: "Tel", text: "9876543210" },
-    { id: 4, title: "Nationality", text: "Indian" },
-    { id: 5, title: "Religion", text: "Christian" },
-    { id: 6, title: "Marital status", text: "Married" },
-    { id: 7, title: "Employment of spouse", text: "No" },
-    { id: 8, title: "No. of children", text: "2" },
-  ];
+  // const personalInfoData = [
+  //   { id: 1, title: "Passport No.", text: "9876543210" },
+  //   { id: 2, title: "Passport Exp Date.", text: "9876543210" },
+  //   { id: 3, title: "Tel", text: "9876543210" },
+  //   { id: 4, title: "Nationality", text: "Indian" },
+  //   { id: 5, title: "Religion", text: "Christian" },
+  //   { id: 6, title: "Marital status", text: "Married" },
+  //   { id: 7, title: "Employment of spouse", text: "No" },
+  //   { id: 8, title: "No. of children", text: "2" },
+  // ];
 
 
   // const personalInfoData = [
@@ -23,6 +23,20 @@ const ProfileTab = (props) => {
   //   { id: 4, title: "Marital status", text: props.profile.ftext },
   //   { id: 5, title: "No. of children", text: props.profile.anzkd }
   // ];
+
+  // const primaryContactData = [
+  //   { id: 1, title: "Name", text: "John Doe" },
+  //   { id: 2, title: "Relationship", text: "Father" },
+  //   { id: 3, title: "Phone", text: "9876543210, 9876543210" },
+  // ];
+
+  const personalInfoData = [
+    { id: 1, title: "Telephone", text: props.profile.telnr },
+    { id: 2, title: "Nationality", text: props.profile.natio === 'IN' ? 'INDIA' : props.profile.natio },
+    { id: 3, title: "Religion", text: props.profile.ktext },
+    { id: 4, title: "Marital status", text: props.profile.ftext },
+    { id: 5, title: "No. of children", text: props.profile.anzkd }
+  ];
 
   // const primaryContactData = [
   //   { id: 1, title: "Name", text: "John Doe" },
