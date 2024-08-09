@@ -8,23 +8,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 
 const TravelAllwowanceExcelSubmitionPopup = () => {
-  // const [setselectOne] = useState(null);
 
-  // const options = [
-  //   { value: 1, label: "John Doe" },
-  //   { value: 2, label: "Richard Miles" },
-  // ];
-
-  // const customStyles = {
-  //   option: (provided, state) => ({
-  //     ...provided,
-  //     backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
-  //     color: state.isFocused ? "#fff" : "#000",
-  //     "&:hover": {
-  //       backgroundColor: "#ff9b44",
-  //     },
-  //   }),
-  // };
   const [data, setData] = useState([]);
   const [excelData, setExcelData] = useState(null);
   const [expenseData, setExpenseData] = useState({});
@@ -68,54 +52,6 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       },
     }),
   };
-
-  // useEffect(() => {
-  //   axios.get("https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_dashboard1.htm?pernr=5053",{
-
-  //   }).then((res) => {
-  //     const apiData = res;
-  //     console.log(apiData);
-
-  //   }).catch((error) => {
-  //     console.error("There was an error making the request:", error);
-  //   });
-  // }, []);
-
-  // useEffect(async ()=>{
-  //   const requestOptions = {
-  //     method: "GET",
-  //     redirect: "follow",
-  //     mode: 'no-cors'
-  //   };
-
-  //   fetch("https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_dashboard1.htm?pernr=5053", requestOptions)
-  //     .then((response) => response.text())
-  //     .then((result) => console.log(result))
-  //     .catch((error) => console.error(error));
-
-  // }, [])
-  //   useEffect(() => {
-  //     function data() {
-  //       {
-  //         const requestOptions = {
-  //           method: "GET",
-  //           redirect: "follow",
-  //           "Access-Control-Allow-Origin": "*",
-  // "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  // "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  //         };
-
-  //         fetch(
-  //           "https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_dashboard1.htm?pernr=5053",
-  //           requestOptions
-  //         )
-  //           .then((response) => response.text())
-  //           .then((result) => console.log(result))
-  //           .catch((error) => console.error(error));
-  //       }
-  //     }
-  //     data();
-  //   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,103 +113,72 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       const data = new Uint8Array(event.target.result);
       const workbook = XLSX.read(data, { type: "array" });
 
-      // Process each sheet
-      workbook.SheetNames.forEach((sheetName) => {
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        const rows = jsonData;
-        const headers = rows[0];
-        const rowsLength = headers.length;
+      
+      const columnsToExtract = [
+        "column_id",
+        "from_date1",
+        "to_date1",
+        "country",
+        "state",
+        "city",
+        "exp_type",
+        "TAX_CODE",
+        "location",
+        "rec_amount",
+        "rec_curr",
+        "descript",
+        "gst_no",
+        "region",
+        "expenseTypeValue",
+      ];
 
-        if (rowsLength === 2) {
-          rows.forEach((ele) => {
-            if (ele[0] === "Name") {
-              setFormData((previousState) => ({
-                ...previousState,
-                Name: ele[1],
-              }));
-            } else if (ele[0] === "Designation") {
-              setFormData((previousState) => ({
-                ...previousState,
-                Designation: ele[1],
-              }));
-            } else if (ele[0] === "Destination") {
-              setFormData((previousState) => ({
-                ...previousState,
-                Destination: ele[1],
-              }));
-            } else if (ele[0] === "Time start") {
-              setFormData((previousState) => ({
-                ...previousState,
-                TimeStart: ele[1],
-              }));
-            } else if (ele[0] === "Time end") {
-              setFormData((previousState) => ({
-                ...previousState,
-                TimeEnd: ele[1],
-              }));
-            } else if (ele[0] === "Total Advance") {
-              setFormData((previousState) => ({
-                ...previousState,
-                TotalAdvance: ele[1],
-              }));
-            } else if (ele[0] === "Mention") {
-              setFormData((previousState) => ({
-                ...previousState,
-                MentionName: ele[1],
-              }));
-            } else if (ele[0] === "In INR") {
-              setFormData((previousState) => ({
-                ...previousState,
-                InINR: ele[1],
-              }));
-            }
-          });
-        } else {
-          const typeIndex = headers.indexOf("Type");
+    
+      const sheetName = workbook.SheetNames[0]; 
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      const rows = jsonData;
+      const headers = rows[0];
 
-          // Group rows by the "Type" column
-          const groupedData = rows.slice(1).reduce((acc, row) => {
-            const type = row[typeIndex];
-            if (!acc[type]) {
-              acc[type] = [];
-            }
+      const typeIndex = headers.indexOf("Type");
 
-            // Create an object for each row using headers as keys
-            const rowData = headers.reduce((rowAcc, header, index) => {
-              rowAcc[header] = row[index];
-              return rowAcc;
-            }, {});
-
-            acc[type].push(rowData);
-            return acc;
-          }, {});
-
-          console.log(typeof groupedData);
-          console.log(Object.values(groupedData));
-          const ArrayGroupedData = Object.values(groupedData);
-          console.log(ArrayGroupedData);
-          setFormData((prevData) => ({
-            ...prevData,
-            expenseDataToBeSend: ArrayGroupedData,
-            // expenseDataToBeSend: groupedData,
-          }));
-
-          setExpenseData((prevData) => ({
-            ...prevData,
-            [sheetName]: groupedData,
-          }));
+      
+      const groupedData = rows.slice(1).reduce((acc, row) => {
+        const type = row[typeIndex];
+        if (!acc[type]) {
+          acc[type] = [];
         }
-      });
 
-      setExcelData(
-        workbook.SheetNames.map((sheetName) => ({
-          sheetName,
-          data: XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-            header: 1,
-          }),
-        }))
-      );
+        
+        const rowData = columnsToExtract.reduce((rowAcc, column) => {
+          const columnIndex = headers.indexOf(column);
+          if (columnIndex >= 0 && columnIndex < row.length) {
+            rowAcc[column] = row[columnIndex];
+          }
+          return rowAcc;
+        }, {});
+
+        acc[type].push(rowData);
+        return acc;
+      }, {});
+
+      console.log(typeof groupedData);
+      console.log(Object.values(groupedData));
+      const ArrayGroupedData = Object.values(groupedData);
+      console.log(ArrayGroupedData);
+      setFormData((prevData) => ({
+        ...prevData,
+        expenseDataToBeSend: ArrayGroupedData,
+      }));
+
+      setExpenseData((prevData) => ({
+        ...prevData,
+        [sheetName]: groupedData,
+      }));
+
+      setExcelData({
+        sheetName,
+        data: XLSX.utils.sheet_to_json(sheet, { header: 1 }),
+      });
     };
 
     reader.readAsArrayBuffer(file);
@@ -288,9 +193,12 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       const date = today.getDate();
       return `${year}${month}${date}`;
     }
-    //For todays date
-    if(new Date().toLocaleDateString()<formData.TimeStart || new Date().toLocaleDateString()<formData.TimeEnd){
-      console.log("Printing todays date",getDate())
+    
+    if (
+      new Date().toLocaleDateString() < formData.TimeStart ||
+      new Date().toLocaleDateString() < formData.TimeEnd
+    ) {
+      console.log("Printing todays date", getDate());
       Toastify({
         text: "End Date or Start date is later then today ",
         duration: 3000,
@@ -299,8 +207,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
         position: "center", // `left`, `center` or `right`
         backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
       }).showToast();
-    }
-    else if(formData.TimeStart > formData.TimeEnd){
+    } else if (formData.TimeStart > formData.TimeEnd) {
       Toastify({
         text: "End Date is earlier then start date",
         duration: 3000,
@@ -309,37 +216,38 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
         position: "center", // `left`, `center` or `right`
         backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
       }).showToast();
-    }
-    else {console.log("In send Data");
-    console.log(JSON.stringify(formData));
-    const value = `${document.cookie}`;
-    console.log(value);
-    // const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
-    const url = `http://localhost:3000/api/TravelExpense/domesticTravelExpens?value=${value}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, Access-Control-Allow-Headers",
-        "Access-Control-Allow-Methods": "POST",
-      },
-      body: JSON.stringify(formData),
-    }).then((response) => {
-      response.json().then((body) => {
-        console.log(body);
-        Toastify({
-          text: body.message,
-          duration: 3000,
-          close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-        }).showToast();
+    } else {
+      console.log("In send Data");
+      console.log(JSON.stringify(formData));
+      const value = `${document.cookie}`;
+      console.log(value);
+      // const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
+      const url = `http://localhost:3000/api/TravelExpense/domesticTravelExpens?value=${value}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Headers":
+            "Content-Type, Authorization, Access-Control-Allow-Headers",
+          "Access-Control-Allow-Methods": "POST",
+        },
+        body: JSON.stringify(formData),
+      }).then((response) => {
+        response.json().then((body) => {
+          console.log(body);
+          Toastify({
+            text: body.message,
+            duration: 3000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          }).showToast();
+        });
+        return;
+        // return response.json();
       });
-      return;
-      // return response.json();
-    });}
+    }
   }
   async function sendDataInternational(e) {
     e.preventDefault();
@@ -401,22 +309,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
             <div className="modal-body">
               {/* <form action="salary"> */}
               <div className="row">
-                {/* <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Select Staff</label>
-                      <Select
-                        placeholder="Select a Category"
-                        options={options}
-                        onChange={setselectOne}
-                        className="select"
-                        styles={customStyles}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <label className="col-form-label">Net Salary</label>
-                    <input className="form-control" type="text" />
-                  </div> */}
+                
               </div>
               <div className="card-body">
                 <form
@@ -434,12 +327,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
                         options={selectExpenseType}
                         placeholder="-- Select --"
                         styles={customStyles}
-                        // onChange={(event) => {
-                        //   setFormData(() => ({
-                        //     ...formData,
-                        //     Country: event.value,
-                        //   }));
-                        // }}
+                        
                         onChange={(event) => {
                           if (event.value == "international") {
                             setIsDomestic(false);
@@ -643,92 +531,6 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
                   </div>
                 </form>
               </div>
-              {/* <div className="row">
-                  <div className="col-sm-6">
-                    <h4 className="text-primary">Earnings</h4>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Basic</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">DA(40%)</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">HRA(15%)</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Conveyance</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Allowance</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Medical Allowance
-                      </label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Others</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="add-more">
-                      <Link to="#">
-                        <i className="fa-solid fa-plus-circle" /> Add More
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <h4 className="text-primary">Deductions</h4>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">TDS</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">ESI</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">PF</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Leave</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Prof. Tax</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Labour Welfare</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Others</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                    <div className="add-more">
-                      <Link to="#">
-                        <i className="fa-solid fa-plus-circle" /> Add More
-                      </Link>
-                    </div>
-                  </div>
-                </div> */}
-              {/* <div className="submit-section">
-                  <button
-                    className="btn btn-primary submit-btn"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    type="reset"
-                  >
-                    Submit
-                  </button>
-                </div> */}
               {/* </form> */}
             </div>
           </div>
