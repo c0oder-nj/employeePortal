@@ -8,7 +8,6 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 
 const TravelAllwowanceExcelSubmitionPopup = () => {
-
   const [data, setData] = useState([]);
   const [excelData, setExcelData] = useState(null);
   const [expenseData, setExpenseData] = useState({});
@@ -113,7 +112,6 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       const data = new Uint8Array(event.target.result);
       const workbook = XLSX.read(data, { type: "array" });
 
-      
       const columnsToExtract = [
         "column_id",
         "from_date1",
@@ -132,8 +130,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
         "expenseTypeValue",
       ];
 
-    
-      const sheetName = workbook.SheetNames[0]; 
+      const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
       const rows = jsonData;
@@ -141,14 +138,12 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
 
       const typeIndex = headers.indexOf("Type");
 
-      
       const groupedData = rows.slice(1).reduce((acc, row) => {
         const type = row[typeIndex];
         if (!acc[type]) {
           acc[type] = [];
         }
 
-        
         const rowData = columnsToExtract.reduce((rowAcc, column) => {
           const columnIndex = headers.indexOf(column);
           if (columnIndex >= 0 && columnIndex < row.length) {
@@ -186,6 +181,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
 
   async function sendDataDomestic(e) {
     e.preventDefault();
+
     function getDate() {
       const today = new Date();
       const month = today.getMonth() + 1;
@@ -193,10 +189,19 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       const date = today.getDate();
       return `${year}${month}${date}`;
     }
-    
+
+    function getConvertedDate() {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
+      console.log(`${year}${month}${day}`)
+      return `${year}${month}${day}`;
+    }
+
     if (
-      new Date().toLocaleDateString() < formData.TimeStart ||
-      new Date().toLocaleDateString() < formData.TimeEnd
+      getConvertedDate() < formData.TimeStart ||
+      getConvertedDate() < formData.TimeEnd
     ) {
       console.log("Printing todays date", getDate());
       Toastify({
@@ -208,6 +213,8 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
         backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
       }).showToast();
     } else if (formData.TimeStart > formData.TimeEnd) {
+      console.log(formData.TimeStart);
+      console.log(formData.TimeEnd);
       Toastify({
         text: "End Date is earlier then start date",
         duration: 3000,
@@ -308,9 +315,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
             </div>
             <div className="modal-body">
               {/* <form action="salary"> */}
-              <div className="row">
-                
-              </div>
+              <div className="row"></div>
               <div className="card-body">
                 <form
                   onSubmit={
@@ -327,7 +332,6 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
                         options={selectExpenseType}
                         placeholder="-- Select --"
                         styles={customStyles}
-                        
                         onChange={(event) => {
                           if (event.value == "international") {
                             setIsDomestic(false);

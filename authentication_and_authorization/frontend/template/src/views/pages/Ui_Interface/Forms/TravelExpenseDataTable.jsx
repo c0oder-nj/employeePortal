@@ -29,7 +29,7 @@ const TravelExpenseDataTable = (props) => {
     //     sorter: (a, b) => a.employeeId.length - b.employeeId.length,
     // },
     {
-      title: "Employee Number",
+      title: "Employee Sap Number",
       dataIndex: "pernr",
       sorter: (a, b) => a.pernr.length - b.pernr.length,
     },
@@ -38,16 +38,12 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "reinr",
       sorter: (a, b) => a.reinr.length - b.reinr.length,
     },
-    {
-      title: "Receipt Number",
-      dataIndex: "receipt_no", // Adjust according to your actual JSON structure
-      sorter: (a, b) => a.receipt_no.length - b.receipt_no.length,
-    },
-    {
-      title: "Receipt Number",
-      dataIndex: "receiptno", // Adjust according to your actual JSON structure
-      sorter: (a, b) => a.receiptno.length - b.receiptno.length,
-    },
+    
+    // {
+    //   title: "Receipt Number",
+    //   dataIndex: "receiptno",
+    //   sorter: (a, b) => a.receiptno.length - b.receiptno.length,
+    // },
     {
       title: "Expense Type",
       dataIndex: "exp_type",
@@ -68,16 +64,16 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "rec_curr",
       sorter: (a, b) => a.rec_curr.length - b.rec_curr.length,
     },
-    {
-      title: "Local Amount",
-      dataIndex: "loc_amount",
-      sorter: (a, b) => a.loc_amount.length - b.loc_amount.length,
-    },
-    {
-      title: "Local Currency",
-      dataIndex: "loc_curr",
-      sorter: (a, b) => a.loc_curr.length - b.loc_curr.length,
-    },
+    // {
+    //   title: "Local Amount",
+    //   dataIndex: "loc_amount",
+    //   sorter: (a, b) => a.loc_amount.length - b.loc_amount.length,
+    // },
+    // {
+    //   title: "Local Currency",
+    //   dataIndex: "loc_curr",
+    //   sorter: (a, b) => a.loc_curr.length - b.loc_curr.length,
+    // },
     {
       title: "Receipt Date",
       dataIndex: "rec_date",
@@ -88,16 +84,16 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "tax_code",
       sorter: (a, b) => a.tax_code.length - b.tax_code.length,
     },
-    {
-      title: "From Date (Old Format)",
-      dataIndex: "from_date",
-      sorter: (a, b) => a.from_date.length - b.from_date.length,
-    },
-    {
-      title: "To Date (Old Format)",
-      dataIndex: "to_date",
-      sorter: (a, b) => a.to_date.length - b.to_date.length,
-    },
+    // {
+    //   title: "From Date (Old Format)",
+    //   dataIndex: "from_date",
+    //   sorter: (a, b) => a.from_date.length - b.from_date.length,
+    // },
+    // {
+    //   title: "To Date (Old Format)",
+    //   dataIndex: "to_date",
+    //   sorter: (a, b) => a.to_date.length - b.to_date.length,
+    // },
     {
       title: "From Date",
       dataIndex: "from_date1",
@@ -118,31 +114,31 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "location",
       sorter: (a, b) => a.location.length - b.location.length,
     },
-    {
-      title: "Document Number",
-      dataIndex: "p_doc",
-      sorter: (a, b) => a.p_doc.length - b.p_doc.length,
-    },
+    // {
+    //   title: "Document Number",
+    //   dataIndex: "p_doc",
+    //   sorter: (a, b) => a.p_doc.length - b.p_doc.length,
+    // },
     {
       title: "Region",
       dataIndex: "region",
       sorter: (a, b) => a.region.length - b.region.length,
     },
-    {
-      title: "Manager Remark",
-      dataIndex: "rm_remark",
-      sorter: (a, b) => a.rm_remark.length - b.rm_remark.length,
-    },
-    {
-      title: "Head of Department Remark",
-      dataIndex: "hod_remark",
-      sorter: (a, b) => a.hod_remark.length - b.hod_remark.length,
-    },
-    {
-      title: "Financial Remark",
-      dataIndex: "fi_remark",
-      sorter: (a, b) => a.fi_remark.length - b.fi_remark.length,
-    },
+    // {
+    //   title: "Manager Remark",
+    //   dataIndex: "rm_remark",
+    //   sorter: (a, b) => a.rm_remark.length - b.rm_remark.length,
+    // },
+    // {
+    //   title: "Head of Department Remark",
+    //   dataIndex: "hod_remark",
+    //   sorter: (a, b) => a.hod_remark.length - b.hod_remark.length,
+    // },
+    // {
+    //   title: "Financial Remark",
+    //   dataIndex: "fi_remark",
+    //   sorter: (a, b) => a.fi_remark.length - b.fi_remark.length,
+    // },
   ];
 
   const ShowTravelData = (props) => {
@@ -258,11 +254,11 @@ const TravelExpenseDataTable = (props) => {
 
   const [dataFetched, setDataFetched] = useState([]);
   const columns = [
-    {
-      title: "Employee Number",
-      dataIndex: "pernr",
-      sorter: (a, b) => a.pernr.length - b.pernr.length,
-    },
+    // {
+    //   title: "Employee Number",
+    //   dataIndex: "pernr",
+    //   sorter: (a, b) => a.pernr.length - b.pernr.length,
+    // },
     {
       title: "Show Expense",
       id: "pernr",
@@ -273,85 +269,55 @@ const TravelExpenseDataTable = (props) => {
           data-bs-target="#show_travel_data"
           onClick={() => ShowTravelData(id)}
         >
-        Show Travel
+          Show Travel
         </button>
       ),
     },
     {
-      title: "Reimbursement Number",
-      dataIndex: "reinr",
-      sorter: (a, b) => a.reinr.length - b.reinr.length,
-    },
-    {
-      title: "Travel Start Date",
-      dataIndex: "datv1",
-      sorter: (a, b) => a.datv1.length - b.datv1.length,
-    },
-    {
-      title: "Travel Start Time",
-      dataIndex: "uhrv1",
-      sorter: (a, b) => a.uhrv1.length - b.uhrv1.length,
-    },
-    {
-      title: "Travel End Date",
-      dataIndex: "datb1",
-      sorter: (a, b) => a.datb1.length - b.datb1.length,
-    },
-    {
-      title: "Travel End Time",
-      dataIndex: "uhrb1",
-      sorter: (a, b) => a.uhrb1.length - b.uhrb1.length,
-    },
-    {
-      title: "Travel Locations",
-      dataIndex: "zort1",
-      sorter: (a, b) => a.zort1.length - b.zort1.length,
-    },
-    {
-      title: "Customer",
-      dataIndex: "kunde",
-      sorter: (a, b) => a.kunde.length - b.kunde.length,
-    },
-    {
-      title: "HDVRS",
-      dataIndex: "hdvrs",
-      sorter: (a, b) => a.hdvrs.length - b.hdvrs.length,
-    },
-    {
-      title: "Application Number",
-      dataIndex: "antrg",
-      sorter: (a, b) => a.antrg.length - b.antrg.length,
-    },
-    {
-      title: "Application Text",
+      title: "Status",
       dataIndex: "antrg_text",
-      sorter: (a, b) => a.antrg_text.length - b.antrg_text.length,
+      render: (text) => (
+        <div className="dropdown action-label">
+          <Link
+            className="btn btn-white btn-sm btn-rounded "
+            to="#"
+            // data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i
+              className={
+                
+                text === "Request Entered"
+                  ? "far fa-dot-circle text-primary"
+                  : text === "Trip Created"
+                  ? "far fa-dot-circle text-primary"
+                  : text === "Trip Completed"
+                  ? "far fa-dot-circle text-info"
+                  : text === "Trip Approved"
+                  ? "far fa-dot-circle text-success"
+                  : text === "Finance"
+                  ? "far fa-dot-circle text-success"
+                  : text === "Audit"
+                  ? "far fa-dot-circle text-success"
+                  : "far fa-dot-circle text-danger"
+              }
+            />{" "}
+            {text}
+          </Link>
+        </div>
+      ),
+      sorter: (a, b) => a.status.length - b.status.length,
     },
-    {
-      title: "Currency",
-      dataIndex: "waers",
-      sorter: (a, b) => a.waers.length - b.waers.length,
-    },
-    {
-      title: "Trip Total",
-      dataIndex: "trip_total",
-      sorter: (a, b) => a.trip_total.length - b.trip_total.length,
-    },
-    {
-      title: "Purpose Text",
-      dataIndex: "pur_txt",
-      sorter: (a, b) => a.pur_txt.length - b.pur_txt.length,
-    },
-    {
-      title: "Out Text",
-      dataIndex: "out_txt",
-      sorter: (a, b) => a.out_txt.length - b.out_txt.length,
-    },
+    // {
+    //   title: "check status",
+    //   dataIndex: "antrg_text",
+    //   sorter: (a, b) => a.pernr.length - b.pernr.length,
+    // },
     {
       title: "Action",
       id: "pernr",
       render: (id) => (
-        <div className="dropdown dropdown-action text-end">
+        id.antrg_text == "Trip Completed" || id.antrg_text == "Trip Approved" ? "" :(<div className="dropdown dropdown-action text-end">
           <Link
             to="#"
             className="action-icon dropdown-toggle"
@@ -361,7 +327,6 @@ const TravelExpenseDataTable = (props) => {
             <i className="material-icons">more_vert</i>
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            
             <button
               className="dropdown-item "
               data-bs-toggle="modal"
@@ -385,9 +350,83 @@ const TravelExpenseDataTable = (props) => {
               Delete
             </button>
           </div>
-        </div>
+        </div>)
       ),
     },
+    {
+      title: "Reimbursement Number",
+      dataIndex: "reinr",
+      sorter: (a, b) => a.reinr.length - b.reinr.length,
+    },
+    {
+      title: "Travel Start Date",
+      dataIndex: "datv1",
+      sorter: (a, b) => a.datv1.length - b.datv1.length,
+    },
+    {
+      title: "Travel End Date",
+      dataIndex: "datb1",
+      sorter: (a, b) => a.datb1.length - b.datb1.length,
+    },
+    // {
+    //   title: "Travel Start Time",
+    //   dataIndex: "uhrv1",
+    //   sorter: (a, b) => a.uhrv1.length - b.uhrv1.length,
+    // },
+    
+    // {
+    //   title: "Travel End Time",
+    //   dataIndex: "uhrb1",
+    //   sorter: (a, b) => a.uhrb1.length - b.uhrb1.length,
+    // },
+    {
+      title: "Travel Locations",
+      dataIndex: "zort1",
+      sorter: (a, b) => a.zort1.length - b.zort1.length,
+    },
+    // {
+    //   title: "Customer",
+    //   dataIndex: "kunde",
+    //   sorter: (a, b) => a.kunde.length - b.kunde.length,
+    // },
+    // {
+    //   title: "HDVRS",
+    //   dataIndex: "hdvrs",
+    //   sorter: (a, b) => a.hdvrs.length - b.hdvrs.length,
+    // },
+    // {
+    //   title: "Application Number",
+    //   dataIndex: "antrg",
+    //   sorter: (a, b) => a.antrg.length - b.antrg.length,
+    // },
+    {
+      title: "Application Text",
+      dataIndex: "antrg_text",
+      sorter: (a, b) => a.antrg_text.length - b.antrg_text.length,
+    },
+   
+    
+    {
+      title: "Trip Total",
+      dataIndex: "trip_total",
+      sorter: (a, b) => a.trip_total.length - b.trip_total.length,
+    },
+    {
+      title: "Currency",
+      dataIndex: "waers",
+      sorter: (a, b) => a.waers.length - b.waers.length,
+    },
+    {
+      title: "Purpose Text",
+      dataIndex: "pur_txt",
+      sorter: (a, b) => a.pur_txt.length - b.pur_txt.length,
+    },
+    {
+      title: "Out Text",
+      dataIndex: "out_txt",
+      sorter: (a, b) => a.out_txt.length - b.out_txt.length,
+    },
+    
   ];
   const [setApi, setApiData] = useState([]);
   useEffect(() => {
@@ -479,8 +518,8 @@ const TravelExpenseDataTable = (props) => {
     console.log(res);
     setDataFetched(res);
   };
-  const [start,setStart] = useState();
-  const [end,setEnd] = useState();
+  const [start, setStart] = useState();
+  const [end, setEnd] = useState();
   return (
     <>
       <div className="row">
@@ -630,13 +669,13 @@ const TravelExpenseDataTable = (props) => {
         </div>
       </div>
       {/* Pop up for trip create start*/}
-      <div className="modal custom-modal fade" id="create" role="dialog">
+      <div className="modal custom-modal fade" id="create" role="dialog" >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
                 <h3>Are you sure want to create trip for?</h3>
-                <p>Reimbursement Number : {setDelete.reinr}</p>
+                <p>Reimbursement Number : {createTrip.reinr}</p>
               </div>
               <div className="modal-btn delete-action">
                 <div className="row">

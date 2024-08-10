@@ -69,6 +69,17 @@ const Breadcrumbs = (props) => {
                   <i className="fa fa-plus" /> {props.name}
                 </Link>
               </div>
+              <div className="col-auto float-end ms-auto">
+                <Link
+                  to="https://docs.google.com/spreadsheets/d/1Fo1biADKNnB13QIV-5nNq9jlhE32icJi0SKSAeCuUdk/edit?usp=sharing"
+                  className="btn add-btn"
+                  // data-bs-toggle="modal"
+                  // data-bs-target={props.modal}
+                  target="_blank"
+                >
+                  <i className="fa fa-plus" /> Download Excel
+                </Link>
+              </div>
             </div>
           )
         

@@ -213,11 +213,55 @@ const TravelExpenseReportTable = () => {
       sorter: (a, b) => a.status.length - b.status.length,
     },
     {
+      title: "Action",
+      id: "PERNR",
+      render: (id) => (
+        <div className="dropdown dropdown-action text-end">
+          <Link
+            to="#"
+            className="action-icon dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i className="material-icons">more_vert</i>
+          </Link>
+          <div className="dropdown-menu dropdown-menu-right">
+            {/* <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#edit_salary"
+            >
+              <i className="fa fa-pencil m-r-5" /> Edit
+            </Link> */}
+            <button
+              className="dropdown-item "
+              data-bs-toggle="modal"
+              data-bs-target="#approvedtrip"
+              onClick={() => {
+                console.log(id);
+                setApproveData(id);
+              }}
+            >
+              {" "}
+              Create trip
+            </button>
+          </div>
+        </div>
+      ),
+    },
+    // {
+    //   title: "Request Description",
+    //   dataIndex: "ANTRG_TEXT",
+    //   sorter: (a, b) => a.ANTRG_TEXT.length - b.ANTRG_TEXT.length,
+    // },
+    {
       title: "Reimbursement Number",
       dataIndex: "REINR",
       render: (text) => <strong>{text}</strong>,
       sorter: (a, b) => a.REINR - b.REINR,
     },
+    
     {
       title: "Employee Sap Number",
       dataIndex: "PERNR",
@@ -235,46 +279,42 @@ const TravelExpenseReportTable = () => {
       dataIndex: "DATV1",
       sorter: (a, b) => new Date(a.DATV1) - new Date(b.DATV1),
     },
-    {
-      title: "Start Time",
-      dataIndex: "UHRV1",
-      sorter: (a, b) => a.UHRV1.localeCompare(b.UHRV1),
-    },
+    // {
+    //   title: "Start Time",
+    //   dataIndex: "UHRV1",
+    //   sorter: (a, b) => a.UHRV1.localeCompare(b.UHRV1),
+    // },
     {
       title: "End Date",
       dataIndex: "DATB1",
       sorter: (a, b) => new Date(a.DATB1) - new Date(b.DATB1),
     },
-    {
-      title: "End Time",
-      dataIndex: "UHRB1",
-      sorter: (a, b) => a.UHRB1.localeCompare(b.UHRB1),
-    },
+    // {
+    //   title: "End Time",
+    //   dataIndex: "UHRB1",
+    //   sorter: (a, b) => a.UHRB1.localeCompare(b.UHRB1),
+    // },
     {
       title: "Location",
       dataIndex: "ZORT1",
       sorter: (a, b) => a.ZORT1.length - b.ZORT1.length,
     },
-    {
-      title: "Customer",
-      dataIndex: "KUNDE",
-      sorter: (a, b) => a.KUNDE.length - b.KUNDE.length,
-    },
-    {
-      title: "Supervisor",
-      dataIndex: "HDVRS",
-      sorter: (a, b) => a.HDVRS - b.HDVRS,
-    },
-    {
-      title: "Request",
-      dataIndex: "ANTRG",
-      sorter: (a, b) => a.ANTRG - b.ANTRG,
-    },
-    {
-      title: "Request Description",
-      dataIndex: "ANTRG_TEXT",
-      sorter: (a, b) => a.ANTRG_TEXT.length - b.ANTRG_TEXT.length,
-    },
+    // {
+    //   title: "Customer",
+    //   dataIndex: "KUNDE",
+    //   sorter: (a, b) => a.KUNDE.length - b.KUNDE.length,
+    // },
+    // {
+    //   title: "Supervisor",
+    //   dataIndex: "HDVRS",
+    //   sorter: (a, b) => a.HDVRS - b.HDVRS,
+    // },
+    // {
+    //   title: "Request",
+    //   dataIndex: "ANTRG",
+    //   sorter: (a, b) => a.ANTRG - b.ANTRG,
+    // },
+    
     {
       title: "Currency",
       dataIndex: "WAERS",
@@ -319,44 +359,7 @@ const TravelExpenseReportTable = () => {
     //     </div>
     //   ),
     // },
-    {
-      title: "Action",
-      id: "PERNR",
-      render: (id) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            {/* <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_salary"
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link> */}
-            <button
-              className="dropdown-item "
-              data-bs-toggle="modal"
-              data-bs-target="#approvedtrip"
-              onClick={() => {
-                console.log(id);
-                setApproveData(id);
-              }}
-            >
-              {" "}
-              Create trip
-            </button>
-          </div>
-        </div>
-      ),
-    },
+    
   ];
 
   const handleFilter = (value) => {

@@ -98,6 +98,14 @@ app.get(
   authUserThoughMiddleware.checkUser,
   empAttnedanceControllers.allEmployeeDailyAttendnceCorrection
 );
+
+//Api for approve and reject of leave
+app.get(
+  "/api/employee/employeeAttendanceApproveReject",
+  authUserThoughMiddleware.checkUser,
+  empAttnedanceControllers.allEmployeeDailyAttendnceApproveReject
+)
+
 //Information about country code and cost center
 app.get(
   "/api/TravelExpense/countryAndCostCenterCode",
