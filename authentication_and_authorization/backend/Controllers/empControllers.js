@@ -128,7 +128,9 @@ const fetchEmpData = async (sapid) => {
   console.log(sapid);
   try {
     // const response = await apiService.apiUsingFtech('/oc_emp_details.htm', queryObject, 'get');
-    const response = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/oc_emp_details.htm?sapid=${sapid}`)
+    const endpont = `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/oc_emp_details.htm?sapid=${sapid}`
+    console.log("Organization chart endpoint before hitting :: ", endpont)
+    const response = await axios.get(endpont)
   const data = response.data;
   if (data.status && data.data && data.data.length > 0) {
     // Add the current data to the response array
