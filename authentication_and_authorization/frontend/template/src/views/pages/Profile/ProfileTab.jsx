@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+// import { Link } from "react-router-dom";
 import PersonalInformationModelPopup from "../../../components/modelpopup/PersonalInformationModelPopup";
 import { ListItem, ProjectDetails } from "./ProfileContent";
 
@@ -50,49 +50,49 @@ const ProfileTab = (props) => {
     { id: 2, title: "Bank account No.", text: props.profile.bankn },
     { id: 3, title: "IFSC Code", text: props.profile.zweck }
   ];
-  const familyInfoData = [
-    {
-      id: 1,
-      name: "Leo",
-      relationship: "Brother",
-      dob: "Feb 16th, 2019",
-      phone: "9876543210",
-    },
-  ];
+  // const familyInfoData = [
+  //   {
+  //     id: 1,
+  //     name: "Leo",
+  //     relationship: "Brother",
+  //     dob: "Feb 16th, 2019",
+  //     phone: "9876543210",
+  //   },
+  // ];
 
-  const educationData = [
-    {
-      id: 1,
-      name: "International College of Arts and Science (UG)",
-      description: "Bsc Computer Science",
-      time: "2020 - 2023",
-    },
-    {
-      id: 2,
-      name: "International College of Arts and Science (PG)",
-      description: "Msc Computer Science",
-      time: "2021 - 2023",
-    },
-    // Add more education info data as needed
-  ];
-  const experienceData = [
-    {
-      id: 1,
-      name: "Web Designer at Zen Corporation",
-      time: "Jan 2023 - Present (5 years 2 months)",
-    },
-    {
-      id: 2,
-      name: "Web Designer at Ron-tech",
-      time: "Jan 2023 - Present (5 years 2 months)",
-    },
-    {
-      id: 3,
-      name: "Web Designer at Dalt Technology",
-      time: "2023 2023 - Present (5 years 2 months)",
-    },
-    // Add more experience info data as needed
-  ];
+  // const educationData = [
+  //   {
+  //     id: 1,
+  //     name: "International College of Arts and Science (UG)",
+  //     description: "Bsc Computer Science",
+  //     time: "2020 - 2023",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "International College of Arts and Science (PG)",
+  //     description: "Msc Computer Science",
+  //     time: "2021 - 2023",
+  //   },
+  //   // Add more education info data as needed
+  // ];
+  // const experienceData = [
+  //   {
+  //     id: 1,
+  //     name: "Web Designer at Zen Corporation",
+  //     time: "Jan 2023 - Present (5 years 2 months)",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Web Designer at Ron-tech",
+  //     time: "Jan 2023 - Present (5 years 2 months)",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Web Designer at Dalt Technology",
+  //     time: "2023 2023 - Present (5 years 2 months)",
+  //   },
+  //   // Add more experience info data as needed
+  // ];
 
   return (
     <>
