@@ -6,6 +6,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddSalaryModal from "../../../../components/modelpopup/AddSalaryModal";
+import TravelAllwowanceExcelSubmitionPopup from "../../../../components/modelpopup/TravelAllwowanceExcelSubmitionPopup";
 import TravelExpenseDataTable from "./TravelExpenseDataTable";
 
 const TravelExpenseTable = () => {
@@ -81,16 +82,37 @@ const TravelExpenseTable = () => {
   };
   return (
     <>
+      {/* custom modal */}
+      {/* <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title custom modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div> */}
+      {/* custom modal end */}
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
             maintitle="Travel Expense"
             title="Travel Dashboard"
-            
+            // modal = "#add_salary"
+            name="Add Travel Expense"
+            modal="#travel_allwowance"
           />
 
           <div className="row filter-row">
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={
                   focused || inputValue !== ""
@@ -107,11 +129,11 @@ const TravelExpenseTable = () => {
                   onChange={handleInputChange}
                 />
                 <label className="focus-label" onClick={handleLabelClick}>
-                  Employee Name
+                  Reimbur. Number
                 </label>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            </div> */}
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div className="input-block mb-3 form-focus select-focus">
                 <Select
                   placeholder="--Select--"
@@ -122,8 +144,8 @@ const TravelExpenseTable = () => {
                 />
                 <label className="focus-label">Purchased By</label>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            </div> */}
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div className="input-block mb-3 form-focus select-focus">
                 <Select
                   placeholder="--Select--"
@@ -134,8 +156,8 @@ const TravelExpenseTable = () => {
                 />
                 <label className="focus-label">Paid By</label>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            </div> */}
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={`input-block mb-3 form-focus ${
                   isFocused ? "focused" : ""
@@ -153,8 +175,8 @@ const TravelExpenseTable = () => {
                 </div>
                 <label className="focus-label">From</label>
               </div>
-            </div>
-            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+            </div> */}
+            {/* <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={`input-block mb-3 form-focus ${
                   dateTwo ? "focused" : ""
@@ -172,19 +194,22 @@ const TravelExpenseTable = () => {
                 </div>
                 <label className="focus-label">To</label>
               </div>
-            </div>
+            </div> */}
             <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-              <Link to="#" className="btn btn-success w-100">
+              {/* <Link to="#" className="btn btn-success w-100">
                 {" "}
                 Search{" "}
-              </Link>
+              </Link> */}
+
+              {/* <button className="btn btn-success w-100" type="button" >Search</button> */}
             </div>
           </div>
 
           <TravelExpenseDataTable />
         </div>
       </div>
-      <AddSalaryModal />
+      {/* <AddSalaryModal/> */}
+      <TravelAllwowanceExcelSubmitionPopup />
     </>
   );
 };

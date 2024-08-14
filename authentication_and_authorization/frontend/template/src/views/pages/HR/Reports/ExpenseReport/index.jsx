@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { Link } from "react-router-dom";
-import ExpenseReportTable from "./ExpenseReportTable";
+import ExpenseReportTable from "./TravelExpenseReportTable";
 
 const ExpenseReport = () => {
   const [selectedDate, setSelectedDate] = useState(null);

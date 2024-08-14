@@ -15,7 +15,7 @@ const OrgCard = (props) => {
         <Fragment key={item.name}>
           <li>
             <div className="org-card">
-              <div className="org-image">
+              {/* <div className="org-image">
                 <img
                   src={
                     "https://randomuser.me/api/portraits/men/" +
@@ -26,7 +26,7 @@ const OrgCard = (props) => {
                   // className="org-card-dynamic-bg"
                   style={{background: levelColor}}
                 />
-              </div>
+              </div> */}
               <div className="org-card-body" style={{zIndex : 1}}>
                 <h4>{item.ename}</h4>
                 <p style={{marginBottom : '0px'}}>
@@ -51,6 +51,7 @@ const OrgCard = (props) => {
 
 const ChartHeirarchy = (props) => {
   return (
+    
     <div className="org-tree">
       <OrgCard data={props.data} />
     </div>

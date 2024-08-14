@@ -16,20 +16,6 @@ const ProfileTab = (props) => {
   // ];
 
 
-  // const personalInfoData = [
-  //   { id: 1, title: "Telephone", text: props.profile.telnr },
-  //   { id: 2, title: "Nationality", text: props.profile.natio === 'IN' ? 'INDIA' : props.profile.natio },
-  //   { id: 3, title: "Religion", text: props.profile.ktext },
-  //   { id: 4, title: "Marital status", text: props.profile.ftext },
-  //   { id: 5, title: "No. of children", text: props.profile.anzkd }
-  // ];
-
-  // const primaryContactData = [
-  //   { id: 1, title: "Name", text: "John Doe" },
-  //   { id: 2, title: "Relationship", text: "Father" },
-  //   { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  // ];
-
   const personalInfoData = [
     { id: 1, title: "Telephone", text: props.profile.telnr },
     { id: 2, title: "Nationality", text: props.profile.natio === 'IN' ? 'INDIA' : props.profile.natio },

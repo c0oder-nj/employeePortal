@@ -5,7 +5,7 @@ const Breadcrumbs = (props) => {
   const location = useLocation();
   let addButton = null;
   if (location.pathname === "/attendance-employee") {
-    console.log(props)
+    console.log(props);
     addButton = (
       <div className="row align-items-center">
         {/* <div className="col">
@@ -40,17 +40,70 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  }else if(location.pathname === "/travel_expense_table"){
+  } else if (location.pathname === "/travel_expense_table") {
+    // addButton = (
+    //   <div className="row">
+    //     <div className="col">
+    //       <h3 className="page-title">{props.maintitle}</h3>
+    //     </div>
+    //   </div>
+    // );
+    if(props.modal=="#travel_allwowance"){
+    addButton =
+      (
+
+        console.log("In travel props",props),
+          
+          (
+            <div className="row align-items-center">
+              <div className="col">
+        <h3 className="page-title">{props.maintitle}</h3>
+             </div>
+              <div className="col-auto float-end ms-auto">
+                <Link
+                  to="#"
+                  className="btn add-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target={props.modal}
+                >
+                  <i className="fa fa-plus" /> {props.name}
+                </Link>
+              </div>
+              <div className="col-auto float-end ms-auto">
+                <Link
+                  to="https://docs.google.com/spreadsheets/d/1Fo1biADKNnB13QIV-5nNq9jlhE32icJi0SKSAeCuUdk/edit?usp=sharing"
+                  className="btn add-btn"
+                  // data-bs-toggle="modal"
+                  // data-bs-target={props.modal}
+                  target="_blank"
+                >
+                  <i className="fa fa-plus" /> Download Excel
+                </Link>
+              </div>
+            </div>
+          )
+        
+    );}
+    else if(props.modal=="#show_travel_data"){
+          console.log("In show table props",props)
+    }
+  } else if (location.pathname === "/domestic-travel-allowance") {
+    console.log("Hello", props);
+  } 
+  else if(location.pathname === "/hod_travel_expense_approval"){
     addButton = (
       <div className="row">
         <div className="col">
           <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            {/* <li className="breadcrumb-item">
+              <Link to="/admin-dashboard">{props.title}</Link>
+            </li> */}
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
         </div>
       </div>
     );
-}
-  else if(location.pathname === "/domestic-travel-allowance"){
-      console.log("Hello",props);
   }
   else if (
     location.pathname === "/form-basic-inputs" ||
@@ -155,7 +208,6 @@ const Breadcrumbs = (props) => {
     addButton = (
       <div className="row">
         <div className="col-sm-12">
-          
           <h3 className="page-title">{props.maintitle}</h3>
         </div>
       </div>

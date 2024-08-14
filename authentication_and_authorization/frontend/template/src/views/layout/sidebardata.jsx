@@ -163,21 +163,25 @@ export const SidebarData = [
         showSubRoute: false,
         icon: "la la-rocket",
         subMenus: [
-          {
-            menuValue: 'Domestic Travel Allownace',
-            route: "/excel-file-upload",
-          },
-          {
-            menuValue: 'Domestic Travel Allownace(Working on it)',
-            route: "/excel-info-file-upload",
-          },
-          {
-            menuValue: 'International Travel Allowance',
-            // route: "/tasks",
-          },
+          // {
+          //   // menuValue: 'Domestic Travel Allownace',
+          //   // route: "/excel-file-upload",
+          // },
+          // {
+          //   // menuValue: 'Domestic Travel Allownace(Working on it)',
+          //   // route: "/excel-info-file-upload",
+          // },
+          // {
+          //   // menuValue: 'International Travel Allowance',
+          //   // // route: "/tasks",
+          // },
           {
             menuValue: 'Travel Reports',
             route: "/travel_expense_table",
+          },
+          {
+            menuValue: 'HOD travel approval',
+            route: "/hod_travel_expense_approval",
           },
         ],
       },
