@@ -244,7 +244,7 @@ const TravelExpenseReportTable = () => {
               }}
             >
               {" "}
-              Create trip
+              Approve Trip
             </button>
           </div>
         </div>

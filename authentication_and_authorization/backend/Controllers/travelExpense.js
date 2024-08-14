@@ -130,9 +130,10 @@ const travelExpenseHodApproval = async(req,res)=>{
   headerValue = newValue.split("=")[1];
   var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   var sapNumberOfApprover = decodedValue.empCode;
+  console.log("Line number 133 sap number of approver :: " , sapNumberOfApprover);
   const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/emp_trip_hod_approval.htm?sapid=${sapNumber}&tripno=${tripNumber}&hodid=${sapNumberOfApprover}`);
   console.log(result.data);
-  res.status(200).send({messageType : result.data.msg_type,message:result.data.message})
+  res.status(200).send({'messageType' : result.data.msg_type,'message':result.data.message})
   // res.status(200).send({status : "True",data : result.data})
 }
 
