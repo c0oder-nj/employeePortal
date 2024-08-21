@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { Table } from "antd";
 import {
   Avatar_01,
@@ -65,9 +67,9 @@ const AdminLeave = () => {
       console.log(url);
 
       dataFetchedThroughApi = await fetch(url, {
-        headers : {
-          'Access-Control-Allow-Origin' : '*'
-        }
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
       })
         .then((response) => {
           return response.json();
@@ -76,6 +78,22 @@ const AdminLeave = () => {
           //Value will be initialized after getting a response
           // leaveSet(data.leave)
           console.log(data);
+
+          console.log(
+            typeof data.employeePendingLeave,
+            typeof [],
+            data.employeePendingLeave,
+            []
+          );
+          if (data.employeePendingLeave.length == 0) {
+            console.log("Line 86");
+            withReactContent(Swal).fire({
+              title: "You are not an Admin !!!",
+              preConfirm: () => {
+                navigate("/employee-dashboard");
+              },
+            });
+          }
           console.log("Printing");
           setPendingLeavesFunction(data.employeePendingLeave);
           // setUsers(data.leaveInfo)
@@ -98,7 +116,7 @@ const AdminLeave = () => {
     console.log("You are in frontend posrtion ", setPendingLeaves);
   }
 
-  async function fetchDataFromApproveReject(option,type) {
+  async function fetchDataFromApproveReject(option, type) {
     //Fetching data for attendance
     const value = `${document.cookie}`;
     console.log(value);
@@ -107,9 +125,9 @@ const AdminLeave = () => {
     console.log(url);
 
     await fetch(url, {
-      headers : {
-        'Access-Control-Allow-Origin' : '*'
-      }
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
     })
       .then((response) => {
         return response.json();
@@ -170,7 +188,7 @@ const AdminLeave = () => {
               className="dropdown-item"
               onClick={(event) => {
                 // console.log(event);
-                fetchDataFromApproveReject(1,text[1]);
+                fetchDataFromApproveReject(1, text[1]);
               }}
             >
               <i className="far fa-dot-circle text-success" /> Approved
@@ -178,7 +196,7 @@ const AdminLeave = () => {
             <button
               className="dropdown-item"
               onClick={() => {
-                fetchDataFromApproveReject(2,text[1]);
+                fetchDataFromApproveReject(2, text[1]);
               }}
             >
               <i className="far fa-dot-circle text-danger" /> Declined

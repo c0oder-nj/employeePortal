@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar_03, Avatar_04 } from "../../../../../Routes/ImagePath";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import DatePicker from "react-datepicker";
 
 const TravelExpenseReportTable = () => {
@@ -34,7 +36,17 @@ const TravelExpenseReportTable = () => {
         .then((data) => {
           setApiData(data.data);
           setFilterData(data.data);
-          console.log(data);
+          console.log(data.data);
+          if (data.data.length == 0) {
+            console.log("Line 86");
+            withReactContent(Swal).fire({
+              title: "You are not an Admin !!!",
+              preConfirm: () => {
+                navigate("/employee-dashboard");
+              },
+            });
+          }
+
         })
         .catch((err) => {
           console.error("Error fetching data:", err);

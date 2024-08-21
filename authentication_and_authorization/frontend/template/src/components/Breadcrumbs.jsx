@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Breadcrumbs = (props) => {
   const location = useLocation();
+  console.log(location.pathname);
   let addButton = null;
   if (location.pathname === "/attendance-employee") {
     console.log(props);
@@ -23,6 +24,8 @@ const Breadcrumbs = (props) => {
             className="btn add-btn"
             data-bs-toggle="modal"
             data-bs-target={props.modal}
+            style={{backgroundColor:"white",
+            }}
           >
             <i className="fa fa-plus" /> {props.name}
           </Link>
@@ -65,6 +68,7 @@ const Breadcrumbs = (props) => {
                   className="btn add-btn"
                   data-bs-toggle="modal"
                   data-bs-target={props.modal}
+                  style={{backgroundColor : "white"}}
                 >
                   <i className="fa fa-plus" /> {props.name}
                 </Link>
@@ -76,6 +80,7 @@ const Breadcrumbs = (props) => {
                   // data-bs-toggle="modal"
                   // data-bs-target={props.modal}
                   target="_blank"
+                  style={{backgroundColor : "white"}}
                 >
                   <i className="fa fa-plus" /> Download Excel
                 </Link>
@@ -179,6 +184,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === '/profile'){
+   
     addButton = (
       <div className="row">
         <div className="col">
