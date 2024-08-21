@@ -60,7 +60,7 @@ const AdminDashboard = () => {
       }).then(function () {
         // Redirect the user
         popUpvalueUpdationState(false)
-        window.location.href = "http://localhost:3001/react/template/";
+        window.location.href = `${process.env.REACT_APP_BASE_URL}/react/template/`;
       });    
     }
   },[popUpvalueState])
@@ -72,12 +72,12 @@ const AdminDashboard = () => {
     console.log(value);
 
     //Giving whole value of token here
-    const url = `http://localhost:3000/api/auth/home?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/auth/home?value=${value}`;
     console.log(url);
 
     let storeResponse;
     
-    await fetch(url).then((response)=>{
+    await fetch(url,{headers : {'Access-Control-Allow-Origin' : '*'}}).then((response)=>{
       return response.json();
     }).then((data) => {
 

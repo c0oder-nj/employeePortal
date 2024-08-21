@@ -5,6 +5,8 @@ const router = express.Router();
 
 
 router.get('/employee_dashboard',authUserThoughMiddleware.checkUserNeeraj, empControllers.employeeDashboard )
+router.get('/employee_profile',authUserThoughMiddleware.checkUserNeeraj, empControllers.employeeProfile )
+router.get('/holidays',authUserThoughMiddleware.checkUserNeeraj, empControllers.holidays )
 router.get('/employeeSapNumber',authUserThoughMiddleware.checkUser,empControllers.employeesapNumber)
 router.get('/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
 router.get('/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)

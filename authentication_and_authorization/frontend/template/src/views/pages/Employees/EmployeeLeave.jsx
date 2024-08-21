@@ -48,11 +48,11 @@ const EmployeeLeave = () => {
         
         // const url = `http://localhost:3000/api/auth/home?value=${value}`;
         //Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
-        const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
+        const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendance?value=${value}`;
         console.log(url);
         
         dataFetchedThroughApi = await fetch
-        (url).then((response)=>{
+        (url, {headers: {'Access-Control-Allow-Origin' : '*'}}).then((response)=>{
           return response.json();
         }).then((data) => {
           

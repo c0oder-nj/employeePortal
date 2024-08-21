@@ -16,14 +16,24 @@ app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
   credentials: true,
-  origin: [
-    "http://localhost:5000",
-    "http://localhost:3000",
-    "http://localhost:3001",
-  ], // Whitelist the domains you want to allow
-  methods: "GET, POST, PUT, DELETE, HEAD",
+  origin: ["http://empportal.shaktipumps.com/", "http://localhost:3000", "http://localhost:3001", "http://www.empportal.shaktipumps.com" ], // Whitelist the domains you want to allow 
+   origin : '*',
+  methods: "GET, POST, PUT, DELETE, HEAD, OPTIONS",
 };
 app.use(cors(corsOptions));
+
+// setting res headers for cors error
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,HEAD');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+});
+
+
+
+
 // Working on session : start
 //app.use(session({secret : "Creating a seesion for user authentication"}))
 // app.use(session({

@@ -39,9 +39,10 @@ const ForgotPassword = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:3000/api/auth/forget-password',
+        url: `${process.env.REACT_APP_BASE_URL}/api/auth/forget-password`,
         headers: { 
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin' : '*'
         },
         data : JSON.stringify(data)
       };
@@ -71,9 +72,10 @@ const ForgotPassword = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:3000/api/auth/verify-otp',
+        url: `${process.env.REACT_APP_BASE_URL}/api/auth/verify-otp`,
         headers: { 
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin' : '*'
         },
         data : JSON.stringify(apiBody)
       };

@@ -437,12 +437,13 @@ const Breadcrumbs = (props) => {
           <h3 className="page-title">{props.maintitle}</h3>
           <ul className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/admin-dashboard">{props.title}</Link>
+              <Link to="/employee-dashboard">{props.title}</Link>
             </li>
             <li className="breadcrumb-item active">{props.subtitle}</li>
           </ul>
         </div>
         <div className="col-auto float-end ms-auto">
+          {props.name && 
           <Link
             to="#"
             className="btn add-btn"
@@ -452,6 +453,7 @@ const Breadcrumbs = (props) => {
             <i className="fa fa-plus" />
             {props.name}
           </Link>
+          }
         </div>
       </div>
     );

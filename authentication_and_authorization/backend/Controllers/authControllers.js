@@ -139,6 +139,9 @@ const login = async (req, res) => {
                         const token = jwt.sign(payloadData, jwtSecretKey);
                         console.log(token)
                         res.cookie("token", token);
+                        res.setHeader('Access-Control-Allow-Origin', '*');
+                        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+                        res.setHeader('Access-Control-Max-Age', 60*60*24*30);
                         db.close();
                         return res.json({ "status": true, message: "user logged in successfully", accessToken: token });
                     } catch (error) {

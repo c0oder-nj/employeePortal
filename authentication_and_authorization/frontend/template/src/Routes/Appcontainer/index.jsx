@@ -24,8 +24,6 @@ import GoalType from "../../views/pages/Performance/Goals/GoalType";
 import Trainers from "../../views/pages/Performance/Training/Trainers";
 import Training from "../../views/pages/Performance/Training/Training";
 import TrainingType from "../../views/pages/Performance/Training/TrainingType";
-
-// import EmployeeProfile from "../../views/pages/Pages/profile/employeeprofile";
 import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard";
 import EmployeeDashboard from "../../views/pages/MainPages/Dashboard/EmployeeDashboard";
 import Chat from "../../views/pages/MainPages/Apps/chat";
@@ -963,6 +961,8 @@ const AppContainer = () => {
       element: <IncomingCall />,
     },
   ];
+
+
   const ComponentsRoutingeObjects = [
     {
       id: 1,
@@ -970,6 +970,7 @@ const AppContainer = () => {
       element: <Components />,
     },
   ];
+
   const EmailRoutingeObjects = [
     {
       id: 1,
@@ -989,6 +990,7 @@ const AppContainer = () => {
    
   
   ];
+
   const SettingsRoutingeObjects = [
     {
       id: 1,
@@ -1056,6 +1058,7 @@ const AppContainer = () => {
       element: <CronSetting />,
     },
   ];
+  
   const ProjectRoutingeObjects = [
     {
       id: 1,
@@ -1180,7 +1183,7 @@ const AppContainer = () => {
  
   const SidebarLayout = () => (
     <>
-      <Header />
+      <Header name="Test"/>
       <Sidebar />
       <OffCanvas />
       <Outlet />
@@ -1240,6 +1243,11 @@ const AppContainer = () => {
     }
   };
 
+
+  // routingObjects.map((item, index)=>{
+  //   console.log(`<Route path="/${item.path}" element={<${item.element.type.name}/>} />`)
+  // })
+
   return (
     <>
       <div className="main-wrapper" onClick={mobileResponsive}>
@@ -1256,6 +1264,7 @@ const AppContainer = () => {
               <Route key={item.id} path={item.path} element={item.element} />
             ))}
           </Route>
+
           <Route path={"/*"} element={<ComponentSidebarLayout />}>
             {ComponentsRoutingeObjects.map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />

@@ -24,7 +24,7 @@ const AllEmployeeAddPopup = (props) => {
     console.log(JSON.stringify(formData));
     const value = `${document.cookie}`;
     console.log(value)
-    const url = `http://localhost:3000/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus?value=${value}`;
     
     const response = await fetch(url, {
         method: "POST",
@@ -32,6 +32,7 @@ const AllEmployeeAddPopup = (props) => {
             'content-type': 'application/json',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
             'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Origin' : '*'
         },
         body: JSON.stringify(formData)
     }).then((response)=>{

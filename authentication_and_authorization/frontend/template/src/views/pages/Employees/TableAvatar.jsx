@@ -26,8 +26,10 @@ const TableAvatar = () => {
 
     const fetchData = async () => {
       const value = `${document.cookie}`;
-      const url = `http://localhost:3000/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
-      await fetch(url)
+      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
+      await fetch(url,{
+        headers: {'Access-Control-Allow-Origin' : '*'}
+      })
         .then((response) => response.json())
         .then((data) => {
           setData(data.data);

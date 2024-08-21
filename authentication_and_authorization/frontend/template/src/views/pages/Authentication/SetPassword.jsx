@@ -57,12 +57,13 @@ const SetPassword = (props) => {
     // custom implementation
     console.log(data);
     try {
-      const response = await fetch(`http://localhost:3000/api/auth/setPassword`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/setPassword`, {
           method: "POST",
           headers: {
               'content-type': 'application/json',
               'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
               'Access-Control-Allow-Methods': 'POST',
+              'Access-Control-Allow-Origin' : '*'
           },
           body: JSON.stringify(data)
       }).then((response)=>{

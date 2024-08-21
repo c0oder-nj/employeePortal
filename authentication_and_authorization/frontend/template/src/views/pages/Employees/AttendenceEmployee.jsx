@@ -236,10 +236,14 @@ const AttendanceEmployee = () => {
       const value = `${document.cookie}`;
       console.log(value);
 
-      const url = `http://localhost:3000/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
       console.log(url);
 
-      dataFetchedThroughApi = await fetch(url)
+      dataFetchedThroughApi = await fetch(url, {
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      })
         .then((response) => {
           return response.json();
         })
@@ -373,9 +377,13 @@ const AttendanceEmployee = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `http://localhost:3002/emp-todays-punch?sapId=5054`;
+      const url = `${process.env.REACT_APP_BASE_URL_JOB}/emp-todays-punch?sapId=5054`;
       console.log(url);
-      await fetch(url)
+      await fetch(url, {
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      })
         .then((response) => {
           return response.json();
         })

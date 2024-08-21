@@ -1,26 +1,64 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { Avatar_02, Avatar_16 } from "../../../Routes/ImagePath";
-import { Link,  useLocation } from "react-router-dom";
+import { Link,  useLocation, useNavigate } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
-  const location = useLocation();
-  const {empData} = location.state; // destructred if pass multiple values in state attribute
-  // console.log("printing location data :: ", empData);
+  const navigate = useNavigate();
+  const [empData, setEmpData] = useState({});
 
-  // function checkCookie(cookieName) {
-  //   const cookies = document.cookie.split(';');
-  //   for (let i = 0; i < cookies.length; i++) {
-  //     let cookie = cookies[i].trim();
-  //     if (cookie.startsWith(cookieName + '=')) {
-  //       const accesstoken = cookie.split('=')[1];
-  //       return { status: true, accesstoken };
-  //     }
-  //   }
-  //   return { status: false, accesstoken: null };
-  // }
+  function checkCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.startsWith(cookieName + '=')) {
+        const accesstoken = cookie.split('=')[1];
+        return { status: true, accesstoken };
+      }
+    }
+    return { status: false, accesstoken: null };
+  }
 
+
+
+    useEffect(() => {
+    const fetchData = async () => {
+      const tokenResult = checkCookie('accessToken');
+      if (!tokenResult.status) {
+        navigate('');
+        return false;
+      }
+
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/employee_profile`, {
+          method: 'GET',
+          headers: {
+            'accesstoken': tokenResult.accesstoken,
+            'Access-Control-Allow-Origin' : '*'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching data", error);
+        return false;
+      }
+    };
+
+    fetchData().then((data)=>{
+      console.log("when fetchdata completes :: ", data);
+      setEmpData(data);
+    })
+    
+    
+  }, []);
+  
 
   return (
     <div className="page-wrapper">
@@ -118,7 +156,8 @@ const Profile = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="pro-edit">
+                  {/* commenting edit icon */}
+                  {/* <div className="pro-edit">
                     <Link
                       data-bs-target="#profile_info"
                       data-bs-toggle="modal"
@@ -127,7 +166,7 @@ const Profile = () => {
                     >
                       <i className="fa-solid fa-pencil"></i>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

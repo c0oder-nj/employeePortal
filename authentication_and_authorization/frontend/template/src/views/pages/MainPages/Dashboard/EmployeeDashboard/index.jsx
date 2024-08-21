@@ -277,10 +277,11 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
       try {
         console.log(tokenResult.accesstoken);
-        const response = await fetch('http://localhost:3000/api/employee/employee_dashboard', {
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/employee_dashboard`, {
           method: 'GET',
           headers: {
-            'accesstoken': tokenResult.accesstoken
+            'accesstoken': tokenResult.accesstoken,
+            'Access-Control-Allow-Origin' : '*'
           }
         });
 
@@ -300,6 +301,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
       console.log("Printing api response in fetchData.then function :: ", data);
       setDashboardData(data);
       setEmpData(data.empDetails[0]);
+      localStorage.setItem("username", data.empDetails[0].ename)
       setHolidays(data.holidays);
       setCompletedTask(data.completedtask);
       setPendingTask(data.pendingtask);

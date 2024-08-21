@@ -150,9 +150,9 @@ const TravelExpenseDataTable = (props) => {
       console.log(value);
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url)
+      fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
         .then((response) => {
           return response.json();
         })
@@ -179,9 +179,9 @@ const TravelExpenseDataTable = (props) => {
       console.log(value);
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `http://localhost:3000/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url)
+      fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
         .then((response) => {
           return response.json();
         })
@@ -226,9 +226,9 @@ const TravelExpenseDataTable = (props) => {
         console.log(value);
 
         console.log("Printing values in useEffect", sapNumber, tripNumber);
-        const url = `http://localhost:3000/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
+        const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
         console.log(url);
-        fetch(url)
+        fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
           .then((response) => {
             return response.json();
           })
@@ -433,9 +433,9 @@ const TravelExpenseDataTable = (props) => {
     const fetchData = async () => {
       const value = `${document.cookie}`;
       console.log(value);
-      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSap?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap?value=${value}`;
       console.log(url);
-      await fetch(url)
+      await fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
         .then((response) => {
           return response.json();
         })

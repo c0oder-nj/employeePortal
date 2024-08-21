@@ -99,10 +99,10 @@ export const SidebarData = [
         route: "#",
         icon: "la la-user",
         subMenus: [
-          {
-            menuValue: 'All Employees',
-            route: "/employees",
-          },
+          // {
+          //   menuValue: 'All Employees',
+          //   route: "/employees",
+          // },
           {
             menuValue: 'Holidays',
             route: "/holidays",
@@ -115,10 +115,10 @@ export const SidebarData = [
             menuValue: 'Leaves(Employee)',
             route: "/leaves-employee",
           },
-          {
-            menuValue: 'Leave Settings',
-            route: "/leave-settings",
-          },
+          // {
+          //   menuValue: 'Leave Settings',
+          //   route: "/leave-settings",
+          // },
           {
             menuValue: 'Attendance (Admin)',
             route: "/adminattendance",
@@ -127,26 +127,26 @@ export const SidebarData = [
             menuValue: 'Attendance (Employee)',
             route: "/attendance-employee",
           },
-          {
-            menuValue: 'Departments',
-            route: "/departments",
-          },
-          {
-            menuValue: 'Designations',
-            route: "/designations",
-          },
-          {
-            menuValue: 'Timesheet',
-            route: "/timesheet",
-          },
-          {
-            menuValue: 'Shift & Schedule',
-            route: "/shift-scheduling",
-          },
-          {
-            menuValue: 'Overtime',
-            route: "/overtime",
-          },
+          // {
+          //   menuValue: 'Departments',
+          //   route: "/departments",
+          // },
+          // {
+          //   menuValue: 'Designations',
+          //   route: "/designations",
+          // },
+          // {
+          //   menuValue: 'Timesheet',
+          //   route: "/timesheet",
+          // },
+          // {
+          //   menuValue: 'Shift & Schedule',
+          //   route: "/shift-scheduling",
+          // },
+          // {
+          //   menuValue: 'Overtime',
+          //   route: "/overtime",
+          // },
         ],
       },
       // commenting clients menu below
@@ -185,13 +185,13 @@ export const SidebarData = [
           },
         ],
       },
-      {
-        menuValue: 'Clients',
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: "/clients",
-        icon: "la la-users",
-      },
+      // {
+      //   menuValue: 'Clients',
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: "/clients",
+      //   icon: "la la-users",
+      // },
     
       // commenting projects menu below
       // {

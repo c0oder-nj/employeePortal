@@ -63,5 +63,34 @@ const apiUsingFtech = async(uri, queryObject, type) => {
     return myPromise;
 }
 
+const onlyUri = async (uri, type) => {
+  if(type === 'get'){
+    const myPromise = new Promise((resolve, reject)=>{
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        // url: `${process.env.BASE_URL}${uri}`,
+        url: `https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new${uri}`,
+        headers: { 
+          'Cookie': 'sap-usercontext=sap-client=900'
+        }
+      };
+      
+      axios.request(config)
+      .then((response) => {
 
-module.exports = {apiUsingFtech}
+        resolve(response.data)
+        // console.log("Printing at api service :: ");
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+        // console.log(error);
+      });
+    })
+    return myPromise;
+  }
+}
+
+
+module.exports = {apiUsingFtech, onlyUri}

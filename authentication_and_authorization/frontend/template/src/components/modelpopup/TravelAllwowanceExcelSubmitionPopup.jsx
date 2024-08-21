@@ -54,9 +54,13 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `http://localhost:3000/api/TravelExpense/countryAndCostCenterCode`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/countryAndCostCenterCode`;
       console.log(url);
-      await fetch(url)
+      await fetch(url, {
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      })
         .then((response) => {
           return response.json();
         })
@@ -229,14 +233,15 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       const value = `${document.cookie}`;
       console.log(value);
       // const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
-      const url = `http://localhost:3000/api/TravelExpense/domesticTravelExpens?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/domesticTravelExpens?value=${value}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "content-type": "application/json",
           "Access-Control-Allow-Headers":
-            "Content-Type, Authorization, Access-Control-Allow-Headers",
+          "Content-Type, Authorization, Access-Control-Allow-Headers",
           "Access-Control-Allow-Methods": "POST",
+          'Access-Control-Allow-Origin' : '*'
         },
         body: JSON.stringify(formData),
       }).then((response) => {
@@ -263,14 +268,15 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
     const value = `${document.cookie}`;
     console.log(value);
     // const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
-    const url = `http://localhost:3000/api/TravelExpense/domesticTravelExpens?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/domesticTravelExpens?value=${value}`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Access-Control-Allow-Headers",
         "Access-Control-Allow-Methods": "POST",
+        'Access-Control-Allow-Origin' : '*'
       },
       body: JSON.stringify(formData),
     }).then((response) => {

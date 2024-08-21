@@ -115,14 +115,15 @@ const EmployeeLeaveModelPopup = (props) => {
     console.log(JSON.stringify(formData));
     const value = `${document.cookie}`;
     console.log(value);
-    const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApply?value=${value}`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Access-Control-Allow-Headers",
         "Access-Control-Allow-Methods": "POST",
+        'Access-Control-Allow-Origin' : '*'
       },
       body: JSON.stringify(formData),
     }).then((response) => {
@@ -199,10 +200,15 @@ const EmployeeLeaveModelPopup = (props) => {
       // const url = `http://localhost:3000/api/auth/home?value=${value}`;
       const value = `${document.cookie}`;
       console.log(value);
-      const url = `http://localhost:3000/api/employee/employeeSapNumber?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeSapNumber?value=${value}`;
       console.log(url);
 
-      sapNumber = await fetch(url)
+      sapNumber = await fetch(url, {
+        method: 'get',
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      })
         .then((response) => {
           return response.json();
         })

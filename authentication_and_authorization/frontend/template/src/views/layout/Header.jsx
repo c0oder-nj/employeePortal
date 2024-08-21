@@ -11,6 +11,7 @@ import {
   Applogo,
   Avatar_02,
   headerlogo,
+  Applogowhite,
   lnEnglish,
   lnFrench,
   lnGerman,
@@ -73,6 +74,7 @@ const Header = (props) => {
   const Value = JSON.parse(Credencial);
   const UserName = Value?.email?.split("@")[0];
   const ProfileName = UserName?.charAt(0).toUpperCase() + UserName?.slice(1);
+  const username = localStorage.getItem("username");
 
   const { t, i18n } = useTranslation();
 
@@ -109,7 +111,8 @@ const Header = (props) => {
       {/* Logo */}
       <div className="header-left">
         <Link to="/admin-dashboard" className="logo">
-          <img src={headerlogo}  alt="img" />
+          {/* <img src={headerlogo}  alt="img" /> */}
+          <img src={Applogowhite}  alt="img" />
         </Link>
         <Link to="/admin-dashboard" className="logo2">
           <img src={Applogo} width={40} height={40} alt="img" />
@@ -136,7 +139,7 @@ const Header = (props) => {
       </Link>
       {/* Header Title */}
       <div className="page-title-box">
-        <h3>Dreams Technologies</h3>
+        <h3>Shakti Pumps</h3>
       </div>
       {/* /Header Title */}
       <Link
@@ -149,8 +152,9 @@ const Header = (props) => {
       </Link>
       {/* Header Menu */}
       <ul className="nav user-menu">
-        {/* Search */}
-        <li className="nav-item">
+        
+        {/* commented search icon */}
+        {/* <li className="nav-item">
           <div className="top-nav-search">
             <Link to="#" className="responsive-search">
               <i className="fa fa-search" />
@@ -166,11 +170,10 @@ const Header = (props) => {
               </button>
             </form>
           </div>
-        </li>
-        {/* /Search */}
-        {/* Flag */}
+        </li> */}
 
-        <li className="nav-item dropdown has-arrow flag-nav">
+        {/* Commented language icon */}
+        {/* <li className="nav-item dropdown has-arrow flag-nav">
           <Link
             className="nav-link dropdown-toggle"
             data-bs-toggle="dropdown"
@@ -209,10 +212,11 @@ const Header = (props) => {
               <img src={lnGerman} alt="Flag" height="16" /> German
             </Link>
           </div>
-        </li>
-        {/* /Flag */}
-        {/* Notifications */}
-        <li className="nav-item dropdown">
+        </li> */}
+
+
+        {/* commented alert icons */}
+        {/* <li className="nav-item dropdown">
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -284,10 +288,10 @@ const Header = (props) => {
               </Link>
             </div>
           </div>
-        </li>
-        {/* /Notifications */}
-        {/* Message Notifications */}
-        <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
+        </li> */}
+
+        {/* commented message icon */}
+        {/* <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -351,8 +355,7 @@ const Header = (props) => {
               </Link>
             </div>
           </div>
-        </li>
-        {/* /Message Notifications */}
+        </li> */}
         <li className="nav-item dropdown has-arrow main-drop">
           <Link
             to="#"
@@ -365,7 +368,9 @@ const Header = (props) => {
               <img src={Avatar_02} alt="img" />
               <span className="status online" />
             </span>
-            <span>{ProfileName ? `${ProfileName}` : "Admin"}</span>
+            {/* <span>{ProfileName ? `${ProfileName}` : "Admin"}</span> */}
+            {/* <span>{props.name ? `${props.name}` : "Admin"}</span> */}
+            <span>{username ? `${username}` : "Welcome"}</span>
           </Link>
           <div
             className={`dropdown-menu dropdown-menu-end ${profile ? "show" : ""
@@ -383,8 +388,6 @@ const Header = (props) => {
           </div>
         </li>
       </ul>
-      {/* /Header Menu */}
-      {/* Mobile Menu */}
       <div className="dropdown mobile-user-menu">
         <Link
           to="#"
@@ -406,7 +409,6 @@ const Header = (props) => {
           </Link>
         </div>
       </div>
-      {/* /Mobile Menu */}
     </div>
   );
 };

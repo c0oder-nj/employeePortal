@@ -21,6 +21,9 @@ const checkUser = async (req,res,next)=> {
     var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
     // console.log(decodedValue);
     console.log("In middle ware")
+    // Adding custom header for resolving cors issue
+    // req.setHeader('Access-Control-Allow-Origin','*');
+
     next()
 }
 
@@ -42,7 +45,11 @@ const checkUserNeeraj = (req,res,next)=> {
     console.log("+++++++++++++++++++++++++++")
     var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
     console.log(decodedValue);
-    req.sapid = decodedValue.empCode;
+    req.sapid = decodedValue.empCode; // here I am setting sap id as request object 
+
+
+    // Adding custom header for resolving cors issue
+    // req.setHeader('Access-Control-Allow-Origin','*');
 
     next()
 }

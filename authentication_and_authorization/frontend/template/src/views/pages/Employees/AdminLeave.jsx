@@ -61,10 +61,14 @@ const AdminLeave = () => {
       // Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
       // const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
 
-      const url = `http://localhost:3000/api/employee/employeeLeaveApproval?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeLeaveApproval?value=${value}`;
       console.log(url);
 
-      dataFetchedThroughApi = await fetch(url)
+      dataFetchedThroughApi = await fetch(url, {
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      })
         .then((response) => {
           return response.json();
         })
@@ -99,10 +103,14 @@ const AdminLeave = () => {
     const value = `${document.cookie}`;
     console.log(value);
 
-    const url = `http://localhost:3000/api/employee/employeeAttendanceApproveReject?value=${value}&option=${option}&type=${type}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApproveReject?value=${value}&option=${option}&type=${type}`;
     console.log(url);
 
-    await fetch(url)
+    await fetch(url, {
+      headers : {
+        'Access-Control-Allow-Origin' : '*'
+      }
+    })
       .then((response) => {
         return response.json();
       })

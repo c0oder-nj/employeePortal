@@ -291,6 +291,15 @@ const employeeDashboard = async(req,res) =>{
   })
 }
 
+
+const holidays = async (req,res) => {
+  const response = await apiService.onlyUri('/holidays.htm' , 'get');
+  if(response.status){
+    return res.send(response);
+  }else{
+    return res.json({ "status": false, "message": "Some error at controller fuction api" })
+  }
+}
 const empUpHeirarchy = async(req,res) => {
   responseArr = [];
   const sapid = req.query.sapid;
@@ -300,8 +309,21 @@ const empUpHeirarchy = async(req,res) => {
 }
 
 
+const employeeProfile = async (req,res) => {
+  const sapid = req.sapid;
+  const queryObject = {
+    sapid: sapid
+  }
+  const response = await apiService.apiUsingFtech('/employee_profile.htm', queryObject, 'get');
+  if(response.status){
+    return res.send(response.data.at(0));
+  }else{
+    return res.send({'status' : false, 'message' : 'Cannot get data for your profile. Pleae contact admin'})
+  }
+}
+
 
 
 // module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeDashboard,empUpHeirarchy};
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeDashboard,empUpHeirarchy, holidays,employeeProfile};
 // module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeDashboard};

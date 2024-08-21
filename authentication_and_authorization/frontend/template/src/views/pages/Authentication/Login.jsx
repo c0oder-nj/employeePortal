@@ -41,7 +41,6 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState(false);
-  // cont [errorStatus, setErrorStatus] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
   const [display, setDisplay] = useState('block');
 
@@ -66,7 +65,7 @@ const Login = () => {
     
     let cookieExists = checkCookie('accessToken');
     if(cookieExists){
-      navigate("/admin-dashboard");
+      navigate("/employee-dashboard");
     }
   }
  
@@ -75,12 +74,15 @@ const Login = () => {
         // when user enters the default password navigate it to set new password
 
         try {
-            const response = await fetch(`http://localhost:3000/api/auth/login`, {
+          let apiUrl = `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
+          console.log('api url: ',apiUrl);
+            const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/json',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
                     'Access-Control-Allow-Methods': 'POST',
+                    'Access-Control-Allow-Origin' : '*'
                 },
                 body: JSON.stringify(data)
             }).then((response)=>{
@@ -147,14 +149,14 @@ const Login = () => {
       <div className="account-page" >
         <div className="main-wrapper">
           <div className="account-content">
-            <Link to="/job-list" className="btn btn-primary apply-btn">
+            {/* <Link to="/job-list" className="btn btn-primary apply-btn">
               Apply Job
-            </Link>
+            </Link> */}
             <div className="container">
               {/* Account Logo */}
               <div className="account-logo">
                 <Link to="/admin-dashboard">
-                  <img src={Applogo} alt="Dreamguy's Technologies" />
+                  <img src={Applogo} alt="Shakti Pumps" style={{'width':'50%'}} />
                 </Link>
               </div>
               {/* /Account Logo */}
