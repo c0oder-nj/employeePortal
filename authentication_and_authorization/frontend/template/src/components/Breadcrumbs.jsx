@@ -51,6 +51,7 @@ const Breadcrumbs = (props) => {
     //     </div>
     //   </div>
     // );
+    console.log("Hello", props);
     if(props.modal=="#travel_allwowance"){
     addButton =
       (
@@ -96,6 +97,7 @@ const Breadcrumbs = (props) => {
     console.log("Hello", props);
   } 
   else if(location.pathname === "/hod_travel_expense_approval"){
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -184,7 +186,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === '/profile'){
-   
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -210,7 +212,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/settings/notifications-settings" ||
     location.pathname === "/settings/toxbox-setting" ||
     location.pathname === "/settings/cron-setting"
-  ) {
+  ) {console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col-sm-12">
@@ -219,6 +221,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === "/admin-dashboard") {
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -230,6 +233,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === "/invoice-view") {
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -260,6 +264,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/employees" ||
     location.pathname === "/employees-list"
   ) {
+    console.log("Hello", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">
@@ -326,6 +331,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/leave-reports" ||
     location.pathname === "/daily-reports"
   ) {
+    console.log("Hello", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">
@@ -437,6 +443,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else {
+    console.log("Hello 123", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">
@@ -455,6 +462,7 @@ const Breadcrumbs = (props) => {
             className="btn add-btn"
             data-bs-toggle="modal"
             data-bs-target={props.modal}
+            style={{background : "white"}}
           >
             <i className="fa fa-plus" />
             {props.name}
