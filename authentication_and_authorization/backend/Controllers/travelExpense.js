@@ -12,7 +12,7 @@ dotenv.config();
 //function for getting an information about country code and cost center code
 
 const countryCodeAndCostCenter = async(req,res)=>{
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/country_costcenter.htm`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/country_costcenter.htm`);
   console.log(result);
   console.log("Your cookie is working")
 
@@ -36,7 +36,7 @@ const domesticTravelAllowance = async (req, res) => {
   const tripDetailsString = JSON.stringify(tripDetails);
   console.log(tripDetailsString);
   const result = await axios.get(
-    `https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/travel_expense_entry.htm?date1=${req.body.TimeStart}&date2=${req.body.TimeEnd}&country=${req.body.Country}&location=${req.body.Location}&cost_center=${req.body.CostCenter}&perno=${sapNumber}&trip_details=${tripDetailsString}`
+    `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/travel_expense_entry.htm?date1=${req.body.TimeStart}&date2=${req.body.TimeEnd}&country=${req.body.Country}&location=${req.body.Location}&cost_center=${req.body.CostCenter}&perno=${sapNumber}&trip_details=${tripDetailsString}`
   );
   console.log(result.data);
   console.log("Your cookie is working");
@@ -50,7 +50,7 @@ const travelExpenseUsingSap = async(req,res)=>{
   headerValue = newValue.split("=")[1];
   var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   var sapNumber = decodedValue.empCode;
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing.htm?sapid=${sapNumber}`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing.htm?sapid=${sapNumber}`);
   console.log(result);
   console.log("Show travel")
   res.status(200).send({travel_data : result.data})
@@ -64,7 +64,7 @@ const travelExpenseUsingSapAndTravelCode = async(req,res)=>{
 
   console.log("You are in sap and trip code")
   console.log(req.query.sapNumber,req.query.tripNumber)
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_details_api.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_details_api.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}`);
   // console.log(result);
   console.log("Show travel")
   res.status(200).send({travel_data : result.data})
@@ -78,7 +78,7 @@ const travelExpenseDelete = async(req,res)=>{
 
   console.log("You are in delete section sap and trip code")
   console.log(req.query.sapNumber,req.query.tripNumber)
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_delete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_delete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}`);
   console.log(result);
   console.log("Show travel")
   res.status(200).send({messageType : result.data.msgtype,message:result.data.msg})
@@ -93,7 +93,7 @@ const travelExpenseCreate = async(req,res)=>{
 
   console.log("You are in create showing undefined section sap and trip code")
   console.log(req.query.sapNumber,req.query.tripNumber,req.query.objectText,req.query.outcomeText)
-  const result = await axios.get(`http://spquasrvr1.shaktipumps.com:8000/sap/bc/bsp/sap/zhr_portal_new/emp_trip_complete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}&obj_txt=${req.query.objectText}&out_txt=${req.query.outcomeText}`);
+  const result = await axios.get(`http://spprdsrvr1.shaktipumps.com:8000/sap/bc/bsp/sap/zhr_portal_new/emp_trip_complete.htm?sapid=${req.query.sapNumber}&tripno=${req.query.tripNumber}&obj_txt=${req.query.objectText}&out_txt=${req.query.outcomeText}`);
   console.log(result);
   // console.log("Show travel")
   res.status(200).send({messageType : result.data.msg_type,message:result.data.msg})
@@ -113,7 +113,7 @@ const showTravelExpenseHodApproval = async(req,res)=>{
   headerValue = newValue.split("=")[1];
   var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   var sapNumber = decodedValue.empCode;
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing_hod_approval.htm?sapid=5089`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/trip_listing_hod_approval.htm?sapid=${sapNumber}`);
   console.log(result);
   // res.status(200).send({messageType : result.data.msg_type,message:result.data.msg})
   res.status(200).send({status : "True",data : result.data})
@@ -131,7 +131,7 @@ const travelExpenseHodApproval = async(req,res)=>{
   var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   var sapNumberOfApprover = decodedValue.empCode;
   console.log("Line number 133 sap number of approver :: " , sapNumberOfApprover);
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/emp_trip_hod_approval.htm?sapid=${sapNumber}&tripno=${tripNumber}&hodid=${sapNumberOfApprover}`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/emp_trip_hod_approval.htm?sapid=${sapNumber}&tripno=${tripNumber}&hodid=${sapNumberOfApprover}`);
   console.log(result.data);
   res.status(200).send({'messageType' : result.data.msg_type,'message':result.data.message})
   // res.status(200).send({status : "True",data : result.data})

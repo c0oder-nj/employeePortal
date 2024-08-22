@@ -57,8 +57,8 @@ app.post("/TestAPI", express.raw({ type: "*/*" }), (req, res) => {
 
 // //For user login and jwt token creation
 // app.post('/api/auth/login',authControllers.login)
-// //Just for test
-app.post("/api/auth/test", authControllers.test);
+// // //Just for test
+// app.post("/api/auth/test", authControllers.test);
 
 // //For setting a password
 // app.post('/api/auth/setPassword',authControllers.setPassword)

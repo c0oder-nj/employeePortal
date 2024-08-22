@@ -29,7 +29,7 @@ const employeeattendance = async (req,res)=>{
         method: 'get',
         maxBodyLength: Infinity,
         // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5051',
-        url:`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+        url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
         }
@@ -159,7 +159,7 @@ const employeeattendanceApply = async (req,res)=>{
 const employeeLeaveCreation = async (req,res) =>{
   console.log("Your value",req.body)
 
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
   console.log(result.data);
   console.log("Your cookie is working")
 
@@ -238,8 +238,8 @@ const employeeLeaveStatus = async (req,res)=>{
   let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5089',
-      // url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+      // url: `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5089`,
+      url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
