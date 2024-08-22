@@ -80,9 +80,9 @@ const allEmployeeDailyAttendnceCorrection = async (req,res)=>{
   var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   var sapNumber = decodedValue.empCode;
 
-  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/hod_emp_attendance.htm?sapid=5089`);
-  console.log(result.data);
-  console.log("All employee attendance ")
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/hod_emp_attendance.htm?sapid=${sapNumber}`);
+  console.log("From data",result);
+  console.log("All employee attendance")
   res.status(200).send(result.data)
 }
 
