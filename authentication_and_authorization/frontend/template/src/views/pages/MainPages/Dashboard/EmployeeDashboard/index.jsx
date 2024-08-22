@@ -2118,7 +2118,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
             <div className="row">
               {/* Employee Month */}
-              <div className="col-xl-6 col-md-12 d-flex">
+              {/* <div className="col-xl-6 col-md-12 d-flex">
                 <div className="card employee-month-card flex-fill">
                   <div className="card-body">
                     <div className="row align-items-center">
@@ -2147,10 +2147,11 @@ function buildHierarchy(data, parentPernr = "00000000") {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* /Employee Month */}
+              
               {/* Company Policy */}
-              <div className="col-xl-6 col-md-12 d-flex">
+              {/* <div className="col-xl-6 col-md-12 d-flex">
                 <div className="card flex-fill">
                   <div className="card-body">
                     <div className="row align-items-center">
@@ -2164,7 +2165,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
                       </div>
                     </div>
                     <Slider {...settings} className="company-slider owl-carousel owl-loaded owl-drag">
-                      {/* Company Grid */}
+                      
                       <div className="owl-item active" style={{ width: '199.667px', marginRight: '20px' }}>
                         <div className="company-grid company-soft-tertiary">
                           <div className="company-top">
@@ -2193,8 +2194,6 @@ function buildHierarchy(data, parentPernr = "00000000") {
                           </div>
                         </div>
                       </div>
-                      {/* Company Grid */}
-                      {/* Company Grid */}
                       <div className="owl-item active" style={{ width: '199.667px', marginRight: '20px' }}>
                         <div className="company-grid company-soft-success">
                           <div className="company-top">
@@ -2223,8 +2222,6 @@ function buildHierarchy(data, parentPernr = "00000000") {
                           </div>
                         </div>
                       </div>
-                      {/* Company Grid */}
-                      {/* Company Grid */}
                       <div className="owl-item active" style={{ width: '199.667px', marginRight: '20px' }}>
                         <div className="company-grid company-soft-info">
                           <div className="company-top">
@@ -2253,11 +2250,10 @@ function buildHierarchy(data, parentPernr = "00000000") {
                           </div>
                         </div>
                       </div>
-                      {/* Company Grid */}
                     </Slider>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* /Company Policy */}
             </div>
           </div>

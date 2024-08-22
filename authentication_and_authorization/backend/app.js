@@ -8,6 +8,7 @@ const empAttnedanceControllers = require("./Controllers/empAttendanceControllers
 const empTravelExpense = require("./Controllers/travelExpense");
 const authUserThoughMiddleware = require("./middleware/authUserMiddle");
 const routes = require("./Routes/index");
+const { default: axios } = require("axios");
 env.config();
 const app = express();
 app.use(cookieParser());
@@ -196,3 +197,31 @@ const port = process.env.port || 3000;
 app.listen(port, () => {
   console.log(`server is listening at http://localhost:${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+// Job server in the same server
+setInterval(() => {
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'http://localhost:3000/api/job/fetch-attendance',
+    headers: { }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}, 1000*60*15);

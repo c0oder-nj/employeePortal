@@ -400,6 +400,19 @@
             display: none;
         } 
     }
+
+    // scss for employee welcome card
+    .employee-welcome-card{
+        background: $blue !important;
+        background: $blue-gradient !important;
+    }
+
+    .employee-welcome-card::before{
+        background:  $blue-gradient;
+    }
+
+
+
     .page-item.active {
         .page-link {
             background-color:  $blue ;

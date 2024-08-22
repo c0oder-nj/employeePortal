@@ -19,7 +19,7 @@ const fetchDailyAttendace = (req,res) =>{
 
     uri += `?ACTION=GET;DATE-RANGE=${finalDate}-${finalDate};RANGE=ALL;FORMAT=JSON`;
 
-    console.log(uri);
+    console.log("Printing url : ", uri);
     axios.get(uri, { 
         auth: {
           username: process.env.COSEC_USERNAME,

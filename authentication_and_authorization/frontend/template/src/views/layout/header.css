@@ -1,0 +1,34 @@
+/* Default Logo Size */
+.app-logo-white {
+    width: 150px; /* Default size */
+    height: auto;
+  }
+  
+  /* For Tablets (Portrait and Landscape) */
+  @media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .app-logo-white {
+      width: 120px; /* Slightly smaller */
+    }
+  }
+  
+  /* For Small Laptops and Desktops */
+  @media only screen and (min-width: 1025px) and (max-width: 1440px) {
+    .app-logo-white {
+      width: 180px; /* Slightly larger */
+    }
+  }
+  
+  /* For Larger Desktops */
+  @media only screen and (min-width: 1441px) {
+    .app-logo-white {
+      width: 200px; /* Largest size */
+    }
+  }
+  
+  /* For Small Devices (Phones) */
+  @media only screen and (max-width: 599px) {
+    .app-logo-white {
+      width: 100px; /* Smallest size */
+    }
+  }
+  
