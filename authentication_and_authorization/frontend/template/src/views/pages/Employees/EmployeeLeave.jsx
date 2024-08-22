@@ -244,7 +244,7 @@ const EmployeeLeave = () => {
             title="Dashboard"
             subtitle="Leaves"
             modal="#add_leave"
-            name="Add New"
+            name="Add Leave"
           />
 
           <div className="row">

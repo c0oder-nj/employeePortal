@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar_09 } from "../../../Routes/ImagePath";
 import AttendenceModelPopup from "../../../components/modelpopup/AttendenceModelPopup";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const TableAvatar = () => {
   const navigate = useNavigate();
@@ -32,6 +34,19 @@ const TableAvatar = () => {
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log("In data from allEmployeeattendance",data);
+
+          if (data.status==false) {
+            console.log("Line 86");
+            withReactContent(Swal).fire({
+              title: "You are not an Admin !!!",
+              preConfirm: () => {
+                navigate("/employee-dashboard");
+              },
+            });
+            return;
+          }
+
           setData(data.data);
         })
         .catch((err) => {

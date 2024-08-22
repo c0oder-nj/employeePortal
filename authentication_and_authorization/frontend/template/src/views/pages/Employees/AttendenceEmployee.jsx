@@ -353,27 +353,27 @@ const AttendanceEmployee = () => {
   //     .then((res) => setData(res.data));
   // }, []);
 
-  useEffect(() => {
-    axios.get(base_url + "/api/attendenceemployee.json").then((res) => {
-      // Assuming the API response is an array of objects
-      const apiData = res.data;
-      // Map the API data to the statisticsData format
-      const mappedData = apiData?.map((data) => ({
-        title: data.title,
-        value: data.value,
-        valuespan: data.valuespan,
-        progressWidth: data.progressWidth,
-        progressBarColor: data.progressBarColor,
-      }));
-      setUsers(mappedData);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(base_url + "/api/attendenceemployee.json").then((res) => {
+  //     // Assuming the API response is an array of objects
+  //     const apiData = res.data;
+  //     // Map the API data to the statisticsData format
+  //     const mappedData = apiData?.map((data) => ({
+  //       title: data.title,
+  //       value: data.value,
+  //       valuespan: data.valuespan,
+  //       progressWidth: data.progressWidth,
+  //       progressBarColor: data.progressBarColor,
+  //     }));
+  //     setUsers(mappedData);
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    axios
-      .get(base_url + "/api/attendenceemployeeactivity.json")
-      .then((res) => setActivity(res.data));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(base_url + "/api/attendenceemployeeactivity.json")
+  //     .then((res) => setActivity(res.data));
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
