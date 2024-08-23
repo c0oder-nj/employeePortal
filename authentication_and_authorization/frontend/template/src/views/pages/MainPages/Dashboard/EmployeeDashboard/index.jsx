@@ -21,7 +21,7 @@ const EmployeeDashboard = () => {
   const [statisticsTimeFrame, setStatisticsTimeFrame] = useState("Week");
   const [workingHoursTimeFrame, setWorkingHoursTimeFrame] = useState("Week");
   const [heirarchyData, setHeirarchyData] = useState([]);
-  
+
   const [chartOptions, setChartOptions] = useState({
     series: [],
     colors: ['#55CE63'], //'#FC133D',
@@ -126,13 +126,13 @@ const EmployeeDashboard = () => {
 
   });
 
-  
-// All global variables start 
+
+  // All global variables start 
   // Weekly and monthly statistics card
   var weeklyStatisticsCard;
   var monthlyStatisticsCard;
   var heirarchy;
-// All Global variable end
+  // All Global variable end
 
 
 
@@ -141,6 +141,7 @@ const EmployeeDashboard = () => {
   // ---------- Checkcookie function -----------------
   function checkCookie(cookieName) {
     const cookies = document.cookie.split(';');
+    console.log(document.cookie);
     for (let i = 0; i < cookies.length; i++) {
       let cookie = cookies[i].trim();
       if (cookie.startsWith(cookieName + '=')) {
@@ -150,6 +151,7 @@ const EmployeeDashboard = () => {
     }
     return { status: false, accesstoken: null };
   }
+
   // ------------ check cookie function end--------------------
 
 
@@ -164,47 +166,47 @@ const EmployeeDashboard = () => {
 
 
 
-// ----------- timeFrameChange for working hours card --------------
+  // ----------- timeFrameChange for working hours card --------------
   const handleTimeFrameChangeWorkingHour = (val) => {
     setWorkingHoursTimeFrame(val);
   }
-// ----------- timeFrameChange end for working hours card --------------
+  // ----------- timeFrameChange end for working hours card --------------
 
 
-// ---------- Parse date function start for date formatting--------------
+  // ---------- Parse date function start for date formatting--------------
   function parseDate(d) {
     const [day, month, year] = d.split(".");
     return new Date(`${year}-${month}-${day}T00:00:00Z`);
   }
-// ---------- Parse date function end for date formatting--------------
+  // ---------- Parse date function end for date formatting--------------
 
 
 
 
-// ---------------------- custom monthly chart implementation function start --------------------
-const updateMonthlyChart = (series, categories) => {
-  setChartOptions1({
-    ...chartOptions1,
-    series: series,
-    xaxis : categories
-  })
-}
-// ---------------------- custom monthly chart implementation function end --------------------
+  // ---------------------- custom monthly chart implementation function start --------------------
+  const updateMonthlyChart = (series, categories) => {
+    setChartOptions1({
+      ...chartOptions1,
+      series: series,
+      xaxis: categories
+    })
+  }
+  // ---------------------- custom monthly chart implementation function end --------------------
 
 
-// --------- heirarchy building function which changes the response--------------------------
-function buildHierarchy(data, parentPernr = "00000000") {
-  return data
+  // --------- heirarchy building function which changes the response--------------------------
+  function buildHierarchy(data, parentPernr = "00000000") {
+    return data
       .filter(item => item.f_pernr === parentPernr)
       .map(item => {
-          const children = buildHierarchy(data, item.pernr);
-          return {
-              ...item,
-              children: children.length ? children : undefined
-          };
+        const children = buildHierarchy(data, item.pernr);
+        return {
+          ...item,
+          children: children.length ? children : undefined
+        };
       });
-}
-// --------- heirarchy building function which changes the response--------------------------
+  }
+  // --------- heirarchy building function which changes the response--------------------------
 
 
 
@@ -256,22 +258,30 @@ function buildHierarchy(data, parentPernr = "00000000") {
     'date': ''
   }
 
-    // custom implementation of monthly hour chart
-    const customMonthlyChart = {
-      'working_hours' : [],
-      'categories' : []
-    }
-// All custom built objects end
-
+  // custom implementation of monthly hour chart
+  const customMonthlyChart = {
+    'working_hours': [],
+    'categories': []
+  }
+  // All custom built objects end
 
 
 
   useEffect(() => {
+    const checkCk = checkCookie('accessToken');
+    if(checkCk.status === false){
+      return navigate('/');
+    }
+
+
     const fetchData = async () => {
+
       console.log("Fetching data...");
       const tokenResult = checkCookie('accessToken');
+      console.log("Printing token at employee dashbaord :: ", tokenResult);
       if (!tokenResult.status) {
-        navigate('/react/template');
+        console.log(tokenResult)
+        navigate('/');
         return false;
       }
 
@@ -281,7 +291,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
           method: 'GET',
           headers: {
             'accesstoken': tokenResult.accesstoken,
-            'Access-Control-Allow-Origin' : '*'
+            'Access-Control-Allow-Origin': '*'
           }
         });
 
@@ -301,7 +311,6 @@ function buildHierarchy(data, parentPernr = "00000000") {
       console.log("Printing api response in fetchData.then function :: ", data);
       setDashboardData(data);
       setEmpData(data.empDetails[0]);
-      localStorage.setItem("username", data.empDetails[0].ename)
       setHolidays(data.holidays);
       setCompletedTask(data.completedtask);
       setPendingTask(data.pendingtask);
@@ -309,7 +318,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
       // console.log("Updating heirarchy data in fetchData.then function");
       // console.log(data.hierarchyData)
       setHeirarchyData(data.hierarchyData);
-      
+
 
       // custom implementation of weekly hour chart
       const customChart = {
@@ -320,18 +329,18 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
 
       const customChartMonthly = {
-        'working_hours' : [],
-        'categories' : []
+        'working_hours': [],
+        'categories': []
       }
 
 
-      
+
 
       if (data.status) {
         const today = new Date();
         const currentDay = today.getDay();
         var currentMonth = today.getMonth() + 1;
-        if(currentMonth < 10){
+        if (currentMonth < 10) {
           currentMonth = '0' + currentMonth;
         }
         const lastMon = new Date(today);
@@ -347,7 +356,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
           return date >= lastMon && date <= endD;
         })
 
-        var oneMonthData = data.attendanceemp.filter((val,index)=>{
+        var oneMonthData = data.attendanceemp.filter((val, index) => {
           return (parseInt(val.begdat.split('.').at(1)) === parseInt(currentMonth));
         })
 
@@ -386,9 +395,9 @@ function buildHierarchy(data, parentPernr = "00000000") {
         customChart.categories = customChart.categories.reverse();
 
 
-        oneMonthData.map((val,index)=>{
-          const [hour, minute,second] = val.totdz.split(':');
-          let workingHours = (parseFloat(hour) + parseFloat((parseInt(minute)/60))).toFixed(2);
+        oneMonthData.map((val, index) => {
+          const [hour, minute, second] = val.totdz.split(':');
+          let workingHours = (parseFloat(hour) + parseFloat((parseInt(minute) / 60))).toFixed(2);
           customChartMonthly.working_hours.push(workingHours);
           customChartMonthly.categories.push(val.begdat);
         })
@@ -441,19 +450,19 @@ function buildHierarchy(data, parentPernr = "00000000") {
         series: updatedSeries1,
         xaxis: updatedCategories1
       })
-      
 
-      
+
+
       setPageDisplay('block')
     });
   }, []);
 
 
   // ----------- Logic for organizational chart -------------------------
-    console.log(heirarchyData);
-    heirarchy = buildHierarchy(heirarchyData);
-    console.log(heirarchy);
-    
+  console.log(heirarchyData);
+  heirarchy = buildHierarchy(heirarchyData);
+  console.log(heirarchy);
+
   // ----------- Logic for organizational chart -------------------------
 
 
@@ -461,8 +470,8 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
 
 
-// ---------All logic written after useEffect---------------
-//------------------ Logic to show all available leave to user start---------------------
+  // ---------All logic written after useEffect---------------
+  //------------------ Logic to show all available leave to user start---------------------
   if (dashboardData.status) {
     dashboardData.leaveemp.map((val, index) => {
       atnAndLeaveCard.total_leaves += parseInt(val.horo)
@@ -476,12 +485,12 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
     atnAndLeaveCard.total_workingDays = dashboardData.working_days;
   }
-//------------------ Logic to show all available leave to user end---------------------
+  //------------------ Logic to show all available leave to user end---------------------
 
 
 
 
-// -----------------Logic to show upcoming holiday to user start------------------------------
+  // -----------------Logic to show upcoming holiday to user start------------------------------
   const today = new Date().toLocaleDateString('de-DE');
   holidays.some((holiday, index) => {
     let holidayDateArr = holiday.datum.split('.');
@@ -507,7 +516,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
 
 
-// -----------------Logic for showing monthly and weekly attendance statistics to user start ------------------------------
+  // -----------------Logic for showing monthly and weekly attendance statistics to user start ------------------------------
   if (empAttendance.length > 0) {
     function parseDateUpdated(dateStr) {
       const [day, month, year] = dateStr.split('.');
@@ -539,7 +548,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
       customMonthlyChart.working_hours.push(tempVar);
       customMonthlyChart.categories.push(val.begdat);
 
-      
+
       let [lateHour, lateMin, lateSec] = val.late_min.split(':');
       totalLateMinutesInMonth += ((parseInt(lateHour) * 60) + parseInt(lateMin))
       lunchDurationInMonth += 30;
@@ -584,7 +593,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
       'lunch_duration': lunchDurationInWeek,
     }
   }
-// ----------------Logic for showing monthly and weekly attendance statistics to user end ------------------------------
+  // ----------------Logic for showing monthly and weekly attendance statistics to user end ------------------------------
 
 
 
@@ -596,23 +605,23 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
 
 
-// ------------------Logic to update custom monthly chart start -------------------------------------------------
-    // set the values 
-    // const updatedSeries = [
-    //   {
-    //     name: "Total Working Hours",
-    //     // data: [-50, -120, -80, -180, -80, -70, -100], // set last 7 days data here
-    //     data: customMonthlyChart.working_hours,
-    //   },
-    // ]
+  // ------------------Logic to update custom monthly chart start -------------------------------------------------
+  // set the values 
+  // const updatedSeries = [
+  //   {
+  //     name: "Total Working Hours",
+  //     // data: [-50, -120, -80, -180, -80, -70, -100], // set last 7 days data here
+  //     data: customMonthlyChart.working_hours,
+  //   },
+  // ]
 
-    // const updatedCategories = {
-    //   categories: customMonthlyChart.categories
-    // }
-    // console.log("printing too many re-renders");
-    // updateMonthlyChart(updatedSeries, updatedCategories);
-// ------------------Logic to update custom monthly chart end -------------------------------------------------
-  
+  // const updatedCategories = {
+  //   categories: customMonthlyChart.categories
+  // }
+  // console.log("printing too many re-renders");
+  // updateMonthlyChart(updatedSeries, updatedCategories);
+  // ------------------Logic to update custom monthly chart end -------------------------------------------------
+
 
   return (
     <>
@@ -765,7 +774,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
                           </div>
                         }
                         <div className="view-attendance">
-                          <Link to="/adminattendance">
+                          <Link to="/attendance-employee">
                             View Attendance <i className="fe fe-arrow-right-circle" />
                           </Link>
                         </div>
@@ -942,8 +951,8 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
 
               {/* start organization chart */}
-              <div className="card col-xxl-4 col-lg-4 col-md-12 d-flex justify-content-center" style={{flexDirection: "row", paddingBottom : '20px'}}>
-                <ChartHeirarichy data={heirarchy} /> 
+              <div className="card col-xxl-4 col-lg-4 col-md-12 d-flex justify-content-center" style={{ flexDirection: "row", paddingBottom: '20px' }}>
+                <ChartHeirarichy data={heirarchy} />
               </div>
               {/* end organization chart */}
 
@@ -1254,24 +1263,24 @@ function buildHierarchy(data, parentPernr = "00000000") {
 
               {/* Monthly working hour graph start */}
               {
-                workingHoursTimeFrame === 'Month' && 
+                workingHoursTimeFrame === 'Month' &&
                 <div className="col-xxl-12 col-lg-12 col-md-12 col-sm-12 d-flex">
-                <div className="card flex-fill">
-                        <div className="card-body">
-                          <div className="statistic-header">
-                            <h4>Working hours</h4>
-                          </div>
-                            <div className="working-hour-info">
-                              <div id="working_chart" />
-                              <Chart
-                                options={chartOptions1}
-                                series={chartOptions1.series}
-                                type="bar"
-                                height={210}
-                              />
-                            </div>
-                        </div>
+                  <div className="card flex-fill">
+                    <div className="card-body">
+                      <div className="statistic-header">
+                        <h4>Working hours</h4>
                       </div>
+                      <div className="working-hour-info">
+                        <div id="working_chart" />
+                        <Chart
+                          options={chartOptions1}
+                          series={chartOptions1.series}
+                          type="bar"
+                          height={210}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               }
               {/* Monthly working hour graph end */}
@@ -2149,7 +2158,7 @@ function buildHierarchy(data, parentPernr = "00000000") {
                 </div>
               </div> */}
               {/* /Employee Month */}
-              
+
               {/* Company Policy */}
               {/* <div className="col-xl-6 col-md-12 d-flex">
                 <div className="card flex-fill">

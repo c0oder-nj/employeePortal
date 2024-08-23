@@ -143,7 +143,7 @@ const login = async (req, res) => {
                         res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
                         res.setHeader('Access-Control-Max-Age', 60*60*24*30);
                         db.close();
-                        return res.json({ "status": true, message: "user logged in successfully", accessToken: token });
+                        return res.json({ "status": true, message: "user logged in successfully", "name" :  empName, accessToken: token });
                     } catch (error) {
                         console.log("Error occured at user validation :: ", error);
                     }
@@ -206,7 +206,7 @@ const setPassword = async (req,res) => {
 
 const getData = async (req, res) => {
     // establish the connection with the database
-    return res.send("test endpoint");
+    // return res.send("test endpoint");
 
     // below code is to create sap user into our db use it in future
     const result = await axios.get('https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/emp_credentials.htm');

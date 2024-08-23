@@ -229,7 +229,7 @@ const AttendanceEmployee = () => {
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists) {
-      navigate("");
+      navigate("/");
     }
 
     const fetchData = async () => {

@@ -74,13 +74,15 @@ const OffCanvas = () => {
         BlueThemes();
         break;
       default:
-        MaroonThemes();
+        MaroonThemes(); //Old
+        // BlueThemes(); //New
     }
   };
 
   const getlayoutWidth = localStorage.getItem("layoutwidth");
   const setLayoutWidth = () => {
     getlayoutWidth === "scrollable" ? ScrollBar() : Fixed();
+    // Fixed();
   };
 
   const getlayoutPos = localStorage.getItem("layoutpos");
@@ -118,15 +120,38 @@ const OffCanvas = () => {
 
   useEffect(() => {
     // eslint-disable-next-line
-    setThemes();
-    setColorSchema(getColorSchema);
-    setLayoutWidth(getlayoutWidth);
-    setLayoutpos(getlayoutPos);
-    setLayoutBars();
-    setSizes();
-    setlayoutStyling(getlayoutStyle);
-    setLayoutSidebarStyling();
+    // old useEffect theme setting default by template
+    // setThemes();
+    // setColorSchema(getColorSchema);
+    // setLayoutWidth(getlayoutWidth);
+    // setLayoutpos(getlayoutPos);
+    // setLayoutBars();
+    // setSizes();
+    // setlayoutStyling(getlayoutStyle);
+    // setLayoutSidebarStyling();
   // eslint-disable-next-line react-hooks/exhaustive-deps
+
+
+  // updated theme as per our need
+    // setThemes();//
+    Vertical()
+    // setColorSchema(getColorSchema);
+    BlueThemes()
+
+    // setLayoutWidth(getlayoutWidth);
+    Fixed()
+    // setLayoutpos(getlayoutPos);
+    Fluid()
+    // setLayoutBars();
+    LightBarThemes()
+
+    // setSizes();
+    Default()
+    // setlayoutStyling(getlayoutStyle);
+    DefaultStyle()
+
+    // setLayoutSidebarStyling();
+    DarkStyle()
   }, []);
 
   const changes = () => {
@@ -305,15 +330,35 @@ const OffCanvas = () => {
     const DefaultStylesThemes = document.querySelector("html");
     DefaultStylesThemes.setAttribute("data-layout-style", "default");
 
+    // default style by template 
+    // setLayoutStyle("vertical");
+    // setlayoutColor("orange");
+    // setLayoutwidths("fluid");
+    // setLayoutposition("fixed");
+    // setLayoutTopbar("light");
+    // setLayoutSize("lg");
+    // setLayoutView("default");
+    // setLayoutSidebar("dark");
+    // localStorage.setItem("colorschema", "orange");
+    // localStorage.setItem("layout", "vertical");
+    // localStorage.setItem("layoutwidth", "fixed");
+    // localStorage.setItem("layoutpos", "fluid");
+    // localStorage.setItem("topbartheme", "light");
+    // localStorage.setItem("layoutSized", "lg");
+    // localStorage.setItem("layoutStyling", "default");
+    // localStorage.setItem("layoutSidebarStyle", "dark");
+
+
+    // new style according to us
     setLayoutStyle("vertical");
-    setlayoutColor("orange");
+    setlayoutColor("blue");
     setLayoutwidths("fluid");
     setLayoutposition("fixed");
     setLayoutTopbar("light");
     setLayoutSize("lg");
     setLayoutView("default");
     setLayoutSidebar("dark");
-    localStorage.setItem("colorschema", "orange");
+    localStorage.setItem("colorschema", "blue");
     localStorage.setItem("layout", "vertical");
     localStorage.setItem("layoutwidth", "fixed");
     localStorage.setItem("layoutpos", "fluid");
@@ -325,7 +370,8 @@ const OffCanvas = () => {
   return (
     <>
       <div>
-        <div className="settings-icon">
+        {/* adding custom style to hide the setting icon | remove later when we need icon for setting */}
+        <div className="settings-icon" style={{display:'none'}}>
           <span
             data-bs-toggle="offcanvas"
             data-bs-target="#theme-settings-offcanvas"
@@ -411,7 +457,7 @@ const OffCanvas = () => {
                         type="radio"
                         defaultValue="twocolumn"
                         checked={layoutStyle === "twocolumn" ? true : false}
-                        onChange={() => setLayoutStyle("twocolumn")}
+                        onChange={() => setLayoutStyle("twocolumn")} // old
                         className="form-check-input"
                       />
                       <label

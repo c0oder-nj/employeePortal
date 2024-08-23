@@ -105,9 +105,10 @@ const Header = (props) => {
     // console.log(document.cookie);
     // localStorage.clear();
     deleteCookie('accessToken');
+    localStorage.clear();
         
     // window.location.href = '/react/template'; // old login endpoint
-    window.location.href = ''; //new login endpoint
+    window.location.href = '/'; //new login endpoint
   }
   return (
     <div className="header" style={{ right: "0px" }}>

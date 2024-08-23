@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Breadcrumbs from "../../../../components/Breadcrumbs";
 import { Link } from "react-router-dom";
@@ -8,13 +8,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddSalaryModal from "../../../../components/modelpopup/AddSalaryModal";
 import TravelAllwowanceExcelSubmitionPopup from "../../../../components/modelpopup/TravelAllwowanceExcelSubmitionPopup";
 import TravelExpenseDataTable from "./TravelExpenseDataTable";
-
+import { useNavigate } from "react-router-dom";
 const TravelExpenseTable = () => {
   const [setSelectedOption] = useState(null);
   const [setSelecttwo] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDateTwo, setSelectedDateTwo] = useState(null);
-
+  const navigate = useNavigate();
   const [dateTwo, setdateTwo] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -80,6 +80,25 @@ const TravelExpenseTable = () => {
       },
     }),
   };
+  
+  function checkCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.startsWith(cookieName + '=')) {
+        const accesstoken = cookie.split('=')[1];
+        return { status: true, accesstoken };
+      }
+    }
+    return { status: false, accesstoken: null };
+  }
+  useEffect(()=>{
+    const checkCk = checkCookie('accessToken');
+    if(checkCk.status === false){
+      return navigate('/');
+    }
+  },[]);
+
   return (
     <>
       {/* custom modal */}

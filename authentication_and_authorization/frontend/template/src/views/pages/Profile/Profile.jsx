@@ -24,10 +24,15 @@ const Profile = () => {
 
 
     useEffect(() => {
+      const checkCk = checkCookie('accessToken');
+      if(checkCk.status === false){
+        return navigate('/');
+      }
+  
     const fetchData = async () => {
       const tokenResult = checkCookie('accessToken');
       if (!tokenResult.status) {
-        navigate('');
+        navigate('/');
         return false;
       }
 
