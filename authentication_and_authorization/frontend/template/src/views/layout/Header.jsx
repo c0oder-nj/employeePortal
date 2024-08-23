@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
+import './header.css';
 import {
   Applogo,
   Avatar_02,
@@ -40,6 +41,7 @@ const Header = (props) => {
   };
 
   const themes = localStorage.getItem("theme");
+
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -103,20 +105,22 @@ const Header = (props) => {
     // console.log(document.cookie);
     // localStorage.clear();
     deleteCookie('accessToken');
+    localStorage.clear();
         
-    window.location.href = '/react/template';
+    // window.location.href = '/react/template'; // old login endpoint
+    window.location.href = '/'; //new login endpoint
   }
   return (
     <div className="header" style={{ right: "0px" }}>
       {/* Logo */}
       <div className="header-left">
-        <Link to="/admin-dashboard" className="logo">
+        <Link to="/employee-dashboard" className="logo">
           {/* <img src={headerlogo}  alt="img" /> */}
-          <img src={Applogowhite}  alt="img" />
+          <img src={Applogowhite} className="img-fluid app-logo-white" alt="img" />
         </Link>
-        <Link to="/admin-dashboard" className="logo2">
+        {/* <Link to="/admin-dashboard" className="logo2">
           <img src={Applogo} width={40} height={40} alt="img" />
-        </Link>
+        </Link> */}
       </div>
       {/* /Logo */}
       <Link
@@ -379,9 +383,10 @@ const Header = (props) => {
             <Link className="dropdown-item" to="/profile">
               My Profile
             </Link>
-            <Link className="dropdown-item" to="/settings/companysetting">
+            {/* commenting profile settings link */}
+            {/* <Link className="dropdown-item" to="/settings/companysetting">
               Settings
-            </Link>
+            </Link> */}
             <Link className="dropdown-item" to="/" onClickCapture={handleLogout}>
               Logout
             </Link>

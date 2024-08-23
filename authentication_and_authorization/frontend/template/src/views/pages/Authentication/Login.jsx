@@ -72,7 +72,7 @@ const Login = () => {
  
   const onSubmit = async (data) => {
         // when user enters the default password navigate it to set new password
-
+        
         try {
           let apiUrl = `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
           console.log('api url: ',apiUrl);
@@ -89,7 +89,10 @@ const Login = () => {
                 return response.json();
             });   
             if(response.status){
+              localStorage.setItem('username', response.name);
               document.cookie= 'accessToken='+response.accessToken;
+              console.log("Cookie has been set");
+              console.log('accessToken='+response.accessToken)
               navigate("/employee-dashboard");
             }else if(response.newUser){
               navigate('/set-password');
@@ -253,10 +256,10 @@ const Login = () => {
                       </div>
                     </form>
                     <div className="account-footer">
-                      <p>
+                      {/* <p>
                         Don't have an account yet?{" "}
                         <Link to="/register">Register</Link>
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                   {/* /Account Form */}

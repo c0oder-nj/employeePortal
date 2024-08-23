@@ -277,8 +277,8 @@ const ScrollToTop = () => {
 
 const AppRouter = () => {
   useEffect(() => {
-    localStorage.setItem("email", "admin@dreamstechnologies.com");
-    localStorage.setItem("password", "123456");
+    // localStorage.setItem("email", "admin@dreamstechnologies.com");
+    // localStorage.setItem("password", "123456");
   }, []);
 
   return (
@@ -296,12 +296,12 @@ const AppRouter = () => {
             <Route path="/error-500" element={<Error500 />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/under-maintenance" element={<UnderManitenance />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* adding sidbar and other things */}
             <Route element={<SidebarLayout />}>
               <Route path="/job-list" element={<JobList />} />
               <Route path="/job-view" element={<JobView />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/lock-screen" element={<LockScreen />} />
               <Route path="/accordion" element={<Accordions />} />
               <Route path="/alerts" element={<Alerts />} />

@@ -28,17 +28,17 @@ const home = async (req, res) => {
 }
 
 
-const test = async (req, res) => {
-    // console.log(req.cookies.token)
+// const test = async (req, res) => {
+//     // console.log(req.cookies.token)
 
-    console.log("Your value",req.body)
+//     console.log("Your value",req.body)
 
-    const result = await axios.post(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
-    console.log(result.data);
-    console.log("Your cookie is working")
-    res.status(200).send({message : "Working",key:"Value"})
-    return;
-}
+//     const result = await axios.post(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+//     console.log(result.data);
+//     console.log("Your cookie is working")
+//     res.status(200).send({message : "Working",key:"Value"})
+//     return;
+// }
 
 //Fetching data for employee attendance
 
@@ -143,7 +143,7 @@ const login = async (req, res) => {
                         res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
                         res.setHeader('Access-Control-Max-Age', 60*60*24*30);
                         db.close();
-                        return res.json({ "status": true, message: "user logged in successfully", accessToken: token });
+                        return res.json({ "status": true, message: "user logged in successfully", "name" :  empName, accessToken: token });
                     } catch (error) {
                         console.log("Error occured at user validation :: ", error);
                     }
@@ -206,7 +206,9 @@ const setPassword = async (req,res) => {
 
 const getData = async (req, res) => {
     // establish the connection with the database
+    // return res.send("test endpoint");
 
+    // below code is to create sap user into our db use it in future
     const result = await axios.get('https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/emp_credentials.htm');
     const userArray = result.data.Response;
 
@@ -343,4 +345,4 @@ const verifyOtp = async(req,res) => {
 
 
 
-module.exports = { home, login, test, getData, encodePassword,setPassword,forgetPassword,verifyOtp };
+module.exports = { home, login,  getData, encodePassword,setPassword,forgetPassword,verifyOtp };

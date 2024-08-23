@@ -35,7 +35,7 @@ jobServer.get('/',(req,res)=>{
 
 jobServer.get('/daily-attendance',jobController.fetchDailyAttendace);
 jobServer.get('/emp-todays-punch', jobController.getEmpPunchData);
-
+jobServer.get('/push-emp-data', jobController.pushEmpData);
 
 
 jobServer.listen(port,()=>{

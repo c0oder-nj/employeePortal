@@ -13,7 +13,7 @@ const AttendanceEmployee = () => {
   const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
   const [sap, setSap] = useState(null);
-  const [isDataFetch,setIsDataFetch] = useState(false);
+  const [isData, setIsData] = useState(false);
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
 
@@ -229,7 +229,7 @@ const AttendanceEmployee = () => {
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists) {
-      navigate("react/template/");
+      navigate("/");
     }
 
     const fetchData = async () => {
@@ -238,7 +238,7 @@ const AttendanceEmployee = () => {
       console.log(value);
 
       const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
-      console.log(url);
+      console.log("Base uri for daily attendance:: ",url);
 
       dataFetchedThroughApi = await fetch(url, {
         headers : {
@@ -251,7 +251,8 @@ const AttendanceEmployee = () => {
         .then((data) => {
           setData(data.employeeAttendance);
           setSap(data.sapNumber);
-          setIsDataFetch(true);
+          setIsData(true);
+
           return data;
         })
         .catch((error) => {
@@ -261,11 +262,11 @@ const AttendanceEmployee = () => {
     fetchData();
   }, []);
 
-  if (data.length > 0 && isDataFetch==true) {
+  if (data.length > 0 && isData)  {
     fetchWeekData();
     fetchMonthData();
     fetchreaminingtime();
-    setIsDataFetch(false);
+    setIsData(false);
   }
 
   // const userElements = data?.map((user, index) => ({
@@ -379,8 +380,8 @@ const AttendanceEmployee = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `${process.env.REACT_APP_BASE_URL_JOB}/emp-todays-punch?sapId=5054`;
-      console.log(url);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/job/emp-punch-data?sapId=5054`;
+      // console.log("Attendance employee url :: ",url);
       await fetch(url, {
         headers : {
           'Access-Control-Allow-Origin' : '*'
@@ -390,7 +391,7 @@ const AttendanceEmployee = () => {
           return response.json();
         })
         .then((data) => {
-          console.log("Daily pucnh in data", data);
+          // console.log("Daily pucnh in data", data);
           setDailyPunchIn(data);
           return data;
         })
@@ -480,9 +481,9 @@ const AttendanceEmployee = () => {
                 <div className="card-body">
                   <h5 className="card-title">Statistics</h5>
                   <div className="stats-list">
-                    {Array.isArray(users) && users.length > 0 ? (
+                    {Array.isArray(users) && users.length > 0? (
                       users.map((data, index) => (
-                        <div className="stats-info" key={index}>
+                        <div className="stats-info" id="stats-info-primary" key={index} >
                           <p>
                             {data.title}{" "}
                             <strong>

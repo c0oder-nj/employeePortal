@@ -64,7 +64,7 @@ const AdminLeave = () => {
       // const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
 
       const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeLeaveApproval?value=${value}`;
-      console.log(url);
+      // console.log(url);
 
       dataFetchedThroughApi = await fetch(url, {
         headers: {

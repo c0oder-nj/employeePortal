@@ -29,6 +29,7 @@ const TableAvatar = () => {
     const fetchData = async () => {
       const value = `${document.cookie}`;
       const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
+      console.log("Printing uri at frontend :: ", url);
       await fetch(url,{
         headers: {'Access-Control-Allow-Origin' : '*'}
       })
