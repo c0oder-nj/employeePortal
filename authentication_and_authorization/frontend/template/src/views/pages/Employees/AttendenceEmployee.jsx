@@ -13,6 +13,7 @@ const AttendanceEmployee = () => {
   const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
   const [sap, setSap] = useState(null);
+  const [isDataFetch,setIsDataFetch] = useState(false);
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
 
@@ -250,7 +251,7 @@ const AttendanceEmployee = () => {
         .then((data) => {
           setData(data.employeeAttendance);
           setSap(data.sapNumber);
-
+          setIsDataFetch(true);
           return data;
         })
         .catch((error) => {
@@ -260,10 +261,11 @@ const AttendanceEmployee = () => {
     fetchData();
   }, []);
 
-  if (data.length > 0) {
+  if (data.length > 0 && isDataFetch==true) {
     fetchWeekData();
     fetchMonthData();
     fetchreaminingtime();
+    setIsDataFetch(false);
   }
 
   // const userElements = data?.map((user, index) => ({
