@@ -33,9 +33,7 @@ const EmployeeLeave = () => {
 
 
   useEffect(() => {
-    // axios
-    // .get(base_url + "/api/adminleaves.json")
-    // .then((res) => setUsers(res.data));
+    
     let cookieExists = checkCookie('accessToken');
     if(!cookieExists){
       navigate("react/template/");
@@ -260,9 +258,10 @@ const EmployeeLeave = () => {
 
           <div className="row">
             {leaveInfo.map((stat, index) => (
+              console.log(stat),
               <div className="col-md-3" key={index}>
                 <div className="stats-info">
-                  <h6>{stat.leaveType}</h6>
+                  <h6>{stat.leaveType.split('-')[0]} LEAVE</h6>
                   <h4>{stat.leaveBal}</h4>
                   {/* <h4>{leave}</h4> */}
                 </div>

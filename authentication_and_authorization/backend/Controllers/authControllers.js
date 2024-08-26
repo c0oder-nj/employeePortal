@@ -146,7 +146,7 @@ const login = async (req, res) => {
           // generate jwt token
           let jwtSecretKey = process.env.JWT_SECRET_KEY;
           const token = jwt.sign(payloadData, jwtSecretKey, {
-            expiresIn: "1m",
+            expiresIn: "30m",
           });
           console.log(token);
           res.cookie("token", token);
@@ -213,12 +213,10 @@ const setPassword = async (req, res) => {
           `update userTable set empPassword = '${encrypted_password}', setPassword = 1, userLockFlag = 0,unSuccessfulAttempts = 0 where empCode=${req.body.sapid}`
         );
       if (queryResponse.rowsAffected[0]) {
-        return res
-          .status(200)
-          .json({
-            status: true,
-            message: "Your password has been resetted successfully",
-          });
+        return res.status(200).json({
+          status: true,
+          message: "Your password has been resetted successfully",
+        });
       }
     } catch (err) {
       console.log("Error 500", err);

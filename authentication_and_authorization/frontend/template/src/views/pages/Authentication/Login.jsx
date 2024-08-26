@@ -182,7 +182,7 @@ const Login = () => {
                    }
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
-                        <label className="col-form-label">Enter You Sap Id</label>
+                        <label className="col-form-label" >SAP ID</label>
                         <Controller
                           name="sapid"
                           control={control}
@@ -194,6 +194,7 @@ const Login = () => {
                               type="text"
                               name='sapNumber' value={value} onChange={onChange}
                               autoComplete="true"
+                              placeholder='Enter your SAP ID'
                             />
                           )}
                         />
@@ -226,6 +227,7 @@ const Login = () => {
                                 }`}
                                 type={eye ? "password" : "text"}
                                 name='password' value={value} onChange={onChange}
+                                placeholder='Enter your Password'
                               />
                             )}
                           />
@@ -250,6 +252,7 @@ const Login = () => {
                         <button
                           className="btn btn-primary account-btn"
                           type="submit"
+                          style={{background:"#0088cc"}}
                         >
                           Login
                         </button>
