@@ -27,6 +27,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { AdminLeaveAddModelPopup } from "../../../components/modelpopup/AdminLeaveModelPopup";
 import SearchBox from "../../../components/SearchBox";
 import LeaveFilter from "../../../components/LeaveFilter";
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 const AdminLeave = () => {
   const [setPendingLeaves, setPendingLeavesFunction] = useState([]);
   const [displayVariable, displayVariableSet] = useState("none");
@@ -78,7 +79,15 @@ const AdminLeave = () => {
           //Value will be initialized after getting a response
           // leaveSet(data.leave)
           console.log(data);
-
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
           console.log(
             typeof data.employeePendingLeave,
             typeof [],
@@ -112,7 +121,7 @@ const AdminLeave = () => {
     fetchData();
   }, []);
 
-  if (setPendingLeaves.length > 0) {
+  if (setPendingLeaves.length > 0){
     console.log("You are in frontend posrtion ", setPendingLeaves);
   }
 
@@ -188,18 +197,47 @@ const AdminLeave = () => {
               className="dropdown-item"
               onClick={(event) => {
                 // console.log(event);
-                fetchDataFromApproveReject(1, text[1]);
+                // fetchDataFromApproveReject(1, text[1]);
+
+                // withReactContent(Swal).fire({
+                //   title: "Do you want to approve leave",
+                //   preConfirm: () => {
+                //     // navigate("/employee-dashboard");
+                //     fetchDataFromApproveReject(1, text[1]);
+                //   },
+                // });
+
+                withReactContent(Swal).fire({
+                  title: "Do you want to Approve leave?",
+                  confirmButtonText: "Yes, Approve it",  
+                  cancelButtonText: "No, Decline it",        
+                  showCancelButton: true,                
+                  preConfirm: () => {
+                    fetchDataFromApproveReject(1, text[1]);
+                  },
+                });
+
               }}
             >
-              <i className="far fa-dot-circle text-success" /> Approved
+              <i className="far fa-dot-circle text-success" /> Approve
             </button>
             <button
               className="dropdown-item"
               onClick={() => {
-                fetchDataFromApproveReject(2, text[1]);
+                // fetchDataFromApproveReject(2, text[1]);
+                withReactContent(Swal).fire({
+                  title: "Do you want to decline leave?",
+                  confirmButtonText: "Yes, decline it",  // Custom confirm button text
+                  cancelButtonText: "No, keep it",        // Custom cancel button text
+                  showCancelButton: true,                 // Shows the cancel button
+                  preConfirm: () => {
+                    fetchDataFromApproveReject(2, text[1]);
+                  },
+                });
+                
               }}
             >
-              <i className="far fa-dot-circle text-danger" /> Declined
+              <i className="far fa-dot-circle text-danger" /> Decline
             </button>
 
             {/* <Link className="dropdown-item" 
@@ -327,8 +365,8 @@ const AdminLeave = () => {
               maintitle="Leaves"
               title="Dashboard"
               subtitle="Leaves"
-              modal="#add_leave"
-              name="Add Leave"
+              // modal="#add_leave"
+              // name="Add Leave"
             />
             {/* /Page Header */}
             {/* Leave Statistics */}
@@ -348,12 +386,12 @@ const AdminLeave = () => {
               </div>
             ))}
           </div> */}
-            <LeaveFilter />
+            {/* <LeaveFilter /> */}
             {/* /Leave Statistics */}
             <div className="row">
               <div className="col-md-12">
                 <div className="table-responsive">
-                  <SearchBox />
+                  {/* <SearchBox /> */}
                   <Table
                     columns={columns}
                     dataSource={table}

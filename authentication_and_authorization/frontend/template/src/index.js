@@ -9,10 +9,12 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./assets/css/line-awesome.min.css";
 import "./assets/scss/main.scss";
 import "./assets/css/material.css";
-
+import { AuthProvider } from "./cookieTimeOut/jwtTokenTime";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
-    <Approuter />
+    
+      <Approuter />
+    
   </>
 );

@@ -10,7 +10,8 @@ import DeleteModal from "../../../components/modelpopup/DeleteModal";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import { base_url } from "../../../base_urls";
 import user from "../../../user";
-
+import { AuthProvider } from "../../../cookieTimeOut/jwtTokenTime";
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 const Holidays = () => {
   const [users, setUsers] = useState([]);
   const [holidays, setHolidays] = useState([]);
@@ -59,6 +60,15 @@ const Holidays = () => {
     };
 
     fetchData().then((data)=>{
+      if(data.status==false){
+        if(data.type=="Token Expired"){
+          console.log("Line 305",data);
+            // handleLogout();
+            JwtTokenTimeExpire();
+            navigate('/logout');
+            return;
+        }
+      }
       console.log("when fetchdata completes :: ", data.data);
       setHolidays(data.data)
     })

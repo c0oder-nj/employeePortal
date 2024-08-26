@@ -253,8 +253,7 @@ import EmailContent from "../../views/pages/MainPages/Apps/Email/emailContent.js
 import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import AllEmployee from "../../views/pages/Employees/AllEmpoyee";
-
-
+import { AuthProvider } from "../../cookieTimeOut/jwtTokenTime.jsx";
 // copied functions
 const SidebarLayout = () => (
   <>
@@ -283,6 +282,7 @@ const AppRouter = () => {
 
   return (
     <div>
+      
       <Provider store={store}>
         <BrowserRouter basename="">
           <ScrollToTop />
@@ -485,6 +485,7 @@ const AppRouter = () => {
           </Routes>
         </BrowserRouter>
       </Provider>
+      
     </div>
   );
 };

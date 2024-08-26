@@ -8,6 +8,7 @@ import EmployeeLeaveModelPopup from "../../../components/modelpopup/EmployeeLeav
 import SearchBox from "../../../components/SearchBox";
 import { useNavigate } from "react-router-dom";
 import { base_url } from "../../../base_urls";
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 
 const EmployeeLeave = () => {
   const [users, setUsers] = useState([]);
@@ -56,6 +57,16 @@ const EmployeeLeave = () => {
           return response.json();
         }).then((data) => {
           
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
+
           //Value will be initialized after getting a response
           leaveSet(data.leave)
           console.log("Printing")

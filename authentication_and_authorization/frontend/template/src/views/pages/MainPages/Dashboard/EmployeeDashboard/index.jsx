@@ -8,6 +8,9 @@ import { ArrowRightCircle } from "react-feather";
 import '../../../../../customFiles/customStyles.css';
 import ChartHeirarichy from "./ChartHeirarichy";
 import './oc_style.css'
+// import {JwtTokenTimeExpire} from "../../../../../cookieTimeOut/JwtTokenTimeExpire.jsx";
+import JwtTokenTimeExpire from "../../../../../cookieTimeOut/jwtTokenTime";
+// import jwt from "jsonwebtoken"
 
 const EmployeeDashboard = () => {
   const [pageDispaly, setPageDisplay] = useState('none');
@@ -208,16 +211,6 @@ const EmployeeDashboard = () => {
   }
   // --------- heirarchy building function which changes the response--------------------------
 
-
-
-
-
-
-
-
-
-
-
   // All custom built objects
   const settings = {
     dots: false,
@@ -308,7 +301,32 @@ const EmployeeDashboard = () => {
     };
 
     fetchData().then((data) => {
-      console.log("Printing api response in fetchData.then function :: ", data);
+
+      // console.log("Printing api response in fetchData.then function :: ", data);
+
+      // const deleteCookie = (cookieName) => {
+      //  console.log(document.cookie);
+      //  const [key, value] = document.cookie.split("=");
+      //  document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";    
+      // };
+
+      // const handleLogout = ()=>{
+      //   deleteCookie('accessToken');
+      //   localStorage.clear();
+      //   window.location.href = '/'; //new login endpoint
+      // }
+
+      if(data.status==false){
+        if(data.type=="Token Expired"){
+          console.log("Line 305",data);
+            // handleLogout();
+            JwtTokenTimeExpire();
+            navigate('/logout');
+            return;
+        }
+      }
+     
+
       setDashboardData(data);
       setEmpData(data.empDetails[0]);
       setHolidays(data.holidays);
@@ -337,6 +355,7 @@ const EmployeeDashboard = () => {
 
 
       if (data.status) {
+        console.log("Inside data.status part ",data);
         const today = new Date();
         const currentDay = today.getDay();
         var currentMonth = today.getMonth() + 1;
@@ -355,6 +374,9 @@ const EmployeeDashboard = () => {
           const date = parseDate(val.begdat);
           return date >= lastMon && date <= endD;
         })
+
+
+        console.log(oneWeekOnly)
 
         var oneMonthData = data.attendanceemp.filter((val, index) => {
           return (parseInt(val.begdat.split('.').at(1)) === parseInt(currentMonth));

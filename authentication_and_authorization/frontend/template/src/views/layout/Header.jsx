@@ -98,8 +98,7 @@ const Header = (props) => {
    //Need To implement 
    console.log(document.cookie);
    const [key, value] = document.cookie.split("=");
-   document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";
-    
+   document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";    
   };
   const handleLogout = ()=>{
     // console.log(document.cookie);

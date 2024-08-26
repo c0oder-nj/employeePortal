@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Salary from "../../../../assets/json/employeeSalary";
 import { Table } from "antd";
+import { Navigate } from "react-router-dom";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import DatePicker from "react-datepicker";
+import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
 // import Breadcrumbs from "../../../../components/Breadcrumbs";
 // import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
 // import DeleteModal from "../../../../components/modelpopup/deletePopup";
@@ -14,6 +16,7 @@ const TravelExpenseDataTable = (props) => {
   console.log(props);
   const data = Salary.Salary;
   console.log(props);
+  const navigate = useNavigate();
   const [ddataFetched, setDdataFetched] = useState([]);
   const [checkData, setCheckData] = useState(false);
   const [setDelete, setDeleteData] = useState([]);
@@ -157,6 +160,15 @@ const TravelExpenseDataTable = (props) => {
           return response.json();
         })
         .then((data) => {
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
           console.log("Helo data", data.travel_data);
           setDdataFetched(data.travel_data);
 
@@ -186,6 +198,15 @@ const TravelExpenseDataTable = (props) => {
           return response.json();
         })
         .then((data) => {
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
           // console.log("Helo data", data.travel_data);
           // setDdataFetched(data.travel_data);
           console.log(data);
@@ -233,6 +254,15 @@ const TravelExpenseDataTable = (props) => {
             return response.json();
           })
           .then((data) => {
+            if(data.status==false){
+              if(data.type=="Token Expired"){
+                console.log("Line 305",data);
+                  // handleLogout();
+                  JwtTokenTimeExpire();
+                  navigate('/logout');
+                  return;
+              }
+            }
             console.log(data);
             Toastify({
               text: data.message,
@@ -440,6 +470,15 @@ const TravelExpenseDataTable = (props) => {
           return response.json();
         })
         .then((data) => {
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
           console.log(data.travel_data);
           setDataFetched(data.travel_data.data);
           setApiData(data.travel_data.data);

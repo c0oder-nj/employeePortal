@@ -4,7 +4,7 @@ import { Avatar_09 } from "../../../Routes/ImagePath";
 import AttendenceModelPopup from "../../../components/modelpopup/AttendenceModelPopup";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 const TableAvatar = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -36,6 +36,15 @@ const TableAvatar = () => {
         .then((response) => response.json())
         .then((data) => {
           console.log("In data from allEmployeeattendance",data);
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
 
           if (data.status==false) {
             console.log("Line 86");
@@ -94,6 +103,7 @@ const TableAvatar = () => {
             <th>18</th>
             <th>19</th>
             <th>20</th>
+            <th>21</th>
             <th>22</th>
             <th>23</th>
             <th>24</th>

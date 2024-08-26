@@ -190,9 +190,6 @@ const employeesapNumber = async (req,res)=>{
   return res.json(sapNumber);
 }
 
-
-
-
 var responseArr = [];
 const fetchEmpData = async (sapid) => {
   console.log(sapid);
@@ -229,7 +226,7 @@ const employeeLeaveStatus = async (req,res)=>{
   console.log(req.query.value)
   const newValue = req.query.value;
   headerValue = newValue.split("=")[1];
-  
+
   var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   
   var sapNumber = decodedValue.empCode;
@@ -270,9 +267,6 @@ const employeeLeaveStatus = async (req,res)=>{
   return res.json(sendEmployeeData);
 }
 
-
-
-
 const employeeDashboard = async(req,res) =>{
   responseArr = []
   console.log("Came under controller")
@@ -290,7 +284,6 @@ const employeeDashboard = async(req,res) =>{
     }
   })
 }
-
 
 const holidays = async (req,res) => {
   const response = await apiService.onlyUri('/holidays.htm' , 'get');

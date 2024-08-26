@@ -18,8 +18,23 @@ const checkUser = async (req,res,next)=> {
     console.log("+++++++++++++++++++++++++++")
     headerValue = newValue.split("=")[1];
     // console.log(headerValue)
-    var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+    // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
     // console.log(decodedValue);
+
+    try{
+        const decodedValue = jwt.verify(headerValue, process.env.JWT_SECRET_KEY);
+        console.log("JWT is valid:", decodedValue);
+    }catch(err){
+        if (err.name === 'TokenExpiredError') {
+            console.log("JWT has expired.");
+            return res.json({"status" : false,"type":"Token Expired","message":"Token has been expired"})
+          } else {
+            console.log("JWT is invalid:", err.message);
+            return res.json({ "status": false,"type":"Token Invalid", "message": "Unauthorized Access" });
+          }
+    }
+
+
     console.log("In middle ware")
     // Adding custom header for resolving cors issue
     // req.setHeader('Access-Control-Allow-Origin','*');
@@ -43,13 +58,25 @@ const checkUserNeeraj = (req,res,next)=> {
     console.log("+++++++++++++++++++++++++++")
     console.log(newValue)
     console.log("+++++++++++++++++++++++++++")
-    var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
-    console.log(decodedValue);
-    req.sapid = decodedValue.empCode; // here I am setting sap id as request object 
+    // var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
+    // console.log(decodedValue);
+    // req.sapid = decodedValue.empCode; // here I am setting sap id as request object 
 
-
-    // Adding custom header for resolving cors issue
-    // req.setHeader('Access-Control-Allow-Origin','*');
+    try{
+        var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
+        console.log(decodedValue);
+        req.sapid = decodedValue.empCode;
+        console.log("JWT is valid:", decodedValue);
+    }catch(err){
+        if (err.name === 'TokenExpiredError') {
+            console.log("JWT has expired at neeraj side.");
+            // return res.redirect('/')
+            return res.json({"status" : false,"type":"Token Expired","message":"Token has been expired"})
+        } else {
+            console.log("JWT is invalid:", err.message);
+            return res.json({ "status": false,"type":"Token Invalid", "message": "Unauthorized Access" });
+          }
+    }
 
     next()
 }

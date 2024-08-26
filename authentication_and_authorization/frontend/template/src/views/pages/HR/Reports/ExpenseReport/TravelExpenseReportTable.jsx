@@ -7,7 +7,7 @@ import "toastify-js/src/toastify.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DatePicker from "react-datepicker";
-
+import JwtTokenTimeExpire from "../../../../../cookieTimeOut/jwtTokenTime";
 const TravelExpenseReportTable = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
@@ -34,6 +34,15 @@ const TravelExpenseReportTable = () => {
       await fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
         .then((response) => response.json())
         .then((data) => {
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
           setApiData(data.data);
           setFilterData(data.data);
           console.log(data.data);
@@ -397,7 +406,17 @@ const TravelExpenseReportTable = () => {
           return response.json();
         })
         .then((data) => {
+
           console.log(data);
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
           Toastify({
             text: data.message,
             duration: 3000,

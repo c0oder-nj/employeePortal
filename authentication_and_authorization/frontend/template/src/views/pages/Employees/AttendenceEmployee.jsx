@@ -6,7 +6,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { base_url } from "../../../base_urls";
 import { useNavigate } from "react-router-dom";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrection";
-// import AttendaceCorrection from "../../../../../template/src/components/modelpopup/AttendenceModelPopup"
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 const AttendanceEmployee = () => {
   const [users, setUsers] = useState([]);
   const [activity, setActivity] = useState([]);
@@ -249,6 +249,17 @@ const AttendanceEmployee = () => {
           return response.json();
         })
         .then((data) => {
+
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
+
           setData(data.employeeAttendance);
           setSap(data.sapNumber);
           setIsData(true);
