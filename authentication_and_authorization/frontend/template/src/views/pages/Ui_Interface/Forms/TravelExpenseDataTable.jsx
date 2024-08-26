@@ -21,6 +21,12 @@ const TravelExpenseDataTable = (props) => {
   const [checkData, setCheckData] = useState(false);
   const [setDelete, setDeleteData] = useState([]);
   const [createTrip, setCreateTrip] = useState([]);
+  //New Search implementation state start
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  // const [filteredData, setFilteredData] = useState(initialData);
+  // New Search implementation state End
   const [formData, setFormData] = useState({
     purposeText: "",
     outComingText: "",
@@ -41,7 +47,7 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "reinr",
       sorter: (a, b) => a.reinr.length - b.reinr.length,
     },
-    
+
     // {
     //   title: "Receipt Number",
     //   dataIndex: "receiptno",
@@ -155,18 +161,18 @@ const TravelExpenseDataTable = (props) => {
       console.log("Printing values in useEffect", sapNumber, tripNumber);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
+      fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          if(data.status==false){
-            if(data.type=="Token Expired"){
-              console.log("Line 305",data);
-                // handleLogout();
-                JwtTokenTimeExpire();
-                navigate('/logout');
-                return;
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
             }
           }
           console.log("Helo data", data.travel_data);
@@ -193,18 +199,18 @@ const TravelExpenseDataTable = (props) => {
       console.log("Printing values in useEffect", sapNumber, tripNumber);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
+      fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          if(data.status==false){
-            if(data.type=="Token Expired"){
-              console.log("Line 305",data);
-                // handleLogout();
-                JwtTokenTimeExpire();
-                navigate('/logout');
-                return;
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
             }
           }
           // console.log("Helo data", data.travel_data);
@@ -249,18 +255,18 @@ const TravelExpenseDataTable = (props) => {
         console.log("Printing values in useEffect", sapNumber, tripNumber);
         const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
         console.log(url);
-        fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
+        fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
           .then((response) => {
             return response.json();
           })
           .then((data) => {
-            if(data.status==false){
-              if(data.type=="Token Expired"){
-                console.log("Line 305",data);
-                  // handleLogout();
-                  JwtTokenTimeExpire();
-                  navigate('/logout');
-                  return;
+            if (data.status == false) {
+              if (data.type == "Token Expired") {
+                console.log("Line 305", data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate("/logout");
+                return;
               }
             }
             console.log(data);
@@ -316,7 +322,6 @@ const TravelExpenseDataTable = (props) => {
           >
             <i
               className={
-                
                 text === "Request Entered"
                   ? "far fa-dot-circle text-primary"
                   : text === "Trip Created"
@@ -346,42 +351,46 @@ const TravelExpenseDataTable = (props) => {
     {
       title: "Action",
       id: "pernr",
-      render: (id) => (
-        id.antrg_text == "Trip Completed" || id.antrg_text == "Trip Approved" ? "" :(<div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <button
-              className="dropdown-item "
-              data-bs-toggle="modal"
-              data-bs-target="#create"
-              onClick={() => {
-                setCreateTrip(id);
-              }}
+      render: (id) =>
+        id.antrg_text == "Trip Completed" ||
+        id.antrg_text == "Trip Approved" ? (
+          ""
+        ) : (
+          <div className="dropdown dropdown-action text-end">
+            <Link
+              to="#"
+              className="action-icon dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              {" "}
-              Create trip
-            </button>
-            <button
-              className="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#delete"
-              onClick={() => {
-                setDeleteData(id);
-              }}
-            >
-              {" "}
-              Delete
-            </button>
+              <i className="material-icons">more_vert</i>
+            </Link>
+            <div className="dropdown-menu dropdown-menu-right">
+              <button
+                className="dropdown-item "
+                data-bs-toggle="modal"
+                data-bs-target="#create"
+                onClick={() => {
+                  setCreateTrip(id);
+                }}
+              >
+                {" "}
+                Create trip
+              </button>
+              <button
+                className="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#delete"
+                onClick={() => {
+                  setDeleteData(id);
+                }}
+              >
+                {" "}
+                Delete
+              </button>
+            </div>
           </div>
-        </div>)
-      ),
+        ),
     },
     {
       title: "Reimbursement Number",
@@ -403,7 +412,7 @@ const TravelExpenseDataTable = (props) => {
     //   dataIndex: "uhrv1",
     //   sorter: (a, b) => a.uhrv1.length - b.uhrv1.length,
     // },
-    
+
     // {
     //   title: "Travel End Time",
     //   dataIndex: "uhrb1",
@@ -434,8 +443,7 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "antrg_text",
       sorter: (a, b) => a.antrg_text.length - b.antrg_text.length,
     },
-   
-    
+
     {
       title: "Trip Total",
       dataIndex: "trip_total",
@@ -456,7 +464,6 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "out_txt",
       sorter: (a, b) => a.out_txt.length - b.out_txt.length,
     },
-    
   ];
   const [setApi, setApiData] = useState([]);
   useEffect(() => {
@@ -465,18 +472,18 @@ const TravelExpenseDataTable = (props) => {
       console.log(value);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap?value=${value}`;
       console.log(url);
-      await fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
+      await fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          if(data.status==false){
-            if(data.type=="Token Expired"){
-              console.log("Line 305",data);
-                // handleLogout();
-                JwtTokenTimeExpire();
-                navigate('/logout');
-                return;
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
             }
           }
           console.log(data.travel_data);
@@ -491,72 +498,136 @@ const TravelExpenseDataTable = (props) => {
     fetchData();
   }, []);
   const [selectedDate, setSelectedDate] = useState([]);
-  const handleFilter = (value) => {
-    console.log(value);
-    console.log(dataFetched);
-    const res = setApi.filter((f) =>
-      f.reinr.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log(res);
-    setDataFetched(res);
-  };
-  const handleDateFilterFrom = (dateValue) => {
-    console.log(dateValue);
-    console.log(dataFetched);
+  // const handleFilter = (value) => {
+  //   console.log(value);
+  //   console.log(dataFetched);
+  //   const res = setApi.filter((f) =>
+  //     f.reinr.toLowerCase().includes(value.toLowerCase())
+  //   );
+  //   console.log(res);
+  //   setDataFetched(res);
+  // };
+  // const handleDateFilterFrom = (dateValue) => {
+  //   console.log(dateValue);
+  //   console.log(dataFetched);
 
-    if (!Array.isArray(dataFetched)) {
-      console.error("dataFetched is not an array");
-      return;
+  //   if (!Array.isArray(dataFetched)) {
+  //     console.error("dataFetched is not an array");
+  //     return;
+  //   }
+  //   const formatDateForComparison = (date) => {
+  //     const d = new Date(date);
+  //     const day = `0${d.getDate()}`.slice(-2);
+  //     const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+  //     const year = d.getFullYear();
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const convertJsonDateForComparison = (jsonDate) => {
+  //     const [day, month, year] = jsonDate.split(".");
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const formattedDate = formatDateForComparison(dateValue);
+  //   console.log("Formatted Date for Comparison:", formattedDate);
+  //   const res = dataFetched.filter((f) => {
+  //     const startDate = convertJsonDateForComparison(f.datv1);
+  //     return startDate >= formattedDate;
+  //   });
+  //   console.log(res);
+  //   setDataFetched(res);
+  // };
+
+  // const handleDateFilterTo = (dateValue) => {
+  //   console.log(dateValue);
+  //   console.log(dataFetched);
+
+  //   if (!Array.isArray(dataFetched)) {
+  //     console.error("dataFetched is not an array");
+  //     return;
+  //   }
+  //   const formatDateForComparison = (date) => {
+  //     const d = new Date(date);
+  //     const day = `0${d.getDate()}`.slice(-2);
+  //     const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+  //     const year = d.getFullYear();
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const convertJsonDateForComparison = (jsonDate) => {
+  //     const [day, month, year] = jsonDate.split(".");
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const formattedDate = formatDateForComparison(dateValue);
+  //   console.log("Formatted Date for Comparison:", formattedDate);
+  //   const res = dataFetched.filter((f) => {
+  //     const startDate = convertJsonDateForComparison(f.datb1);
+  //     return startDate <= formattedDate;
+  //   });
+  //   console.log(res);
+  //   setDataFetched(res);
+  // };
+
+  //   const formatDateForComparison = (date) => {
+  //     const d = new Date(date);
+  //     return d.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  // };
+
+  // const parseDate = (dateStr) => {
+  //     const d = new Date(dateStr);
+  //     return d.toISOString().split('T')[0]; // Convert to YYYY-MM-DD for comparison
+  // };
+
+//New search implemented start
+
+  const formatDateForComparison = (date) => {
+    const d = new Date(date);
+    const day = `0${d.getDate()}`.slice(-2);
+    const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+    const year = d.getFullYear();
+    return `${year}${month}${day}`;
+  };
+  const convertJsonDateForComparison = (jsonDate) => {
+    const [day, month, year] = jsonDate.split(".");
+    return `${year}${month}${day}`;
+  };
+
+  // Unified search handler
+  const handleSearch = () => {
+    let results = setApi;
+
+    // Filter by search term
+    if (searchTerm) {
+      results = results.filter((f) =>
+        f.reinr.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-    const formatDateForComparison = (date) => {
-      const d = new Date(date);
-      const day = `0${d.getDate()}`.slice(-2);
-      const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
-      const year = d.getFullYear();
-      return `${year}${month}${day}`;
-    };
-    const convertJsonDateForComparison = (jsonDate) => {
-      const [day, month, year] = jsonDate.split(".");
-      return `${year}${month}${day}`;
-    };
-    const formattedDate = formatDateForComparison(dateValue);
-    console.log("Formatted Date for Comparison:", formattedDate);
-    const res = dataFetched.filter((f) => {
-      const startDate = convertJsonDateForComparison(f.datv1);
-      return startDate >= formattedDate;
-    });
-    console.log(res);
-    setDataFetched(res);
-  };
 
-  const handleDateFilterTo = (dateValue) => {
-    console.log(dateValue);
-    console.log(dataFetched);
-
-    if (!Array.isArray(dataFetched)) {
-      console.error("dataFetched is not an array");
-      return;
+    if (dateFrom) {
+      const formattedDate = formatDateForComparison(dateFrom);
+      console.log("Formatted Date for Comparison:", formattedDate);
+      results = results.filter((f) => {
+        const startDate = convertJsonDateForComparison(f.datb1);
+        console.log(startDate);
+        console.log(formattedDate);
+        return startDate >= formattedDate;
+      });
     }
-    const formatDateForComparison = (date) => {
-      const d = new Date(date);
-      const day = `0${d.getDate()}`.slice(-2);
-      const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
-      const year = d.getFullYear();
-      return `${year}${month}${day}`;
-    };
-    const convertJsonDateForComparison = (jsonDate) => {
-      const [day, month, year] = jsonDate.split(".");
-      return `${year}${month}${day}`;
-    };
-    const formattedDate = formatDateForComparison(dateValue);
-    console.log("Formatted Date for Comparison:", formattedDate);
-    const res = dataFetched.filter((f) => {
-      const startDate = convertJsonDateForComparison(f.datb1);
-      return startDate <= formattedDate;
-    });
-    console.log(res);
-    setDataFetched(res);
+
+    if (dateTo) {
+      
+      const formattedDate = formatDateForComparison(dateTo);
+      console.log("Formatted Date for Comparison:", formattedDate);
+      results = results.filter((f) => {
+        const endDate = convertJsonDateForComparison(f.datb1);
+        return endDate <= formattedDate;
+      });
+    }
+
+    setDataFetched(results);
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchTerm, dateFrom, dateTo]);
+//New search implemented ends here
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
   return (
@@ -570,7 +641,8 @@ const TravelExpenseDataTable = (props) => {
                 placeholder="search here ..."
                 className="form-control"
                 onChange={(e) => {
-                  handleFilter(e.target.value);
+                  // handleFilter(e.target.value);
+                  setSearchTerm(e.target.value);
                 }}
               ></input>
               <label className="focus-label">Trip number</label>
@@ -585,7 +657,8 @@ const TravelExpenseDataTable = (props) => {
                   // onChange={handleDateChange}
                   onChange={(e) => {
                     setStart(e);
-                    handleDateFilterFrom(e);
+                    // handleDateFilterFrom(e);
+                    setDateFrom(e);
                   }}
                   dateFormat="dd-MM-yyyy"
                 />
@@ -602,7 +675,9 @@ const TravelExpenseDataTable = (props) => {
                   // onChange={handleDateChange}
                   onChange={(e) => {
                     setEnd(e);
-                    handleDateFilterTo(e);
+                    // handleDateFilterTo(e);
+                    // console.log(e);
+                    setDateTo(e);
                   }}
                   dateFormat="dd-MM-yyyy"
                 />
@@ -708,7 +783,7 @@ const TravelExpenseDataTable = (props) => {
         </div>
       </div>
       {/* Pop up for trip create start*/}
-      <div className="modal custom-modal fade" id="create" role="dialog" >
+      <div className="modal custom-modal fade" id="create" role="dialog">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-body">

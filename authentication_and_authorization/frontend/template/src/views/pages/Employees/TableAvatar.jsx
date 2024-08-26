@@ -30,23 +30,23 @@ const TableAvatar = () => {
       const value = `${document.cookie}`;
       const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
       console.log("Printing uri at frontend :: ", url);
-      await fetch(url,{
-        headers: {'Access-Control-Allow-Origin' : '*'}
+      await fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*" },
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("In data from allEmployeeattendance",data);
-          if(data.status==false){
-            if(data.type=="Token Expired"){
-              console.log("Line 305",data);
-                // handleLogout();
-                JwtTokenTimeExpire();
-                navigate('/logout');
-                return;
+          console.log("In data from allEmployeeattendance", data);
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
             }
           }
 
-          if (data.status==false) {
+          if (data.status == false) {
             console.log("Line 86");
             withReactContent(Swal).fire({
               title: "You are not an Admin !!!",
@@ -82,7 +82,7 @@ const TableAvatar = () => {
             {/* {[...Array(32).keys()].slice(1).map((_, i) => (
               <th key={i + 1}>{i + 1}</th>
             ))} */}
-             <th></th>
+            <th></th>
             <th>1</th>
             <th>2</th>
             <th>3</th>
@@ -126,17 +126,23 @@ const TableAvatar = () => {
                 const dateStr = new Date(2024, 7, index + 1)
                   .toISOString()
                   .split("T")[0];
-                const attendance = ele.ATTENDANCE.find(
-                  (att) => att.BEGDAT === dateStr,
+                  console.log(dateStr);
+                  const date=  new Date();
+                  const todayDate = date.getDate();
                   
+                  console.log(todayDate);
+                
+                  const attendance = ele.ATTENDANCE.find(
+                  (att) => att.BEGDAT === dateStr
                 );
-                console.log(index);
+                console.log("Index value",index);
+                console.log("Today date",todayDate);
                 return (
                   <td key={index}>
                     <div className="half-day">
                       {isPastSunday(dateStr) ? (
                         <span className="first-off">
-                          <i className="fa fa-close text-danger" />
+                          <i className="fa fa-circle text-success" />
                         </span>
                       ) : attendance ? (
                         attendance.ATN_STATUS === "P" ? (
@@ -183,8 +189,9 @@ const TableAvatar = () => {
                           </span>
                         )
                       ) : (
-                        // "N/A"
-                        ""
+                        (todayDate>=index && index!=0)?(<span className="first-off">
+                          <i className="fa fa-circle text-info" />
+                        </span>):""
                       )}
                     </div>
                   </td>
