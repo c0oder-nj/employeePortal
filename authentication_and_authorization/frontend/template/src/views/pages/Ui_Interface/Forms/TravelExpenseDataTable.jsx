@@ -852,8 +852,9 @@ const TravelExpenseDataTable = (props) => {
                           formData.outComingText
                         );
                       }}
+                      
                     >
-                      Create Trip
+                    Create Trip
                     </button>
                   </div>
                   <div className="col-6">
