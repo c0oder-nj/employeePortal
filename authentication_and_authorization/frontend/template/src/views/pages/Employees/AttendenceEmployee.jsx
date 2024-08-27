@@ -9,13 +9,15 @@ import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrec
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 const AttendanceEmployee = () => {
   const [users, setUsers] = useState([]);
-  const [activity, setActivity] = useState([]);
   const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
   const [sap, setSap] = useState(null);
   const [isData, setIsData] = useState(false);
+  const [today,setToday] = useState({});
+  var todayDate,todayPunchIn,todayPunchOut;
+  
   const navigate = useNavigate();
-  var dataFetchedThroughApi = null;
+  var dataFetchedThroughApi;
 
   function checkCookie(cookieName) {
     const cookies = document.cookie.split(";");
@@ -273,7 +275,15 @@ const AttendanceEmployee = () => {
     fetchData();
   }, []);
 
-  if (data.length > 0 && isData)  {
+  if (data.length > 0 && isData) {
+    console.log(data[0]);
+    todayDate = data[0].begdat;
+    todayPunchIn=data[0].indz;
+    todayPunchOut=data[0].iodz;
+    setToday({todayDate :data[0].begdat,
+      todayPunchIn : data[0].indz,
+      todayPunchOut: data[0].iodz});
+    console.log(todayDate,todayPunchIn,todayPunchOut)
     fetchWeekData();
     fetchMonthData();
     fetchreaminingtime();
@@ -445,14 +455,19 @@ const AttendanceEmployee = () => {
                   <h5 className="card-title">
                     Timesheet{" "}
                     <small className="text-muted">
-                      {dailyPunchIn.punch1_date}
+                    {today.todayDate}
                     </small>
                   </h5>
                   <div className="punch-det">
                     <h6>Punch In at</h6>
                     {/* <p>Wed, 11th Mar 2023 10.00 AM</p> */}
-                    <p>Date : {dailyPunchIn.punch1_date}</p>
-                    <p>Time : {dailyPunchIn.punch1_time}</p>
+                    <p>Date : {today.todayDate}</p>
+                    <p>Time : {today.todayPunchIn}</p>
+                    
+                    {/* user.begdat,
+                    PunchIn: user.begdat, */}
+                    {/* <p>Date : {data[0].begdat}</p>
+                    <p>Time : {data[0].begdat}</p> */}
                   </div>
                   <div className="punch-info" >
                     <div className="punch-hours" style={{color: "red",border:"5px solid #E2E536"}}>
@@ -544,7 +559,13 @@ const AttendanceEmployee = () => {
                       <p className="mb-0">Punch In Time</p>
                       <p className="res-activity-time">
                         <i className="fa-regular fa-clock"></i>{" "}
-                        {dailyPunchIn.punch1_time}
+                        {today.todayPunchIn}
+                      </p>
+                    </li>
+                    <li>
+                      <p className="mb-0"></p>
+                      <p className="res-activity-time">
+                        <i className="fa-regular "></i>
                       </p>
                     </li>
                     <li>
@@ -554,10 +575,17 @@ const AttendanceEmployee = () => {
                       </p>
                     </li>
                     <li>
+                      <p className="mb-0"> </p>
+                      <p className="res-activity-time">
+                        <i className="fa-regular "></i>
+                      </p>
+                    </li>
+                    
+                    <li>
                       <p className="mb-0"> Punch Out</p>
                       <p className="res-activity-time">
                         <i className="fa-regular fa-clock"></i>{" "}
-                        {dailyPunchIn.outpunch_time}
+                        {today.todayPunchOut}
                       </p>
                     </li>
                   </ul>

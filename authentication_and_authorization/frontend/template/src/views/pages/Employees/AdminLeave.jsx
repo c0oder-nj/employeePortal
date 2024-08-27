@@ -97,7 +97,7 @@ const AdminLeave = () => {
           if (data.employeePendingLeave.length == 0) {
             console.log("Line 86");
             withReactContent(Swal).fire({
-              title: "You are not an Admin !!!",
+              title: "No leaves are available for approval !!!",
               preConfirm: () => {
                 navigate("/employee-dashboard");
               },
