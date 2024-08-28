@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table } from "antd";
+import SearchBox from "../../../components/SearchBox";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 // import AttendanceEmployeeFilter from "../../../components/AttendanceEmployeeFilter";
 import { base_url } from "../../../base_urls";
 import { useNavigate } from "react-router-dom";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrection";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+
 const AttendanceEmployee = () => {
   const [users, setUsers] = useState([]);
   const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
   const [sap, setSap] = useState(null);
   const [isData, setIsData] = useState(false);
-  const [today,setToday] = useState({});
-  var todayDate,todayPunchIn,todayPunchOut;
-  
+  const [today, setToday] = useState({});
+  const [page,setPage] = useState(10);
+  var todayDate, todayPunchIn, todayPunchOut;
+  const [filteredData, setFilteredData] = useState([]);
+
   const navigate = useNavigate();
   var dataFetchedThroughApi;
 
@@ -240,25 +244,24 @@ const AttendanceEmployee = () => {
       console.log(value);
 
       const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
-      console.log("Base uri for daily attendance:: ",url);
+      console.log("Base uri for daily attendance:: ", url);
 
       dataFetchedThroughApi = await fetch(url, {
-        headers : {
-          'Access-Control-Allow-Origin' : '*'
-        }
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
       })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-
-          if(data.status==false){
-            if(data.type=="Token Expired"){
-              console.log("Line 305",data);
-                // handleLogout();
-                JwtTokenTimeExpire();
-                navigate('/logout');
-                return;
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
             }
           }
 
@@ -278,28 +281,19 @@ const AttendanceEmployee = () => {
   if (data.length > 0 && isData) {
     console.log(data[0]);
     todayDate = data[0].begdat;
-    todayPunchIn=data[0].indz;
-    todayPunchOut=data[0].iodz;
-    setToday({todayDate :data[0].begdat,
-      todayPunchIn : data[0].indz,
-      todayPunchOut: data[0].iodz});
-    console.log(todayDate,todayPunchIn,todayPunchOut)
+    todayPunchIn = data[0].indz;
+    todayPunchOut = data[0].iodz;
+    setToday({
+      todayDate: data[0].begdat,
+      todayPunchIn: data[0].indz,
+      todayPunchOut: data[0].iodz,
+    });
+    console.log(todayDate, todayPunchIn, todayPunchOut);
     fetchWeekData();
     fetchMonthData();
     fetchreaminingtime();
     setIsData(false);
   }
-
-  // const userElements = data?.map((user, index) => ({
-  //   key: index,
-  //   id: user.id,
-  //   Date: user.Date,
-  //   PunchIn: user.PunchIn,
-  //   PunchOut: user.PunchOut,
-  //   Production: user.Production,
-  //   Break: user.Break,
-  //   Overtime: user.Overtime,
-  // }));
 
   const userElements = data?.map((user, index) => ({
     key: index,
@@ -333,6 +327,16 @@ const AttendanceEmployee = () => {
     // Overtime: user.Overtime,
     LateMin: user.late_min,
   }));
+  // let newUserElement = userElements;
+  const [newUserElement,setNewUserElement] = useState(userElements);
+  
+  const entriesChange = (e) => {
+    const newFilteredData = userElements.slice(0, e.target.value);
+    setPage(e.target.value);
+    // newUserElement = newFilteredData;
+    setNewUserElement(newFilteredData);
+    console.log("Filter value and data ", e.target.value, newFilteredData);
+  };
 
   const columns = [
     {
@@ -371,48 +375,20 @@ const AttendanceEmployee = () => {
       sorter: (a, b) => a.Overtime.length - b.Overtime.length,
     },
   ];
-  // useEffect(() => {
-  //   axios
-  //     .get(base_url + "/api/attendenceemployeedatatable.json")
-  //     .then((res) => setData(res.data));
-  // }, []);
-
-  // useEffect(() => {
-  //   axios.get(base_url + "/api/attendenceemployee.json").then((res) => {
-  //     // Assuming the API response is an array of objects
-  //     const apiData = res.data;
-  //     // Map the API data to the statisticsData format
-  //     const mappedData = apiData?.map((data) => ({
-  //       title: data.title,
-  //       value: data.value,
-  //       valuespan: data.valuespan,
-  //       progressWidth: data.progressWidth,
-  //       progressBarColor: data.progressBarColor,
-  //     }));
-  //     setUsers(mappedData);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(base_url + "/api/attendenceemployeeactivity.json")
-  //     .then((res) => setActivity(res.data));
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       const url = `${process.env.REACT_APP_BASE_URL}/api/job/emp-punch-data?sapId=5054`;
       // console.log("Attendance employee url :: ",url);
       await fetch(url, {
-        headers : {
-          'Access-Control-Allow-Origin' : '*'
-        }
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
       })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          // console.log("Daily pucnh in data", data);
           setDailyPunchIn(data);
           return data;
         })
@@ -425,28 +401,18 @@ const AttendanceEmployee = () => {
   const date = new Date();
   const showTime =
     date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
   return (
     <>
       <div className="page-wrapper">
         {/* /Page Header */}
         <div className="content container-fluid">
-          {/* <Breadcrumbs
-            // maintitle="Attendance"
-            title="Leave Correction"
-            modal="#attendace_correction"
-            // subtitle="Attendance"
-          /> */}
           <Breadcrumbs
-            // maintitle="Employee Attendance Correction"
-            // title="Attendance Correction Dashboard"
-            // subtitle="Attendance Correction of Employee"
             modal="#add_employee_attendance_correction"
             name="Attendance Correction Request"
             Linkname="/attendance-employee"
-            // Linkname1="/employees-list"
           />
-          {/* <AttendenceModelPopup/> */}
-          {/* <EmployeeLeaveModelPopup data1={"Hello"} data2={"Hello"}/> */}
+
           {/* /Page Header */}
           <div className="row">
             <div className="col-md-4">
@@ -454,23 +420,19 @@ const AttendanceEmployee = () => {
                 <div className="card-body">
                   <h5 className="card-title">
                     Timesheet{" "}
-                    <small className="text-muted">
-                    {today.todayDate}
-                    </small>
+                    <small className="text-muted">{today.todayDate}</small>
                   </h5>
                   <div className="punch-det">
                     <h6>Punch In at</h6>
                     {/* <p>Wed, 11th Mar 2023 10.00 AM</p> */}
                     <p>Date : {today.todayDate}</p>
                     <p>Time : {today.todayPunchIn}</p>
-                    
-                    {/* user.begdat,
-                    PunchIn: user.begdat, */}
-                    {/* <p>Date : {data[0].begdat}</p>
-                    <p>Time : {data[0].begdat}</p> */}
                   </div>
-                  <div className="punch-info" >
-                    <div className="punch-hours" style={{color: "red",border:"5px solid #E2E536"}}>
+                  <div className="punch-info">
+                    <div
+                      className="punch-hours"
+                      style={{ color: "red", border: "5px solid #E2E536" }}
+                    >
                       <span>
                         {parseInt(showTime) -
                           parseInt(dailyPunchIn.punch1_time)}{" "}
@@ -478,11 +440,7 @@ const AttendanceEmployee = () => {
                       </span>
                     </div>
                   </div>
-                  {/* <div className="punch-btn-section">
-                    <button type="button" className="btn btn-primary punch-btn">
-                      Punch Out
-                    </button>
-                  </div> */}
+
                   <div className="statistics">
                     <div className="row">
                       <div className="col-md-6 col-6 text-center">
@@ -507,9 +465,13 @@ const AttendanceEmployee = () => {
                 <div className="card-body">
                   <h5 className="card-title">Statistics</h5>
                   <div className="stats-list">
-                    {Array.isArray(users) && users.length > 0? (
+                    {Array.isArray(users) && users.length > 0 ? (
                       users.map((data, index) => (
-                        <div className="stats-info" id="stats-info-primary" key={index} >
+                        <div
+                          className="stats-info"
+                          id="stats-info-primary"
+                          key={index}
+                        >
                           <p>
                             {data.title}{" "}
                             <strong>
@@ -580,7 +542,7 @@ const AttendanceEmployee = () => {
                         <i className="fa-regular "></i>
                       </p>
                     </li>
-                    
+
                     <li>
                       <p className="mb-0"> Punch Out</p>
                       <p className="res-activity-time">
@@ -595,13 +557,47 @@ const AttendanceEmployee = () => {
 
             <AllEmployeeAddPopup data={sap} />
             <div className="row">
+              <div className="col-sm-12 col-md-6">
+                <div className="dataTables_length d-flex">
+                  <label className="d-flex">
+                    Show{" "}
+                    <select
+                      name="DataTables_Table_0_length"
+                      aria-controls="DataTables_Table_0"
+                      className="custom-select custom-select-sm form-control form-control-sm me-1 ms-1 mb-2"
+                      onChange={entriesChange}
+                      
+                    >
+                      <option value="">Select</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+                      <option value="30">30</option>
+                    </select>{" "}
+                    entries
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-12 col-md-6"></div>
+            </div>
+            <div className="row">
               <div className="col-lg-12">
                 <div className="table-responsive">
                   <Table
                     columns={columns}
-                    dataSource={userElements?.length > 0 ? userElements : []}
+                    //Data for showing the number of data on the basis of slice menas first n data
+                    // dataSource={
+                    //   newUserElement?.length > 0 ? newUserElement : []
+                    // }
+                    dataSource={
+                        userElements?.length > 0 ? userElements : []
+                      }
+                    // dataSource={filteredData?.length > 0 ? filteredData : []}
+                    pagination={{ pageSize: page }}
                     className="table-striped"
-                    rowKey={(record) => record.id}
+                    // rowKey={(record) => record.id}
                   />
                 </div>
               </div>
