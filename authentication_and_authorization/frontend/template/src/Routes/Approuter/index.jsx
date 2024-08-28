@@ -254,15 +254,24 @@ import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import AllEmployee from "../../views/pages/Employees/AllEmpoyee";
 import { AuthProvider } from "../../cookieTimeOut/jwtTokenTime.jsx";
+
+
+
+// auth provider using context api 
+// import { AuthProvider } from "../../Context/AuthProvider.jsx";
+import RequireAuth from "../../components/RequireAuth.jsx";
+import useAuth from "../../hooks/useAuth.jsx";
+
 // copied functions
-const SidebarLayout = () => (
-  <>
-    <Header name="Test"/>
-    <Sidebar />
-    <OffCanvas />
-    <Outlet />
-  </>
-);
+// const SidebarLayout = () => (
+//   <>
+//     {/* <RequireAuth /> { /* require auth a component which validates that only authenticated user will go ahead */ } */}
+//     <Header name="Test"/>
+//     <Sidebar />
+//     <OffCanvas />
+//     <Outlet />
+//   </>
+// );
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -279,210 +288,270 @@ const AppRouter = () => {
     // localStorage.setItem("email", "admin@dreamstechnologies.com");
     // localStorage.setItem("password", "123456");
   }, []);
-
+  const { auth } = useAuth();
+  console.log("After login auth value :: -> ", auth);
   return (
     <div>
       
       <Provider store={store}>
         <BrowserRouter basename="">
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Login />} />
-            {/* <Route path="/employee-dashboard" element={<EmployeeDashboard />} /> */}
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/set-password" element={<SetPassword />} />
-            <Route path="/otp" element={<Otp />} />
-            <Route path="/error-404" element={<Error404 />} />
-            <Route path="/error-500" element={<Error500 />} />
-            <Route path="/coming-soon" element={<ComingSoon />} />
-            <Route path="/under-maintenance" element={<UnderManitenance />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <ScrollToTop />
+            <Routes>
 
-            {/* adding sidbar and other things */}
-            <Route element={<SidebarLayout />}>
-              <Route path="/job-list" element={<JobList />} />
-              <Route path="/job-view" element={<JobView />} />
-              <Route path="/lock-screen" element={<LockScreen />} />
-              <Route path="/accordion" element={<Accordions />} />
-              <Route path="/alerts" element={<Alerts />} />
-              <Route path="/breadcrumbs" element={<Breadcrumbs />} />
-              <Route path="/avatar" element={<Avatar />} />
-              <Route path="/badges" element={<Badges />} />
-              <Route path="/buttons" element={<ButtonCard />} />
-              <Route path="/buttongroup" element={<ButtonGroup />} />
-              <Route path="/cards" element={<Cards />} />
-              <Route path="/dropdowns" element={<Dropdowns />} />
-              <Route path="/grid" element={<Grid />} />
-              <Route path="/images" element={<Images />} />
-              <Route path="/media" element={<Media />} />
-              <Route path="/modal" element={<Modals />} />
-              <Route path="/offcanvas" element={<Offcanvas />} />
-              <Route path="/pagination" element={<Pagination />} />
-              <Route path="/popover" element={<Popover />} />
-              <Route path="/progress" element={<Progress />} />
-              <Route path="/placeholders" element={<Placeholder />} />
-              <Route path="/rangeslider" element={<RangeSlider />} />
-              <Route path="/spinners" element={<Spinners />} />
-              <Route path="/sweetalert" element={<SweetAlert />} />
-              <Route path="/nav-tabs" element={<Tabs />} />
-              <Route path="/toastr" element={<Toats />} />
-              <Route path="/tooltips" element={<Tooltips />} />
-              <Route path="/typography" element={<Typography />} />
-              <Route path="/video" element={<Videos />} />
-              <Route path="/lightbox" element={<Lightbox />} />
-              <Route path="/carousel" element={<Carousel />} />
-              <Route path="/carousel" element={<Carousel />} />
-              <Route path="/borders" element={<Borders />} />
-              <Route path="/breadcrumb" element={<Breadcrumb />} />
-              <Route path="/colors" element={<Colors />} />
-              <Route path="/modals" element={<UiModals />} />
-              <Route path="/spinner" element={<Spinner />} />
 
-              {/* new urls copied from appContainer */}
-              <Route path="/form-basic-inputs" element={<BasicInputs/>} />
-              <Route path="/admin-dashboard" element={<AdminDashboard/>} />
-              <Route path="/form-horizontal" element={<HorizontalForm/>} />
-              <Route path="/form-vertical" element={<VerticalForm/>} />
-              <Route path="/form-mask" element={<Formmask/>} />
-              <Route path="/form-validation" element={<Formvalidation/>} />
-              <Route path="/tables-basic" element={<TablesBasic/>} />
-              <Route path="/data-tables" element={<DataTables/>} />
-              <Route path="/performance-indicator" element={<PerformanceIndicator/>} />
-              <Route path="/performance" element={<PerformanceReview/>} />
-              <Route path="/performance-appraisal" element={<PerformanceAppraisal/>} />
-              <Route path="/goal-tracking" element={<GoalTracking/>} />
-              <Route path="/goal-type" element={<GoalType/>} />
-              <Route path="/trainers" element={<Trainers/>} />
-              <Route path="/training" element={<Training/>} />
-              <Route path="/training-type" element={<TrainingType/>} />
-              <Route path="/employee-dashboard" element={<EmployeeDashboard/>} />
-              <Route path="/activities" element={<Activities/>} />
-              <Route path="/form-input-groups" element={<InputGroups/>} />
-              <Route path="/events" element={<Calendar/>} />
-              <Route path="/contacts" element={<Contacts/>} />
-              <Route path="/file-manager" element={<FileManager/>} />
-              <Route path="/estimates" element={<Estimates/>} />
-              <Route path="/create-estimate" element={<CreateEstimate/>} />
-              <Route path="/edit-estimate" element={<EditEstimate/>} />
-              <Route path="/invoices" element={<Invoices/>} />
-              <Route path="/create-invoice" element={<CreateInvoice/>} />
-              <Route path="/edit-invoice" element={<EditInvoice/>} />
-              <Route path="/invoice-view" element={<InvoiceView/>} />
-              <Route path="/payments" element={<Payments/>} />
-              <Route path="/promotion" element={<Promotion/>} />
-              <Route path="/resignation" element={<Resignation/>} />
-              <Route path="/termination" element={<Termination/>} />
-              <Route path="/employees" element={<AllEmployee/>} />
-              <Route path="/holidays" element={<Holidays/>} />
-              <Route path="/adminleaves" element={<AdminLeave/>} />
-              <Route path="/leaves-employee" element={<EmployeeLeave/>} />
-              <Route path="/leave-settings" element={<LeaveSettings/>} />
-              <Route path="/adminattendance" element={<AttendenceAdmin/>} />
-              <Route path="/attendance-employee" element={<AttendanceEmployee/>} />
-              <Route path="/departments" element={<Department/>} />
-              <Route path="/designations" element={<Designation/>} />
-              <Route path="/timesheet" element={<TimeSheet/>} />
-              <Route path="/shift-scheduling" element={<ShiftScheduling/>} />
-              <Route path="/shift-list" element={<ShiftList/>} />
-              <Route path="/overtime" element={<OverTime/>} />
-              <Route path="/clients" element={<Clients/>} />
-              <Route path="/projects" element={<Project/>} />
-              <Route path="/clients-list" element={<ClientList/>} />
-              <Route path="/task-board" element={<TaskBoard/>} />
-              <Route path="/leads" element={<Leads/>} />
-              <Route path="/tickets" element={<Ticket/>} />
-              <Route path="/client-profile" element={<ClientProfile/>} />
-              <Route path="/profile" element={<Profile/>} />
-              <Route path="/subscriptions" element={<Subscribtions/>} />
-              <Route path="/subscribed-companies" element={<SubscribedCompany/>} />
-              <Route path="/subscriptions-company" element={<SubscribtionsCompany/>} />
-              <Route path="/search" element={<Search/>} />
-              <Route path="/faq" element={<Faq/>} />
-              <Route path="/terms" element={<Terms/>} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
-              <Route path="/blank-page" element={<BlankPage/>} />
-              <Route path="/knowledgebase" element={<KnowledgeBase/>} />
-              <Route path="/knowledgebase-view" element={<KnowledgeBaseView/>} />
-              <Route path="/employees-list" element={<EmployeeList/>} />
-              <Route path="/expenses" element={<Expenses/>} />
-              <Route path="/provident-fund" element={<ProvidentFund/>} />
-              <Route path="/taxes" element={<Taxes/>} />
-              <Route path="/categories" element={<Categories/>} />
-              <Route path="/sub-category" element={<SubCategory/>} />
-              <Route path="/budgets" element={<Budgets/>} />
-              <Route path="/budget-expenses" element={<BudgetExpenses/>} />
-              <Route path="/budget-revenues" element={<BudgetRevenues/>} />
-              <Route path="/salary-view" element={<PaySlip/>} />
-              <Route path="/payroll-items" element={<PayrollItems/>} />
-              <Route path="/policies" element={<Policies/>} />
-              <Route path="/salary" element={<EmployeeSalary/>} />
-              <Route path="/expense-reports" element={<ExpenseReport/>} />
-              <Route path="/invoice-reports" element={<InvoiceReport/>} />
-              <Route path="/payments-reports" element={<PaymentReport/>} />
-              <Route path="/project-reports" element={<ProjectReport/>} />
-              <Route path="/task-reports" element={<TaskReport/>} />
-              <Route path="/user-reports" element={<UserReport/>} />
-              <Route path="/employee-reports" element={<EmployeeReport/>} />
-              <Route path="/payslip-reports" element={<PaySlipReports/>} />
-              <Route path="/attendance-reports" element={<AttendanceReport/>} />
-              <Route path="/leave-reports" element={<LeaveReport/>} />
-              <Route path="/daily-reports" element={<DailyReports/>} />
-              <Route path="/project-list" element={<ProjectList/>} />
-              <Route path="/project-view" element={<ProjectView/>} />
-              <Route path="/form-select2" element={<FormSelectTwo/>} />
-              <Route path="/file-upload" element={<FileUpload/>} />
-              <Route path="/ribbon" element={<Ribbon/>} />
-              <Route path="/clipboard" element={<Clipboard/>} />
-              <Route path="/dragdrop" element={<Dragdrop/>} />
-              <Route path="/rating" element={<Ratings/>} />
-              <Route path="/text-editor" element={<Texteditor/>} />
-              <Route path="/counter" element={<Counter/>} />
-              <Route path="/scrollbar" element={<Scrollbar/>} />
-              <Route path="/notification" element={<Notification/>} />
-              <Route path="/stickynote" element={<Stickynotes/>} />
-              <Route path="/timeline" element={<Timeline/>} />
-              <Route path="/form-wizard" element={<Formwizard/>} />
-              <Route path="/apex-charts" element={<Apexchart/>} />
-              <Route path="/chartjs" element={<ChartJs/>} />
-              <Route path="/morris-charts" element={<MorrisCharts/>} />
-              <Route path="/flot-charts" element={<FlotCharts/>} />
-              <Route path="/peity-charts" element={<PeityCharts/>} />
-              <Route path="/charts-c3" element={<C3Charts/>} />
-              <Route path="/fontawesome-icons" element={<FontAwesomeicons/>} />
-              <Route path="/feather-icons" element={<FeatherIcons/>} />
-              <Route path="/ionic-icons" element={<IonicIcon/>} />
-              <Route path="/material-icons" element={<MaterialIcons/>} />
-              <Route path="/pe7-icons" element={<Pe7Icon/>} />
-              <Route path="/simpleline-icons" element={<SimpleLine/>} />
-              <Route path="/themify-icons" element={<Themifyicons/>} />
-              <Route path="/weather-icons" element={<WeatherIcons/>} />
-              <Route path="/typicons" element={<Typicons/>} />
-              <Route path="/flag-icons" element={<FlagIcons/>} />
-              <Route path="/contact-list" element={<ContactList/>} />
-              <Route path="/contact-grid" element={<ContactGrid/>} />
-              <Route path="/deals-dashboard" element={<DealsDashboard/>} />
-              <Route path="/leads-dashboard" element={<LeadsDashboard/>} />
-              <Route path="/ticket-details" element={<TicketDetails/>} />
-              <Route path="/companies" element={<Companies/>} />
-              <Route path="/contact-details" element={<ContactDetails/>} />
-              <Route path="/leads-list" element={<LeadsList/>} />
-              <Route path="/leads-kanban" element={<LeadsKanban/>} />
-              <Route path="/leads-details" element={<LeadsDetails/>} />
-              <Route path="/pipeline" element={<PipeLine/>} />
-              <Route path="/Companies-grid" element={<CompaniesGrid/>} />
-              <Route path="/company-details" element={<CompanyDetails/>} />
-              <Route path="/deals" element={<Deals/>} />
-              <Route path="/deals-kanban" element={<DealsKanban/>} />
-              <Route path="/analytics" element={<Analytics/>} />
-              <Route path="/deals-details" element={<DealsDetails/>} />
-              <Route path="/excel-file-upload" element={<ExcelFileUpload/>} />
-              <Route path="/excel-info-file-upload" element={<ExcelInfoFileUpload/>} />
-              <Route path="/travel_expense_table" element={<TravelExpenseTable/>} />
-              <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow/>} />
-              {/* <Route path="/*" element={<AppContainer />} /> */}
-              <Route path="*" element={<Navigate to="/" />} />
-            </Route>
-          </Routes>
+              {/* unauthorized routes */}
+              <Route path="/" element={<Login />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/set-password" element={<SetPassword />} />
+              <Route path="/otp" element={<Otp />} />
+              <Route path="/error-404" element={<Error404 />} />
+              <Route path="/error-500" element={<Error500 />} />
+              <Route path="/coming-soon" element={<ComingSoon />} />
+              <Route path="/under-maintenance" element={<UnderManitenance />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+
+              {/* protected routes */}
+              <Route element={<RequireAuth allowedRoles={['user', 'admin']} /> }>
+              {/* allowedRoles={['admin']} */}
+              {/* adding sidbar and other things || the below require auth first check if user is authenticated successfully or not then it will redirect them to next pages */}
+
+                  {/* user routes */}
+                  <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
+                  <Route path="/holidays" element={<Holidays />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/leaves-employee" element={<EmployeeLeave />} />
+                  <Route path="/attendance-employee" element={<AttendanceEmployee />} />
+                  <Route path="/travel_expense_table" element={<TravelExpenseTable />} />
+
+                </Route>
+                
+                <Route element={<RequireAuth allowedRoles={['admin']} />}>
+                    {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
+                    <Route path="/adminattendance" element={<AttendenceAdmin />} />
+                    <Route path="/adminleaves" element={<AdminLeave />} />
+                    <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
+                </Route>
+
+
+
+
+
+                  {/* <Route path="/job-list" element={<JobList />} />
+                  <Route path="/job-view" element={<JobView />} />
+                  <Route path="/lock-screen" element={<LockScreen />} />
+                  <Route path="/accordion" element={<Accordions />} />
+                  <Route path="/alerts" element={<Alerts />} />
+                  <Route path="/breadcrumbs" element={<Breadcrumbs />} />
+                  <Route path="/avatar" element={<Avatar />} />
+                  <Route path="/badges" element={<Badges />} />
+                  <Route path="/buttons" element={<ButtonCard />} />
+                  <Route path="/buttongroup" element={<ButtonGroup />} />
+                  <Route path="/cards" element={<Cards />} />
+                  <Route path="/dropdowns" element={<Dropdowns />} />
+                  <Route path="/grid" element={<Grid />} />
+                  <Route path="/images" element={<Images />} />
+                  <Route path="/media" element={<Media />} />
+                  <Route path="/modal" element={<Modals />} />
+                  <Route path="/offcanvas" element={<Offcanvas />} />
+                  <Route path="/pagination" element={<Pagination />} />
+                  <Route path="/popover" element={<Popover />} />
+                  <Route path="/progress" element={<Progress />} />
+                  <Route path="/placeholders" element={<Placeholder />} />
+                  <Route path="/rangeslider" element={<RangeSlider />} />
+                  <Route path="/spinners" element={<Spinners />} />
+                  <Route path="/sweetalert" element={<SweetAlert />} />
+                  <Route path="/nav-tabs" element={<Tabs />} />
+                  <Route path="/toastr" element={<Toats />} />
+                  <Route path="/tooltips" element={<Tooltips />} />
+                  <Route path="/typography" element={<Typography />} />
+                  <Route path="/video" element={<Videos />} />
+                  <Route path="/lightbox" element={<Lightbox />} />
+                  <Route path="/carousel" element={<Carousel />} />
+                  <Route path="/borders" element={<Borders />} />
+                  <Route path="/breadcrumb" element={<Breadcrumb />} />
+                  <Route path="/colors" element={<Colors />} />
+                  <Route path="/modals" element={<UiModals />} />
+                  <Route path="/spinner" element={<Spinner />} /> */}
+
+                  {/* new urls copied from appContainer */}
+                  {/* <Route path="/form-basic-inputs" element={<BasicInputs />} />
+                  <Route path="/form-horizontal" element={<HorizontalForm />} />
+                  <Route path="/form-vertical" element={<VerticalForm />} />
+                  <Route path="/form-mask" element={<Formmask />} />
+                  <Route path="/form-validation" element={<Formvalidation />} />
+                  <Route path="/tables-basic" element={<TablesBasic />} />
+                  <Route path="/data-tables" element={<DataTables />} />
+                  <Route path="/performance-indicator" element={<PerformanceIndicator />} />
+                  <Route path="/performance" element={<PerformanceReview />} />
+                  <Route path="/performance-appraisal" element={<PerformanceAppraisal />} />
+                  <Route path="/goal-tracking" element={<GoalTracking />} />
+                  <Route path="/goal-type" element={<GoalType />} />
+                  <Route path="/trainers" element={<Trainers />} />
+                  <Route path="/training" element={<Training />} />
+                  <Route path="/training-type" element={<TrainingType />} />
+                  <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
+                  <Route path="/activities" element={<Activities />} />
+                  <Route path="/form-input-groups" element={<InputGroups />} />
+                  <Route path="/events" element={<Calendar />} />
+                  <Route path="/contacts" element={<Contacts />} />
+                  <Route path="/file-manager" element={<FileManager />} />
+                  <Route path="/estimates" element={<Estimates />} />
+                  <Route path="/create-estimate" element={<CreateEstimate />} />
+                  <Route path="/edit-estimate" element={<EditEstimate />} />
+                  <Route path="/invoices" element={<Invoices />} />
+                  <Route path="/create-invoice" element={<CreateInvoice />} />
+                  <Route path="/edit-invoice" element={<EditInvoice />} />
+                  <Route path="/invoice-view" element={<InvoiceView />} />
+                  <Route path="/payments" element={<Payments />} />
+                  <Route path="/promotion" element={<Promotion />} />
+                  <Route path="/resignation" element={<Resignation />} />
+                  <Route path="/termination" element={<Termination />} />
+                  <Route path="/employees" element={<AllEmployee />} />
+                  <Route path="/holidays" element={<Holidays />} />
+                  <Route path="/leaves-employee" element={<EmployeeLeave />} />
+                  <Route path="/leave-settings" element={<LeaveSettings />} />
+                  <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
+                  <Route path="/attendance-employee" element={<AttendanceEmployee />} />
+                  <Route path="/departments" element={<Department />} />
+                  <Route path="/designations" element={<Designation />} />
+                  <Route path="/timesheet" element={<TimeSheet />} />
+                  <Route path="/shift-scheduling" element={<ShiftScheduling />} />
+                  <Route path="/shift-list" element={<ShiftList />} />
+                  <Route path="/overtime" element={<OverTime />} />
+                  <Route path="/clients" element={<Clients />} />
+                  <Route path="/projects" element={<Project />} />
+                  <Route path="/clients-list" element={<ClientList />} />
+                  <Route path="/task-board" element={<TaskBoard />} />
+                  <Route path="/leads" element={<Leads />} />
+                  <Route path="/tickets" element={<Ticket />} />
+                  <Route path="/client-profile" element={<ClientProfile />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/subscriptions" element={<Subscribtions />} />
+                  <Route path="/subscribed-companies" element={<SubscribedCompany />} />
+                  <Route path="/subscriptions-company" element={<SubscribtionsCompany />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/faq" element={<Faq />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/blank-page" element={<BlankPage />} />
+                  <Route path="/knowledgebase" element={<KnowledgeBase />} />
+                  <Route path="/knowledgebase-view" element={<KnowledgeBaseView />} />
+                  <Route path="/employees-list" element={<EmployeeList />} />
+                  <Route path="/expenses" element={<Expenses />} />
+                  <Route path="/provident-fund" element={<ProvidentFund />} />
+                  <Route path="/taxes" element={<Taxes />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/sub-category" element={<SubCategory />} />
+                  <Route path="/budgets" element={<Budgets />} />
+                  <Route path="/budget-expenses" element={<BudgetExpenses />} />
+                  <Route path="/budget-revenues" element={<BudgetRevenues />} />
+                  <Route path="/salary-view" element={<PaySlip />} />
+                  <Route path="/payroll-items" element={<PayrollItems />} />
+                  <Route path="/policies" element={<Policies />} />
+                  <Route path="/salary" element={<EmployeeSalary />} />
+                  <Route path="/expense-reports" element={<ExpenseReport />} />
+                  <Route path="/invoice-reports" element={<InvoiceReport />} />
+                  <Route path="/payments-reports" element={<PaymentReport />} />
+                  <Route path="/project-reports" element={<ProjectReport />} />
+                  <Route path="/task-reports" element={<TaskReport />} />
+                  <Route path="/user-reports" element={<UserReport />} />
+                  <Route path="/employee-reports" element={<EmployeeReport />} />
+                  <Route path="/payslip-reports" element={<PaySlipReports />} />
+                  <Route path="/attendance-reports" element={<AttendanceReport />} />
+                  <Route path="/leave-reports" element={<LeaveReport />} />
+                  <Route path="/daily-reports" element={<DailyReports />} />
+                  <Route path="/project-list" element={<ProjectList />} />
+                  <Route path="/project-view" element={<ProjectView />} />
+                  <Route path="/form-select2" element={<FormSelectTwo />} />
+                  <Route path="/file-upload" element={<FileUpload />} />
+                  <Route path="/ribbon" element={<Ribbon />} />
+                  <Route path="/clipboard" element={<Clipboard />} />
+                  <Route path="/dragdrop" element={<Dragdrop />} />
+                  <Route path="/rating" element={<Ratings />} />
+                  <Route path="/text-editor" element={<Texteditor />} />
+                  <Route path="/counter" element={<Counter />} />
+                  <Route path="/scrollbar" element={<Scrollbar />} />
+                  <Route path="/notification" element={<Notification />} />
+                  <Route path="/stickynote" element={<Stickynotes />} />
+                  <Route path="/timeline" element={<Timeline />} />
+                  <Route path="/form-wizard" element={<Formwizard />} />
+                  <Route path="/apex-charts" element={<Apexchart />} />
+                  <Route path="/chartjs" element={<ChartJs />} />
+                  <Route path="/morris-charts" element={<MorrisCharts />} />
+                  <Route path="/flot-charts" element={<FlotCharts />} />
+                  <Route path="/peity-charts" element={<PeityCharts />} />
+                  <Route path="/charts-c3" element={<C3Charts />} />
+                  <Route path="/fontawesome-icons" element={<FontAwesomeicons />} />
+                  <Route path="/feather-icons" element={<FeatherIcons />} />
+                  <Route path="/ionic-icons" element={<IonicIcon />} />
+                  <Route path="/material-icons" element={<MaterialIcons />} />
+                  <Route path="/pe7-icons" element={<Pe7Icon />} />
+                  <Route path="/simpleline-icons" element={<SimpleLine />} />
+                  <Route path="/themify-icons" element={<Themifyicons />} />
+                  <Route path="/weather-icons" element={<WeatherIcons />} />
+                  <Route path="/typicons" element={<Typicons />} />
+                  <Route path="/flag-icons" element={<FlagIcons />} />
+                  <Route path="/contact-list" element={<ContactList />} />
+                  <Route path="/contact-grid" element={<ContactGrid />} />
+                  <Route path="/deals-dashboard" element={<DealsDashboard />} />
+                  <Route path="/leads-dashboard" element={<LeadsDashboard />} />
+                  <Route path="/ticket-details" element={<TicketDetails />} />
+                  <Route path="/companies" element={<Companies />} />
+                  <Route path="/contact-details" element={<ContactDetails />} />
+                  <Route path="/leads-list" element={<LeadsList />} />
+                  <Route path="/leads-kanban" element={<LeadsKanban />} />
+                  <Route path="/leads-details" element={<LeadsDetails />} />
+                  <Route path="/pipeline" element={<PipeLine />} />
+                  <Route path="/Companies-grid" element={<CompaniesGrid />} />
+                  <Route path="/company-details" element={<CompanyDetails />} />
+                  <Route path="/deals" element={<Deals />} />
+                  <Route path="/deals-kanban" element={<DealsKanban />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/deals-details" element={<DealsDetails />} />
+                  <Route path="/excel-file-upload" element={<ExcelFileUpload />} />
+                  <Route path="/excel-info-file-upload" element={<ExcelInfoFileUpload />} />
+                  <Route path="/travel_expense_table" element={<TravelExpenseTable />} />
+                  <Route path="/*" element={<AppContainer />} />
+                  <Route path="*" element={<Navigate to="/" />} /> */}
+                  {/* </Route> */}
+              
+                {/* <Route element={<RequireAuth allowedRoles={['admin']} />}>
+                  
+                </Route> */}
+              
+
+            
+
+
+
+
+              {/* <Route element={<RequireAuth allowedRoles={['admin', 'user']} />}>
+              {/* like this you can give specific routes based on logged in user roles 
+                <Route path="/job-list" element={<JobList />} />
+                <Route path="/job-view" element={<JobView />} />
+                <Route path="/lock-screen" element={<LockScreen />} />
+              </Route> */}
+
+
+                {/* including all admin routes */}
+                {/* {auth?.roles?.includes('admin')?
+                    <>
+                      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                      <Route path="/adminattendance" element={<AttendenceAdmin />} />
+                      <Route path="/adminleaves" element={<AdminLeave />} />
+                      <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
+                    </>
+                    :
+                    <>
+                      
+                    </>
+                } */}
+
+
+
+
+            </Routes>
+          
         </BrowserRouter>
       </Provider>
       

@@ -29,7 +29,7 @@ const employeeattendance = async (req,res)=>{
         method: 'get',
         maxBodyLength: Infinity,
         // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5051',
-        url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+        url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`, 
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
         }
@@ -317,6 +317,12 @@ const employeeProfile = async (req,res) => {
 
 
 
+const getRoles = async (req,res) => {
+  return res.json({'user': true,'name' : req.name, 'roles' : req.roles, 'sapid' : req.sapid, 'designation' : req.designation, 'mobile' : req.mobile, 'email' : req.mail , 'address' : req.address});
+}
+
+
+
 // module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeDashboard,empUpHeirarchy, holidays,employeeProfile};
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeDashboard,empUpHeirarchy, holidays,employeeProfile,getRoles};
 // module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeDashboard};

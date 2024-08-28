@@ -27,11 +27,11 @@ const EmployeeDashboard = () => {
 
   const [chartOptions, setChartOptions] = useState({
     series: [],
-    colors: ['#55CE63'], //'#FC133D',
+    colors: ['#55CE63', '#FC133D'], //'#FC133D',
     chart: {
       type: 'bar',
       height: 210,
-      stacked: true,
+      stacked: false,
 
       zoom: {
         enabled: true
@@ -59,7 +59,7 @@ const EmployeeDashboard = () => {
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
     },
     yaxis: {
       min: -0,
@@ -70,7 +70,7 @@ const EmployeeDashboard = () => {
       categories: [], // set day wise category from api
       // categories: [ "S","M","T","W","T","F","S",],
     },
-    legend: { show: false },
+    legend: { show: true },
     fill: {
       opacity: 1,
     },
@@ -261,10 +261,10 @@ const EmployeeDashboard = () => {
 
 
   useEffect(() => {
-    const checkCk = checkCookie('accessToken');
-    if(checkCk.status === false){
-      return navigate('/');
-    }
+    // const checkCk = checkCookie('accessToken');
+    // if(checkCk.status === false){
+    //   return navigate('/');
+    // }
 
 
     const fetchData = async () => {
@@ -384,6 +384,7 @@ const EmployeeDashboard = () => {
 
         let day;
         oneWeekOnly.map((val, index) => {
+          console.log("Weekly data at day :: ", val.day ,"  ", val )
           console.log(val.day)
           switch (val.day) {
             case '1':
@@ -407,6 +408,8 @@ const EmployeeDashboard = () => {
 
           console.log(day);
           customChart.categories.push(day);
+
+          // if(val.)
 
           let workingHours = val.totdz.split(':');
           workingHours = (parseFloat(workingHours.at(0)) + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
@@ -442,6 +445,11 @@ const EmployeeDashboard = () => {
           // data: [-50, -120, -80, -180, -80, -70, -100], // set last 7 days data here
           data: customChart.last7DaysWorkingHour,
         },
+        // {
+        //   name: 'Used Late Minutes',
+        //   data : [6,5,7,8]
+        // }
+        // pass multiple values in series in order to pass it to the user
       ]
 
       const updatedCategories = {
@@ -761,10 +769,11 @@ const EmployeeDashboard = () => {
                                   <p>Remaining Minutes</p>
                                   <h6>{weeklyStatisticsCard?.rem_late_min} Minutes</h6>
                                 </li>
-                                <li>
+                                {/* commenting lunch duration from dashboard */}
+                                {/* <li>
                                   <p>Lunch duration</p>
                                   <h6>{weeklyStatisticsCard?.lunch_duration}</h6>
-                                </li>
+                                </li> */}
                               </ul>
                             </div>
                           </div>

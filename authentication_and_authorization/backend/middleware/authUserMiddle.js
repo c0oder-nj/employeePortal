@@ -58,9 +58,21 @@ const checkUserNeeraj = (req,res,next)=> {
     console.log("+++++++++++++++++++++++++++")
     console.log(newValue)
     console.log("+++++++++++++++++++++++++++")
-    // var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
-    // console.log(decodedValue);
-    // req.sapid = decodedValue.empCode; // here I am setting sap id as request object 
+
+    try {
+        var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
+        console.log(decodedValue);
+        req.sapid = decodedValue.empCode; // here I am setting sap id as request object 
+        req.roles = decodedValue.roles; // settings roles as request object
+        req.name = decodedValue.empName; // setting name
+        req.designation = decodedValue.empDesignation;
+        req.mobile = decodedValue.mobileNo;
+        req.mail = decodedValue.emailIdShakti;
+        req.address = decodedValue.empAddress;
+    } catch (error) {
+        return res.json({ "status": false, "message": "Invalid JWT Token or problem at decoding jwt value" });
+    }
+
 
     try{
         var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);

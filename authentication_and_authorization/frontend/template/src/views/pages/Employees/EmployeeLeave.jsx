@@ -99,7 +99,7 @@ const EmployeeLeave = () => {
     noofdays: user.horo,
     reason: user.reason,
     role: user.role,
-    status: (user.apphod)?"Approved":"Decline",
+    status: (user.apphod)?"Approved":(user.dele)?"Decline":"Pending",
     approvedby: user.approvedby,
   }));
   const columns = [

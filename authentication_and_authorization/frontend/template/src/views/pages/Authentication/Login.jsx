@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import Swal from 'sweetalert2';
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -11,6 +11,9 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
 import Error from './Error';
+
+// import custom hooks for context api custom hooks
+import useAuth from '../../../hooks/useAuth';
 
 const validationSchema = Yup.object({
   sapid: Yup
@@ -28,6 +31,9 @@ const validationSchema = Yup.object({
 
 
 const Login = () => {
+
+  // setting autheticated user object
+  const { auth, setAuth } = useAuth();
 
   const {
     register,
@@ -72,7 +78,6 @@ const Login = () => {
  
   const onSubmit = async (data) => {
         // when user enters the default password navigate it to set new password
-        
         try {
           let apiUrl = `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
           console.log('api url: ',apiUrl);
@@ -93,9 +98,16 @@ const Login = () => {
               document.cookie= 'accessToken='+response.accessToken;
               console.log("Cookie has been set");
               console.log('accessToken='+response.accessToken)
+              setAuth({'user': true,'name' : response.name, 'roles' : response.roles,'accessToken':response.accessToken})
+              console.log("New auth that has been set :: -> ", auth);
               navigate("/employee-dashboard");
             }else if(response.newUser){
-              navigate('/set-password');
+              navigate('/set-password', {
+                state : {
+                  "sapid" : data.sapid
+                }
+              });
+              <Navigate to={"/set-password"}/>
             }
             else{
               console.log(response.message);
@@ -182,7 +194,7 @@ const Login = () => {
                    }
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
-                        <label className="col-form-label" >SAP ID</label>
+                        <label className="col-form-label">Username / SAP Id</label>
                         <Controller
                           name="sapid"
                           control={control}

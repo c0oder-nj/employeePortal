@@ -1183,7 +1183,7 @@ const AppContainer = () => {
  
   const SidebarLayout = () => (
     <>
-      <Header name="Test"/>
+      <Header/>
       <Sidebar />
       <OffCanvas />
       <Outlet />

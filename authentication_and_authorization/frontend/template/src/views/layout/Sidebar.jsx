@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";
 import * as Icon from 'react-feather';
+import useAuth from "../../hooks/useAuth";
 
 
 const Sidebar = () => {
@@ -27,6 +28,26 @@ const Sidebar = () => {
   const [level3Menu, setLevel3Menu] = useState("");
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
 
+
+  // the below useEffect only works when component first loads
+  const { auth } = useAuth();
+
+  useEffect(()=>{
+    const filteredSidebarData = SidebarData.map(section => {
+      return {
+        ...section,
+        menu: section.menu.map(menuItem => {
+          return {
+            ...menuItem,
+            subMenus: menuItem.subMenus.filter(subMenu => 
+              subMenu.visibility.some(role => auth.roles.includes(role))
+            ),
+          };
+        }).filter(menuItem => menuItem.subMenus.length > 0), // remove menuItems with no visible subMenus
+      };
+    }).filter(section => section.menu.length > 0); // remove sections with no visible menuItems
+    setSidebarData(filteredSidebarData);
+  }, []); 
   
 
   useEffect(() => {
