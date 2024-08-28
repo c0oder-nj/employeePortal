@@ -1,6 +1,7 @@
+import useAuth from "../../hooks/useAuth";
+// const {auth} = useAuth();
 
 export const SidebarData = [
-
 
 {
     tittle: 'MAIN',
@@ -17,10 +18,12 @@ export const SidebarData = [
           // {
           //   menuValue: 'Admin Dashboard',
           //   route: "/admin-dashboard",
+          //   visibility : ['admin']
           // },
           {
             menuValue: 'Employee Dashboard',
             route: "/employee-dashboard",
+            visibility : ['user', 'admin']
           },
           // {
           //   menuValue: 'Deals Dashboard',
@@ -106,14 +109,17 @@ export const SidebarData = [
           {
             menuValue: 'Holidays',
             route: "/holidays",
+            visibility : ['user', 'admin']
           },
           {
             menuValue: 'Leaves(Admin)',
             route: "/adminleaves",
+            visibility : ['admin']
           },
           {
             menuValue: 'Leaves(Employee)',
             route: "/leaves-employee",
+            visibility : ['user', 'admin']
           },
           // {
           //   menuValue: 'Leave Settings',
@@ -122,10 +128,12 @@ export const SidebarData = [
           {
             menuValue: 'Attendance (Admin)',
             route: "/adminattendance",
+            visibility : ['admin']
           },
           {
             menuValue: 'Attendance (Employee)',
             route: "/attendance-employee",
+            visibility : ['user', 'admin']
           },
           // {
           //   menuValue: 'Departments',
@@ -178,10 +186,12 @@ export const SidebarData = [
           {
             menuValue: 'Travel Reports',
             route: "/travel_expense_table",
+            visibility : ['user', 'admin']
           },
           {
             menuValue: 'HOD travel approval',
             route: "/hod_travel_expense_approval",
+            visibility : ['admin']
           },
         ],
       },

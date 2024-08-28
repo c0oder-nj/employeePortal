@@ -10,9 +10,13 @@ import "./assets/css/line-awesome.min.css";
 import "./assets/scss/main.scss";
 import "./assets/css/material.css";
 
+import { AuthProvider } from "./Context/AuthProvider";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
-    <Approuter />
+    <AuthProvider>
+      <Approuter />
+    </AuthProvider>
   </>
 );

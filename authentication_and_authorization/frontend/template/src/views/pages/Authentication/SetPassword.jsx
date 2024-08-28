@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -23,18 +23,21 @@ const schema = yup.object({
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required("Repeat Password is required")
-    .trim(),
-  sapid:yup
-    .string()
-    .required("this is a required field")
-    .matches(/^[0-9]+$/, "Must be only digits")
     .trim()
+  // sapid:yup
+  //   .string()
+  //   .required("this is a required field")
+  //   .matches(/^[0-9]+$/, "Must be only digits")
+  //   .trim()
 });
 
 const SetPassword = (props) => {
   const [passwordEye, setPasswordEye] = useState(true); // State for password field
   const [repeatPasswordEye, setRepeatPasswordEye] = useState(true); // State for repeat password field
+  const location = useLocation();
 
+  const sapid = location.state.sapid;
+  
   const {
     control,
     register,
@@ -55,6 +58,7 @@ const SetPassword = (props) => {
 
   const onSubmit = async(data) => {
     // custom implementation
+    data.sapid = sapid // modifying data sap id according to the new user sap id
     console.log(data);
     try {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/setPassword`, {
@@ -107,7 +111,7 @@ const SetPassword = (props) => {
             {/* Account Logo */}
             <div className="account-logo">
               <Link to="/admin-dashboard">
-                <img src={Applogo} alt="Dreamguy's Technologies" />
+                <img src={Applogo} alt="Set Password" />
               </Link>
             </div>
             {/* /Account Logo */}
@@ -139,8 +143,9 @@ const SetPassword = (props) => {
                                 errors?.sapid ? "error-input" : ""
                               }`}
                               {...register("sapid")}
-                              value={value}
-                              onChange={onChange}
+                              placeholder={sapid}
+                              value={sapid}
+                              readOnly
                               autoComplete="false"
                             />
                           </div>
