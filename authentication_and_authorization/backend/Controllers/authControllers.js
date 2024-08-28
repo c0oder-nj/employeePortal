@@ -140,7 +140,7 @@ const login = async (req, res) => {
                         let jwtSecretKey = process.env.JWT_SECRET_KEY;
                         const token = jwt.sign(payloadData, jwtSecretKey,
                           {
-                            expiresIn: "1m",
+                            expiresIn: "30m",
             
                           }
                         );

@@ -16,6 +16,7 @@ const EmployeeLeave = () => {
   const [leaveInfo,leaveSet] = useState([]);
   const [casualLeave,setCasualLeave]  = useState("");
   const [allEmp,allEmpFunction]  = useState([]);
+  const [page,setPage] = useState(10);
   const [isFetchedData,isFetchedDataFunction] = useState(false);
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
@@ -242,7 +243,13 @@ const EmployeeLeave = () => {
     },
   ];
 
-  
+  const entriesChange = (e) => {
+    const newFilteredData = userElements.slice(0, e.target.value);
+    setPage(e.target.value);
+    // newUserElement = newFilteredData;
+    // setNewUserElement(newFilteredData);
+    // console.log("Filter value and data ", e.target.value, newFilteredData);
+  };
 
   return (
     <div className="blockingOrNot" style= {{display:displayVariable}}>
@@ -268,14 +275,40 @@ const EmployeeLeave = () => {
               </div>
             ))}
           </div>
-
+          <div className="row">
+              <div className="col-sm-12 col-md-6">
+                <div className="dataTables_length d-flex">
+                  <label className="d-flex">
+                    Show{" "}
+                    <select
+                      name="DataTables_Table_0_length"
+                      aria-controls="DataTables_Table_0"
+                      className="custom-select custom-select-sm form-control form-control-sm me-1 ms-1 mb-2"
+                      onChange={entriesChange}
+                      
+                    >
+                      <option value="">Select</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+                      <option value="30">30</option>
+                    </select>{" "}
+                    entries
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-12 col-md-6"></div>
+            </div>
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
-                <SearchBox />
+                {/* <SearchBox /> */}
                 <Table
                   columns={columns}
                   dataSource={userElements?.length > 0 ? userElements : []}
+                  pagination={{ pageSize: page }}
                   className="table-striped"
                 />
               </div>
