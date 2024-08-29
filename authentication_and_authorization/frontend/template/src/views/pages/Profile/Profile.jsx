@@ -191,7 +191,7 @@ const Profile = () => {
                     Profile
                   </Link>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Link
                     to="#emp_projects"
                     data-bs-toggle="tab"
@@ -199,8 +199,8 @@ const Profile = () => {
                   >
                     Projects
                   </Link>
-                </li>
-                <li className="nav-item">
+                </li> */}
+                {/* <li className="nav-item">
                   <Link
                     to="#bank_statutory"
                     data-bs-toggle="tab"
@@ -209,8 +209,8 @@ const Profile = () => {
                     Bank &amp; Statutory
                     <small className="text-danger ms-1">(Admin Only)</small>
                   </Link>
-                </li>
-                <li className="nav-item">
+                </li> */}
+                {/* <li className="nav-item">
                   <Link
                     to="#emp_assets"
                     data-bs-toggle="tab"
@@ -218,7 +218,7 @@ const Profile = () => {
                   >
                     Assets
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

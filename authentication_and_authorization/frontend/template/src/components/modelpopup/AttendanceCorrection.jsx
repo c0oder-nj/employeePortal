@@ -7,16 +7,25 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
 const AllEmployeeAddPopup = (props) => {
-  // console.log("In attendance",props.data);
-    const [startDate, setStartDate] = useState(null);
+  console.log("In attendance",props.data);
+  const [sapid,setSapId] = useState(props.data);
+  const [startDate, setStartDate] = useState(null);
   const navigate = useNavigate();
   const [formData,setFormData] = useState({
-    SapNumber : props.data,
+    SapNumber : props.data || "",
     status : "",
     date :"",
     remark : ""
   })
 
+  useEffect(() => {
+    if (props.data) {
+      setFormData(()=>({
+        ...formData,
+        SapNumber : props.data
+    }));
+    }
+  }, [props.data]);
  
   async function sendData(e){
     e.preventDefault();

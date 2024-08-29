@@ -62,7 +62,7 @@ const employeeDailyAttendnceStatus = async (req,res)=>{
 
 //Funtion for attendance correction of logged in employee
 const employeeDailyAttendnceCorrection = async (req,res)=>{
-  // console.log("Your value",req.body)
+  console.log("Your value for attendance correction",req.body)
   const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/attendance_correction.htm?date=${req.body.date}&perno=${req.body.SapNumber}&status=${req.body.status}&remark=${req.body.remark}`);
   console.log(result.data);
   console.log("Your cookie is working")

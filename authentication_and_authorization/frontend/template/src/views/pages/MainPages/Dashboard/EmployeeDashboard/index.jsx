@@ -796,10 +796,10 @@ const EmployeeDashboard = () => {
                                   <p>Remaining Minutes</p>
                                   <h6>{monthlyStatisticsCard?.rem_late_min} Minutes</h6>
                                 </li>
-                                <li>
+                                {/* <li>
                                   <p>Lunch Duration</p>
                                   <h6>{monthlyStatisticsCard?.lunch_duration} Minutes</h6>
-                                </li>
+                                </li> */}
                               </ul>
                             </div>
                           </div>

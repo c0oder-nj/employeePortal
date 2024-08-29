@@ -10,6 +10,8 @@ import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrec
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 
 const AttendanceEmployee = () => {
+
+  
   const [users, setUsers] = useState([]);
   const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
@@ -502,7 +504,7 @@ const AttendanceEmployee = () => {
               <div className="card recent-activity">
                 <div className="card-body">
                   <h5 className="card-title">Today Activity</h5>
-                  <ul className="res-activity-list">
+                  <ul id="list-icon" className="res-activity-list fs-5">
                     {/* {Array.isArray(activity) && activity.length > 0 ? (
                       activity.map((activity, index) => (
                         <li key={index}>
@@ -517,34 +519,22 @@ const AttendanceEmployee = () => {
                       <p>No activities available.</p>
                     )} */}
 
-                    <li>
-                      <p className="mb-0">Punch In Time</p>
-                      <p className="res-activity-time">
+                    <li className="mt-5 mb-5">
+                      <p className="custom-size">Punch In Time</p>
+                      <p className="res-activity-time custom-size">
                         <i className="fa-regular fa-clock"></i>{" "}
                         {today.todayPunchIn}
                       </p>
                     </li>
-                    <li>
-                      <p className="mb-0"></p>
-                      <p className="res-activity-time">
-                        <i className="fa-regular "></i>
-                      </p>
-                    </li>
-                    <li>
-                      <p className="mb-0"> Lunch Break</p>
+                    <li className="mt-5 mb-5">
+                      <p className="custom-size"> Lunch Break</p>
                       <p className="res-activity-time">
                         <i className="fa-regular fa-clock"></i> 1:00 pm
                       </p>
                     </li>
-                    <li>
-                      <p className="mb-0"> </p>
-                      <p className="res-activity-time">
-                        <i className="fa-regular "></i>
-                      </p>
-                    </li>
 
-                    <li>
-                      <p className="mb-0"> Punch Out</p>
+                    <li className="mt-5 mb-5">
+                      <p className="mt-5"> Punch Out</p>
                       <p className="res-activity-time">
                         <i className="fa-regular fa-clock"></i>{" "}
                         {today.todayPunchOut}
