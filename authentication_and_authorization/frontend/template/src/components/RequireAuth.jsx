@@ -41,7 +41,7 @@ const RequireAuth = ({ allowedRoles }) => {
             let config = {
                 method: 'get',
                 maxBodyLength: Infinity,
-                url: 'http://localhost:3000/api/employee/roles',
+                url: `${process.env.REACT_APP_BASE_URL}/api/employee/roles`,
                 headers: { 
                     'accessToken': cookieChecking.accesstoken
                 }

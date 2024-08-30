@@ -5,18 +5,29 @@ import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const AllEmployeeAddPopup = (props) => {
-  // console.log("In attendance",props.data);
-    const [startDate, setStartDate] = useState(null);
+  console.log("In attendance",props.data);
+  const [sapid,setSapId] = useState(props.data);
+  const [startDate, setStartDate] = useState(null);
   const navigate = useNavigate();
   const [formData,setFormData] = useState({
-    SapNumber : props.data,
+    SapNumber : props.data || "",
     status : "",
     date :"",
     remark : ""
   })
 
+  useEffect(() => {
+    if (props.data) {
+      setFormData(()=>({
+        ...formData,
+        SapNumber : props.data
+    }));
+    }
+  }, [props.data]);
  
   async function sendData(e){
     e.preventDefault();
@@ -38,14 +49,20 @@ const AllEmployeeAddPopup = (props) => {
     }).then((response)=>{
 
       response.json().then(body => {console.log(body)
-        Toastify({
-          text: body.message,
-          duration: 3000,
-          close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-        }).showToast();
+        // Toastify({
+        //   text: body.message,
+        //   duration: 3000,
+        //   close: true,
+        //   gravity: "top", // `top` or `bottom`
+        //   position: "center", // `left`, `center` or `right`
+        //   backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        // }).showToast();
+        withReactContent(Swal).fire({
+          title: body.message,
+          preConfirm: () => {
+            navigate("/attendance-employee");
+          },
+        });
      
       })
       // console.log(response)
