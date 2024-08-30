@@ -78,7 +78,7 @@ const Holidays = () => {
 
   console.log("Printing holidays :: ", holidaysArray);
   var userElements;
-  if(holidays.length > 0){
+  if(holidays?.length > 0){
     userElements = holidays?.map((holiday, index) => (
       {
       key: index,
@@ -173,6 +173,7 @@ const Holidays = () => {
                   dataSource={userElements?.length > 0 ? userElements : []}
                   className="table-striped"
                   rowKey={(record) => record.id}
+                  pagination={{pageSize:'15'}}
                 />
               </div>
             </div>
