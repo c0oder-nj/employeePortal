@@ -6,6 +6,9 @@ import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import withReactContent from "sweetalert2-react-content";
 
 const TravelAllwowanceExcelSubmitionPopup = () => {
   const [data, setData] = useState([]);
@@ -16,6 +19,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
   const [selectCountry, setSelectCountry] = useState([]);
   const [selectCostCenter, setSelectCostCenter] = useState([]);
   const [isDomestic, setIsDomestic] = useState(true);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     Country: "",
     TimeStart: "",
@@ -247,14 +251,20 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
       }).then((response) => {
         response.json().then((body) => {
           console.log(body);
-          Toastify({
-            text: body.message,
-            duration: 3000,
-            close: true,
-            gravity: "top", // `top` or `bottom`
-            position: "center", // `left`, `center` or `right`
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-          }).showToast();
+          // Toastify({
+          //   text: body.message,
+          //   duration: 3000,
+          //   close: true,
+          //   gravity: "top", // `top` or `bottom`
+          //   position: "center", // `left`, `center` or `right`
+          //   backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+          // }).showToast();
+          withReactContent(Swal).fire({
+            title: body.message,
+            preConfirm: () => {
+              navigate("/travel_expense_table");
+            },
+          });
         });
         return;
         // return response.json();

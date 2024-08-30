@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 
 const EmployeeLeaveModelPopup = (props) => {
@@ -131,14 +132,20 @@ const EmployeeLeaveModelPopup = (props) => {
       response.json().then((body) => {
         console.log(body);
         // alert(body.message);
-        Toastify({
-          text: body.message,
-          duration: 3000,
-          close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-        }).showToast();
+        // Toastify({
+        //   text: body.message,
+        //   duration: 3000,
+        //   close: true,
+        //   gravity: "top", // `top` or `bottom`
+        //   position: "center", // `left`, `center` or `right`
+        //   backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        // }).showToast();
+        withReactContent(Swal).fire({
+          title: body.message,
+          preConfirm: () => {
+            navigate("/leaves-employee");
+          },
+        });
         //   toast(body.message, {
         //     position: toast.POSITION.TOP_LEFT,
         // });
