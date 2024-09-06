@@ -8,6 +8,7 @@ import { base_url } from "../../../base_urls";
 import { useNavigate } from "react-router-dom";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrection";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
 
 const AttendanceEmployee = () => {
 
@@ -21,20 +22,11 @@ const AttendanceEmployee = () => {
   const [page,setPage] = useState(10);
   var todayDate, todayPunchIn, todayPunchOut;
   const [filteredData, setFilteredData] = useState([]);
+  const {checkCookie} = useAuth();
 
   const navigate = useNavigate();
   var dataFetchedThroughApi;
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
   function fetchWeekData() {
     function parseDate(d) {
       const [day, month, year] = d.split(".");
@@ -236,13 +228,13 @@ const AttendanceEmployee = () => {
   }
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
+    if (!cookieExists.status) {
       navigate("/");
     }
 
     const fetchData = async () => {
       //Fetching data for attendance
-      const value = `${document.cookie}`;
+      const value = cookieExists.cookie;
       console.log(value);
 
       const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
@@ -251,6 +243,7 @@ const AttendanceEmployee = () => {
       dataFetchedThroughApi = await fetch(url, {
         headers: {
           "Access-Control-Allow-Origin": "*",
+          'accesstoken' : value
         },
       })
         .then((response) => {

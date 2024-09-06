@@ -5,29 +5,23 @@ import AttendenceModelPopup from "../../../components/modelpopup/AttendenceModel
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
+
 const TableAvatar = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const {checkCookie} = useAuth();
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
+
 
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
 
     const fetchData = async () => {
-      const value = `${document.cookie}`;
+      const value = cookieExists.cookie
       const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
       console.log("Printing uri at frontend :: ", url);
       await fetch(url, {
