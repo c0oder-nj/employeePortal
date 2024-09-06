@@ -328,14 +328,14 @@ const EmployeeDashboard = () => {
      
 
       setDashboardData(data);
-      setEmpData(data.empDetails[0]);
-      setHolidays(data.holidays);
-      setCompletedTask(data.completedtask);
-      setPendingTask(data.pendingtask);
-      setEmpAttendance(data.attendanceemp);
+      setEmpData(data?.empDetails[0]);
+      setHolidays(data?.holidays);
+      setCompletedTask(data?.completedtask);
+      setPendingTask(data?.pendingtask);
+      setEmpAttendance(data?.attendanceemp);
       // console.log("Updating heirarchy data in fetchData.then function");
       // console.log(data.hierarchyData)
-      setHeirarchyData(data.hierarchyData);
+      setHeirarchyData(data?.hierarchyData);
 
 
       // custom implementation of weekly hour chart
@@ -354,7 +354,7 @@ const EmployeeDashboard = () => {
 
 
 
-      if (data.status) {
+      if (data?.status) {
         console.log("Inside data.status part ",data);
         const today = new Date();
         const currentDay = today.getDay();
@@ -384,7 +384,7 @@ const EmployeeDashboard = () => {
 
         let day;
         oneWeekOnly.map((val, index) => {
-          console.log("Weekly data at day :: ", val.day ,"  ", val )
+          console.log("Weekly data at day :: ", val.day ,"  ", val ) 
           console.log(val.day)
           switch (val.day) {
             case '1':
@@ -502,7 +502,7 @@ const EmployeeDashboard = () => {
 
   // ---------All logic written after useEffect---------------
   //------------------ Logic to show all available leave to user start---------------------
-  if (dashboardData.status) {
+  if (dashboardData?.status) {
     dashboardData.leaveemp.map((val, index) => {
       atnAndLeaveCard.total_leaves += parseInt(val.horo)
       if (val.lev_typ === "WithoutPay Leave") {
@@ -522,7 +522,7 @@ const EmployeeDashboard = () => {
 
   // -----------------Logic to show upcoming holiday to user start------------------------------
   const today = new Date().toLocaleDateString('de-DE');
-  holidays.some((holiday, index) => {
+  holidays?.some((holiday, index) => {
     let holidayDateArr = holiday.datum.split('.');
     let holidayDateDay = parseInt(holidayDateArr[0]);
     let holidayMonth = parseInt(holidayDateArr[1]);
@@ -533,8 +533,8 @@ const EmployeeDashboard = () => {
 
     // if upcoming holiday exist in the same month then 
     if ((holidayMonth === currentDateMonth) && (holidayDateDay >= currentDateDay)) {
-      recentHoliday.holiday_text = holiday.ltext
-      recentHoliday.date = holiday.datum
+      recentHoliday.holiday_text = holiday.ltext   
+      recentHoliday.date = holiday.datum     
       return true;
     } else if (holidayMonth > currentDateMonth) { // when upcoming holidays are not in same month
       recentHoliday.holiday_text = holiday.ltext
@@ -547,7 +547,7 @@ const EmployeeDashboard = () => {
 
 
   // -----------------Logic for showing monthly and weekly attendance statistics to user start ------------------------------
-  if (empAttendance.length > 0) {
+  if (empAttendance?.length > 0) {
     function parseDateUpdated(dateStr) {
       const [day, month, year] = dateStr.split('.');
       return new Date(`${year}-${month}-${day}`);
@@ -697,7 +697,7 @@ const EmployeeDashboard = () => {
                       <div className="card-body">
                         <div className="welcome-info">
                           <div className="welcome-content">
-                            <h4>Welcome Back, {empData.ename}</h4>
+                            <h4>Welcome Back, {empData?.ename}</h4>
                             <p>
                               You have been missed,
                             </p>
@@ -796,6 +796,7 @@ const EmployeeDashboard = () => {
                                   <p>Remaining Minutes</p>
                                   <h6>{monthlyStatisticsCard?.rem_late_min} Minutes</h6>
                                 </li>
+                                {/* hide lunch duration from month */}
                                 {/* <li>
                                   <p>Lunch Duration</p>
                                   <h6>{monthlyStatisticsCard?.lunch_duration} Minutes</h6>
@@ -823,8 +824,8 @@ const EmployeeDashboard = () => {
                               />
                             </div>
                             <div className="holiday-calendar-content">
-                              <h6>{recentHoliday.holiday_text}</h6>
-                              <p>{recentHoliday.date}</p>
+                              <h6>{recentHoliday?.holiday_text}</h6>
+                              <p>{recentHoliday?.date}</p>
                             </div>
                           </div>
                           <div className="holiday-btn">
@@ -896,7 +897,7 @@ const EmployeeDashboard = () => {
                           </div> */}
                             <div className="col-md-4">
                               <div className="attendance-details">
-                                <h4 className="text-pink">{atnAndLeaveCard.total_leaves}</h4>
+                                <h4 className="text-pink">{atnAndLeaveCard?.total_leaves}</h4>
                                 <p>Leaves Taken</p>
                               </div>
                             </div>
@@ -908,20 +909,20 @@ const EmployeeDashboard = () => {
                           </div> */}
                             <div className="col-md-4">
                               <div className="attendance-details">
-                                <h4 className="text-purple">{atnAndLeaveCard.pendingApproval}</h4>
+                                <h4 className="text-purple">{atnAndLeaveCard?.pendingApproval}</h4>
                                 <p>Pending Approval</p>
                               </div>
                             </div>
                             <div className="col-md-4">
                               <div className="attendance-details">
-                                <h4 className="text-info">{atnAndLeaveCard.total_workingDays}</h4>
+                                <h4 className="text-info">{atnAndLeaveCard?.total_workingDays}</h4>
                                 <p>Working Days</p>
                               </div>
                             </div>
                             <div className="col-md-4">
                               <div className="attendance-details">
-                                <h4 className="text-danger">{atnAndLeaveCard.withoutPay}</h4>
-                                <p>Loss of Pay</p>
+                                <h4 className="text-danger">{atnAndLeaveCard?.withoutPay}</h4>
+                                <p>LWPs</p>
                               </div>
                             </div>
                           </div>

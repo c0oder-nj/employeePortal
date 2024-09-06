@@ -27,7 +27,7 @@ const checkUser = async (req,res,next)=> {
     }catch(err){
         if (err.name === 'TokenExpiredError') {
             console.log("JWT has expired.");
-            return res.json({"status" : false,"type":"Token Expired","message":"Token has been expired"})
+            return res.json({"status" : false,"type":"Token Expired","message":"User Session Has been Expired, Please Login Again."})
           } else {
             console.log("JWT is invalid:", err.message);
             return res.json({ "status": false,"type":"Token Invalid", "message": "Unauthorized Access" });
@@ -58,6 +58,38 @@ const checkUserNeeraj = (req,res,next)=> {
     console.log("+++++++++++++++++++++++++++")
     console.log(newValue)
     console.log("+++++++++++++++++++++++++++")
+
+
+    try{
+        var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
+        console.log(decodedValue);
+        req.sapid = decodedValue.empCode;
+        console.log("JWT is valid:", decodedValue);
+    }catch(err){
+        if (err.name === 'TokenExpiredError') {
+            console.log("JWT has expired at neeraj side.");
+            // return res.redirect('/')
+            return res.json({"status" : false,"type":"Token Expired","message":"User Session Has been Expired, Please Login Again."})
+        } else {
+            console.log("JWT is invalid:", err.message);
+            return res.json({ "status": false,"type":"Token Invalid", "message": "Unauthorized Access" });
+          }
+    }
+
+    next();
+}
+
+
+
+const checkUserRoles = (req,res,next) => {
+    if(!req.headers.accesstoken){
+        return res.json({ "status": false, "message": "Unauthorized Access" });
+    }
+
+    const newValue = req.headers.accesstoken;
+    console.log("------------------");
+    console.log("Token for roles :: ", newValue);
+    console.log("------------------");
 
     try {
         var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
@@ -92,4 +124,5 @@ const checkUserNeeraj = (req,res,next)=> {
     next()
 }
 
-module.exports = { checkUser,checkUserNeeraj};
+
+module.exports = { checkUser,checkUserNeeraj, checkUserRoles};

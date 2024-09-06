@@ -3,7 +3,7 @@
 import Swal from 'sweetalert2';
 import React, { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { Applogo } from "../../../Routes/ImagePath";
+import { Applogo , bgImageLogin } from "../../../Routes/ImagePath";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
@@ -35,6 +35,14 @@ const Login = () => {
   // setting autheticated user object
   const { auth, setAuth } = useAuth();
 
+  const customStyle = {
+
+    'backgroundImage'  : `url(${bgImageLogin})`,
+    'backgroundRepeat' : 'no-repeat',
+    'backgroundPosition' : '0 0',
+    'background-size'   : 'cover'
+  }
+
   const {
     register,
     control,
@@ -49,7 +57,6 @@ const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
   const [display, setDisplay] = useState('block');
-
 
   
   const checkCookie = async ()=>{
@@ -161,7 +168,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className="account-page" >
+      <div className="account-page" style={customStyle}>
         <div className="main-wrapper">
           <div className="account-content">
             {/* <Link to="/job-list" className="btn btn-primary apply-btn">

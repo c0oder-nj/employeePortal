@@ -116,7 +116,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Phone:</div>
                             <div className="text">
-                              <Link to={`tel:${empData.telnr}`}>
+                              <Link target="_blank" to={`tel:${empData.telnr}`}>
                                 {empData.telnr}
                               </Link>
                             </div>
@@ -124,7 +124,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Email Personal:</div>
                             <div className="text">
-                              <Link to={`mailto:${empData.usrid}`}>
+                              <Link target="_blank" to={`mailto:${empData.usrid}`}>
                                 {empData.usrid}
                               </Link>
                             </div>
@@ -132,7 +132,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Email Company:</div>
                             <div className="text">
-                              <Link to={`mailto:${empData.usrid_long}`}>
+                              <Link target="_blank" to={`mailto:${empData.usrid_long}`}>
                                 {empData.usrid_long}
                               </Link>
                             </div>
@@ -152,7 +152,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Reports to:</div>
                             <div className="text">
-                              <Link to="profile">
+                              <Link to="/profile">
                                 {empData.f_ename}
                               </Link>
                             </div>
@@ -188,7 +188,8 @@ const Profile = () => {
                     data-bs-toggle="tab"
                     className="nav-link active"
                   >
-                    Profile
+                    {/* Profile */}
+                    Other Info
                   </Link>
                 </li>
                 {/* <li className="nav-item">

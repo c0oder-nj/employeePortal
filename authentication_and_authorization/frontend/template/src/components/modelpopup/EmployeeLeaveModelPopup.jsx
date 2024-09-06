@@ -192,6 +192,7 @@ const EmployeeLeaveModelPopup = (props) => {
     for (let i = 0; i < cookies.length; i++) {
       let cookie = cookies[i].trim();
       if (cookie.startsWith(cookieName + "=")) {
+        console.log("You are in cookiee testing area",cookie);
         return true;
       }
     }

@@ -49,7 +49,7 @@ const ForgotPassword = () => {
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `http://localhost:3000/api/auth/fetch-phone?sapid=${sapId}`,
+        url: `${process.env.REACT_APP_BASE_URL}/api/auth/fetch-phone?sapid=${sapId}`,
         headers: { }
       };
       

@@ -142,3 +142,7 @@ export { default as avatar14 } from "../../assets/img/avatar/avatar-14.jpg";
 export { default as avatar15 } from "../../assets/img/avatar/avatar-15.jpg"; 
 export { default as avatar17 } from "../../assets/img/avatar/avatar-17.jpg"; 
 export { default as tagUserIcon } from "../../assets/img/icons/tag-user-icon.svg"; 
+
+
+// custom added images
+export {default as bgImageLogin } from "../../assets/img/bg/about_img4.jpg"

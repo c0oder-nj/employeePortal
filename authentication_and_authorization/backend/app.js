@@ -205,9 +205,6 @@ app.listen(port, () => {
 
 
 
-
-
-
 // Job server in the same server
 setInterval(() => {
   let config = {

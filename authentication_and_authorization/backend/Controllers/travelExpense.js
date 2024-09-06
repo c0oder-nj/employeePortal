@@ -39,7 +39,7 @@ const domesticTravelAllowance = async (req, res) => {
     `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/travel_expense_entry.htm?date1=${req.body.TimeStart}&date2=${req.body.TimeEnd}&country=${req.body.Country}&location=${req.body.Location}&cost_center=${req.body.CostCenter}&perno=${sapNumber}&trip_details=${tripDetailsString}`
   );
   console.log(result.data);
-  console.log("Your cookie is working");
+  console.log("Your cookie is working in domestic");
   res.status(200).send(result.data);
 };
 
