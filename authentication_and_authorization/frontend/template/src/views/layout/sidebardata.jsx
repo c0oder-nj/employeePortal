@@ -111,11 +111,11 @@ export const SidebarData = [
             route: "/holidays",
             visibility : ['user', 'admin']
           },
-          {
-            menuValue: 'Leaves(Admin)',
-            route: "/adminleaves",
-            visibility : ['admin']
-          },
+          // {
+          //   menuValue: 'Leaves(Admin)',
+          //   route: "/adminleaves",
+          //   visibility : ['admin']
+          // },
           {
             menuValue: 'Leaves(Employee)',
             route: "/leaves-employee",
@@ -125,11 +125,11 @@ export const SidebarData = [
           //   menuValue: 'Leave Settings',
           //   route: "/leave-settings",
           // },
-          {
-            menuValue: 'Attendance (Admin)',
-            route: "/adminattendance",
-            visibility : ['admin']
-          },
+          // {
+          //   menuValue: 'Attendance (Admin)',
+          //   route: "/adminattendance",
+          //   visibility : ['admin']
+          // },
           {
             menuValue: 'Attendance (Employee)',
             route: "/attendance-employee",
@@ -166,30 +166,54 @@ export const SidebarData = [
       //   icon: "la la-users",
       // },
       {
+        menuValue: 'KRA',
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-file-image",
+        subMenus: [
+          {
+            menuValue: 'Report',
+            route: "/kra_report",
+            visibility : ['user', 'admin']
+          }
+        ],
+      },
+      {
         menuValue: 'Travel Allownace',
         hasSubRoute: true,
         showSubRoute: false,
         icon: "la la-rocket",
         subMenus: [
-          // {
-          //   // menuValue: 'Domestic Travel Allownace',
-          //   // route: "/excel-file-upload",
-          // },
-          // {
-          //   // menuValue: 'Domestic Travel Allownace(Working on it)',
-          //   // route: "/excel-info-file-upload",
-          // },
-          // {
-          //   // menuValue: 'International Travel Allowance',
-          //   // // route: "/tasks",
-          // },
           {
             menuValue: 'Travel Reports',
             route: "/travel_expense_table",
             visibility : ['user', 'admin']
           },
+          // {
+          //   menuValue: 'HOD travel approval',
+          //   route: "/hod_travel_expense_approval",
+          //   visibility : ['admin']
+          // },
+        ],
+      },
+      {
+        menuValue: 'Admin',
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-user-cog",
+        subMenus: [
           {
-            menuValue: 'HOD travel approval',
+            menuValue: 'Leaves Approval',
+            route: "/adminleaves",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'Employee Attendance',
+            route: "/adminattendance",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'Travel Approval',
             route: "/hod_travel_expense_approval",
             visibility : ['admin']
           },
