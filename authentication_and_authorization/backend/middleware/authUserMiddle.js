@@ -89,7 +89,6 @@ const checkUserNeeraj = (req,res,next)=> {
             return res.json({ "status": false,"type":"Token Invalid", "message": "Unauthorized Access" });
           }
     }
-
     next()
 }
 
