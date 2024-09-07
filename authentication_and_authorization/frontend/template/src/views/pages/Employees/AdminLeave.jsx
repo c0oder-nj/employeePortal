@@ -28,6 +28,9 @@ import { AdminLeaveAddModelPopup } from "../../../components/modelpopup/AdminLea
 import SearchBox from "../../../components/SearchBox";
 import LeaveFilter from "../../../components/LeaveFilter";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import { useAccordionButton } from "react-bootstrap";
+import useAuth from "../../../hooks/useAuth";
+
 const AdminLeave = () => {
   const [setPendingLeaves, setPendingLeavesFunction] = useState([]);
   const [displayVariable, displayVariableSet] = useState("none");
@@ -35,30 +38,19 @@ const AdminLeave = () => {
   const [casualLeave, setCasualLeave] = useState("");
   const [allEmp, allEmpFunction] = useState([]);
   const [isFetchedData, isFetchedDataFunction] = useState(false);
+  const {checkCookie} = useAuth();
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
 
-  //Cookie checking
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
     const fetchData = async () => {
       //Fetching data for attendance
-      const value = `${document.cookie}`;
-      console.log(value);
+      const value = cookieExists.cookie
 
       // const url = `http://localhost:3000/api/auth/home?value=${value}`;
       // Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
@@ -127,7 +119,8 @@ const AdminLeave = () => {
 
   async function fetchDataFromApproveReject(option, type) {
     //Fetching data for attendance
-    const value = `${document.cookie}`;
+    const cookieExists = checkCookie('accessToken');
+    const value = cookieExists.value;
     console.log(value);
 
     const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApproveReject?value=${value}&option=${option}&type=${type}`;

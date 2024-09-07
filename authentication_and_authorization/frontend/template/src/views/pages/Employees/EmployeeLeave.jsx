@@ -9,6 +9,7 @@ import SearchBox from "../../../components/SearchBox";
 import { useNavigate } from "react-router-dom";
 import { base_url } from "../../../base_urls";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
 
 const EmployeeLeave = () => {
   const [users, setUsers] = useState([]);
@@ -20,31 +21,25 @@ const EmployeeLeave = () => {
   const [isFetchedData,isFetchedDataFunction] = useState(false);
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
+
+  const { checkCookie } = useAuth();
   
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for(let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if(cookie.startsWith(cookieName + '=')) {
-        return true;
-      }
-    }
-    return false;
-  }
+
 
 
   useEffect(() => {
     
-    let cookieExists = checkCookie('accessToken');
-    if(!cookieExists){
-      navigate("react/template/");
+    var cookieExists = checkCookie('accessToken');
+    if(!cookieExists.status){
+      navigate("/");
     }
 
     const fetchData = async ()=>{
 
         //Fetching data for attendance
-        const value = `${document.cookie}`;
-        console.log(value)
+    
+        let cookieExist = checkCookie('accessToken')
+        const value = cookieExist.cookie;
         
         // const url = `http://localhost:3000/api/auth/home?value=${value}`;
         //Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
@@ -52,7 +47,7 @@ const EmployeeLeave = () => {
         console.log(url);
         
         dataFetchedThroughApi = await fetch
-        (url, {headers: {'Access-Control-Allow-Origin' : '*'}}).then((response)=>{
+        (url, {headers: {'Access-Control-Allow-Origin' : '*', 'accesstoken' : value}}).then((response)=>{
           return response.json();
         }).then((data) => {
           
