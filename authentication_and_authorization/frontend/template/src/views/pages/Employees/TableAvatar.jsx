@@ -117,7 +117,11 @@ const TableAvatar = () => {
                 <h2 className="table-avatar">{ele.ENAME}</h2>
               </td>
               {[...Array(31).keys()].map((_, index) => {
-                const dateStr = new Date(2024, 7, index + 1)
+                
+                const currentDate = new Date();
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const dateStr = new Date(year, month, index + 1)
                   .toISOString()
                   .split("T")[0];
                   console.log(dateStr);

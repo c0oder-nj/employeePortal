@@ -165,19 +165,19 @@ export const SidebarData = [
       //   route: "/clients",
       //   icon: "la la-users",
       // },
-      {
-        menuValue: 'KRA',
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: "la la-file-image",
-        subMenus: [
-          {
-            menuValue: 'Report',
-            route: "/kra_report",
-            visibility : ['user', 'admin']
-          }
-        ],
-      },
+      // {
+      //   menuValue: 'KRA',
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: "la la-file-image",
+      //   subMenus: [
+      //     {
+      //       menuValue: 'Report',
+      //       route: "/kra_report",
+      //       visibility : ['user', 'admin']
+      //     }
+      //   ],
+      // },
       {
         menuValue: 'Travel Allownace',
         hasSubRoute: true,

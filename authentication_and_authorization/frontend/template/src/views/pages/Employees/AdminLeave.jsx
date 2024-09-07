@@ -119,7 +119,8 @@ const AdminLeave = () => {
 
   async function fetchDataFromApproveReject(option, type) {
     //Fetching data for attendance
-    const value = `${document.cookie}`;
+    const cookieExists = checkCookie('accessToken');
+    const value = cookieExists.value;
     console.log(value);
 
     const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApproveReject?value=${value}&option=${option}&type=${type}`;

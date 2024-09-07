@@ -7,6 +7,7 @@ import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import DatePicker from "react-datepicker";
 import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../../hooks/useAuth";
 // import Breadcrumbs from "../../../../components/Breadcrumbs";
 // import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
 // import DeleteModal from "../../../../components/modelpopup/deletePopup";
@@ -25,12 +26,18 @@ const TravelExpenseDataTable = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const { checkCookie } = useAuth();
   // const [filteredData, setFilteredData] = useState(initialData);
   // New Search implementation state End
   const [formData, setFormData] = useState({
     purposeText: "",
     outComingText: "",
   });
+
+
+
+  const isCookieExist = checkCookie('accessToken');
+  let value = isCookieExist.cookie;
   const setColums = [
     // {
     //     title: "Sap Number",
@@ -155,8 +162,8 @@ const TravelExpenseDataTable = (props) => {
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
+      const isCookie = checkCookie('accessToken');
+      console.log(isCookie.cookie);
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
@@ -193,8 +200,7 @@ const TravelExpenseDataTable = (props) => {
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
+      
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
@@ -249,8 +255,8 @@ const TravelExpenseDataTable = (props) => {
       const [sapNumber, tripNumber] = [props.pernr, props.reinr];
       console.log("Sap and trip number", sapNumber, tripNumber);
       const fetchData = async () => {
-        const value = `${document.cookie}`;
-        console.log(value);
+        // const value = `${document.cookie}`;
+        // console.log(value);
 
         console.log("Printing values in useEffect", sapNumber, tripNumber);
         const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
@@ -468,8 +474,8 @@ const TravelExpenseDataTable = (props) => {
   const [setApi, setApiData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
+      // const value = `${document.cookie}`;
+      console.log("Printing value at 478 for travelexpense data in local :: ",value);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap?value=${value}`;
       console.log(url);
       await fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
@@ -486,7 +492,7 @@ const TravelExpenseDataTable = (props) => {
               return;
             }
           }
-          console.log(data.travel_data);
+          console.log("Printing travel data in data.travel_data :: ",data.travel_data);
           setDataFetched(data.travel_data.data);
           setApiData(data.travel_data.data);
           return data;
