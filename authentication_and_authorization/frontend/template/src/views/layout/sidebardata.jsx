@@ -234,6 +234,11 @@ export const SidebarData = [
             route: "/hod_travel_expense_approval",
             visibility: ["admin"],
           },
+          {
+            menuValue: 'GatePass Approval',
+            route: "/gatepass-approval",
+            visibility : ['admin']
+          },
         ],
       },
       // {
