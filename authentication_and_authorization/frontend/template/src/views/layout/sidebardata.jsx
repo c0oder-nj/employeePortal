@@ -2,14 +2,13 @@ import useAuth from "../../hooks/useAuth";
 // const {auth} = useAuth();
 
 export const SidebarData = [
-
-{
-    tittle: 'MAIN',
+  {
+    tittle: "MAIN",
     showAsTab: false,
     separateRoute: false,
     menu: [
       {
-        menuValue: 'Dashboard',
+        menuValue: "Dashboard",
         hasSubRoute: true,
         showSubRoute: false,
         route: "#",
@@ -21,9 +20,9 @@ export const SidebarData = [
           //   visibility : ['admin']
           // },
           {
-            menuValue: 'Employee Dashboard',
+            menuValue: "Employee Dashboard",
             route: "/employee-dashboard",
-            visibility : ['user', 'admin']
+            visibility: ["user", "admin"],
           },
           // {
           //   menuValue: 'Deals Dashboard',
@@ -91,12 +90,12 @@ export const SidebarData = [
     ],
   },
   {
-    tittle: 'EMPLOYEES',
+    tittle: "EMPLOYEES",
     showAsTab: false,
     separateRoute: false,
     menu: [
       {
-        menuValue: 'General',
+        menuValue: "General",
         hasSubRoute: true,
         showSubRoute: false,
         route: "#",
@@ -107,9 +106,9 @@ export const SidebarData = [
           //   route: "/employees",
           // },
           {
-            menuValue: 'Holidays',
+            menuValue: "Holidays",
             route: "/holidays",
-            visibility : ['user', 'admin']
+            visibility: ["user", "admin"],
           },
           // {
           //   menuValue: 'Leaves(Admin)',
@@ -117,9 +116,9 @@ export const SidebarData = [
           //   visibility : ['admin']
           // },
           {
-            menuValue: 'Leaves(Employee)',
+            menuValue: "Leaves(Employee)",
             route: "/leaves-employee",
-            visibility : ['user', 'admin']
+            visibility: ["user", "admin"],
           },
           // {
           //   menuValue: 'Leave Settings',
@@ -131,9 +130,9 @@ export const SidebarData = [
           //   visibility : ['admin']
           // },
           {
-            menuValue: 'Attendance (Employee)',
+            menuValue: "Attendance (Employee)",
             route: "/attendance-employee",
-            visibility : ['user', 'admin']
+            visibility: ["user", "admin"],
           },
           // {
           //   menuValue: 'Departments',
@@ -179,15 +178,15 @@ export const SidebarData = [
       //   ],
       // },
       {
-        menuValue: 'Travel Allownace',
+        menuValue: "Travel Allownace",
         hasSubRoute: true,
         showSubRoute: false,
         icon: "la la-rocket",
         subMenus: [
           {
-            menuValue: 'Travel Reports',
+            menuValue: "Travel Reports",
             route: "/travel_expense_table",
-            visibility : ['user', 'admin']
+            visibility: ["user", "admin"],
           },
           // {
           //   menuValue: 'HOD travel approval',
@@ -197,25 +196,43 @@ export const SidebarData = [
         ],
       },
       {
-        menuValue: 'Admin',
+        menuValue: "Gate Pass",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-door-open",
+        subMenus: [
+          {
+            menuValue: "Gate Pass Creation",
+            route: "/gate_pass_creation",
+            visibility: ["user", "admin"],
+          },
+          // {
+          //   menuValue: 'HOD travel approval',
+          //   route: "/hod_travel_expense_approval",
+          //   visibility : ['admin']
+          // },
+        ],
+      },
+      {
+        menuValue: "Admin",
         hasSubRoute: true,
         showSubRoute: false,
         icon: "la la-user-cog",
         subMenus: [
           {
-            menuValue: 'Leaves Approval',
+            menuValue: "Leaves Approval",
             route: "/adminleaves",
-            visibility : ['admin']
+            visibility: ["admin"],
           },
           {
-            menuValue: 'Employee Attendance',
+            menuValue: "Employee Attendance",
             route: "/adminattendance",
-            visibility : ['admin']
+            visibility: ["admin"],
           },
           {
-            menuValue: 'Travel Approval',
+            menuValue: "Travel Approval",
             route: "/hod_travel_expense_approval",
-            visibility : ['admin']
+            visibility: ["admin"],
           },
         ],
       },
@@ -226,7 +243,7 @@ export const SidebarData = [
       //   route: "/clients",
       //   icon: "la la-users",
       // },
-    
+
       // commenting projects menu below
       // {
       //   menuValue: 'Projects',
@@ -264,13 +281,13 @@ export const SidebarData = [
       //       menuValue: 'Ticket Details',
       //       route: "/ticket-details",
       //     },
-        
+
       //   ],
       // },
     ],
   },
-
-
+  
+  
 
   // commentign all below menu fields
   // {
@@ -334,8 +351,7 @@ export const SidebarData = [
   //   showAsTab: false,
   //   separateRoute: false,
   //   menu: [
-    
-    
+
   //     {
   //       menuValue: 'Sales',
   //       hasSubRoute: true,
@@ -390,7 +406,7 @@ export const SidebarData = [
   //           menuValue: 'Budget Expenses',
   //           route: "/budget-expenses",
   //         },
-         
+
   //       ],
   //     },
 
@@ -412,8 +428,7 @@ export const SidebarData = [
   //           menuValue: 'Payroll Items',
   //           route: "/payroll-items",
   //         },
-         
-         
+
   //       ],
   //     },
   //     {
@@ -561,7 +576,6 @@ export const SidebarData = [
   //           icon: "la la-times-circle",
   //         },
 
-          
   //   ],
   // },
 
@@ -650,7 +664,7 @@ export const SidebarData = [
   //           route: "/company-settings",
   //           icon: "la la-cog",
   //         },
-      
+
   //   ],
   // },
   // {
@@ -774,13 +788,10 @@ export const SidebarData = [
   //             }
   //           ]
   //         }
-          
+
   //   ],
   // },
- 
- 
-  
- 
+
   // {
   //   tittle: 'UI INTERFACE',
   //   showAsTab: false,
@@ -903,7 +914,7 @@ export const SidebarData = [
   //             { menuValue: "Data Table", route: "/data-tables" }
   //           ]
   //         }
-          
+
   //   ],
   // },
   // {
@@ -914,7 +925,7 @@ export const SidebarData = [
   //     {
   //       menuValue: 'Documentation',
   //       hasSubRoute: false,
-  //       showSubRoute: false,       
+  //       showSubRoute: false,
   //       route: "#",
   //       icon: "la la-file-text",
   //     },
@@ -934,11 +945,10 @@ export const SidebarData = [
   //       icon: "la la-share-alt",
   //       subMenus: [
   //         { menuValue: "Level 1", route: "#" },
-         
+
   //       ]
   //     },
-     
-    
+
   //   ],
   // },
 ];

@@ -199,6 +199,7 @@ import RecentFiles from "../../views/pages/MainPages/Apps/FileManager/recentFile
 import EmailContent from "../../views/pages/MainPages/Apps/Email/emailContent.jsx";
 import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
+import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -931,7 +932,12 @@ const AppContainer = () => {
       id: 135,
       path: "hod_travel_expense_approval",
       element: <HodTravelExpenseShow/>,
+    },{
+      id: 136,
+      path: "gate_pass_creation",
+      element: <GatePass/>,
     },
+    
   ];
 
   const ChatRoutingeObjects = [

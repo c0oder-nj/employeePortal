@@ -151,7 +151,7 @@ import KnowledgeBaseView from "../../views/pages/Administration/Knowledgebase/Kn
 import EmployeeList from "../../views/pages/Employees/EmployeeList";
 import Expenses from "../../views/pages/HR/Sales/Expenses";
 import Activities from "../../views/pages/Administration/Activities";
-import ProvidentFund from "../../views/pages/HR/Sales/ProvidentFund";
+
 import Taxes from "../../views/pages/HR/Sales/Taxes";
 import Categories from "../../views/pages/HR/Accounting/Categories";
 import SubCategory from "../../views/pages/HR/Accounting/Categories/subCategory";
@@ -254,7 +254,7 @@ import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import AllEmployee from "../../views/pages/Employees/AllEmpoyee";
 import { AuthProvider } from "../../cookieTimeOut/jwtTokenTime.jsx";
-
+import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
 
 
 // auth provider using context api 
@@ -322,6 +322,7 @@ const AppRouter = () => {
                   <Route path="/leaves-employee" element={<EmployeeLeave />} />
                   <Route path="/attendance-employee" element={<AttendanceEmployee />} />
                   <Route path="/travel_expense_table" element={<TravelExpenseTable />} />
+                  <Route path="/gate_pass_creation" element={<GatePass />} />
 
                 </Route>
                 
