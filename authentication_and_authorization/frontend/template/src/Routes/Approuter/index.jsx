@@ -256,6 +256,9 @@ import AllEmployee from "../../views/pages/Employees/AllEmpoyee";
 import { AuthProvider } from "../../cookieTimeOut/jwtTokenTime.jsx";
 
 
+// custom created components from Neeraj Chittodiya
+import Gatepass from "../../views/pages/Administration/Adminpages/Gatepass.jsx";
+
 
 // auth provider using context api 
 // import { AuthProvider } from "../../Context/AuthProvider.jsx";
@@ -329,7 +332,9 @@ const AppRouter = () => {
                     {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
                     <Route path="/adminattendance" element={<AttendenceAdmin />} />
                     <Route path="/adminleaves" element={<AdminLeave />} />
+                    {/* <Route path="/gate-pass-approval" element={<AdminLeave />} /> */}
                     <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
+                    <Route path="/gatepass-approval" element={<Gatepass />} />
                 </Route>
 
 
