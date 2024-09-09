@@ -122,9 +122,9 @@ const EmployeeLeaveModelPopup = (props) => {
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Headers":
-        "Content-Type, Authorization, Access-Control-Allow-Headers",
+          "Content-Type, Authorization, Access-Control-Allow-Headers",
         "Access-Control-Allow-Methods": "POST",
-        'Access-Control-Allow-Origin' : '*'
+        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify(formData),
     }).then((response) => {
@@ -192,7 +192,7 @@ const EmployeeLeaveModelPopup = (props) => {
     for (let i = 0; i < cookies.length; i++) {
       let cookie = cookies[i].trim();
       if (cookie.startsWith(cookieName + "=")) {
-        console.log("You are in cookiee testing area",cookie);
+        console.log("You are in cookiee testing area", cookie);
         return true;
       }
     }
@@ -212,10 +212,10 @@ const EmployeeLeaveModelPopup = (props) => {
       console.log(url);
 
       sapNumber = await fetch(url, {
-        method: 'get',
-        headers : {
-          'Access-Control-Allow-Origin' : '*'
-        }
+        method: "get",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
       })
         .then((response) => {
           return response.json();

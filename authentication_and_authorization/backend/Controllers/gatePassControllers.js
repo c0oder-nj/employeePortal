@@ -1,5 +1,8 @@
 const axios = require('axios')
 
+const createGatePass = (req,res)=>{
+    const sapId = req.sapId;
+}
 
 const gatePassListing = (req,res) => {
     const sapId = req.sapid;
@@ -43,9 +46,6 @@ const approveReject = (req,res) => {
   // console.log("GatePass Number :: ", gpNo);
   // console.log("employee Pernr :: ", sapId);
 
-  
-
-
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
@@ -76,4 +76,4 @@ const approveReject = (req,res) => {
   
 }
 
-module.exports = { gatePassListing ,approveReject }
+module.exports = { gatePassListing ,approveReject,createGatePass }
