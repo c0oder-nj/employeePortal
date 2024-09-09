@@ -5,18 +5,24 @@ import { useNavigate } from "react-router-dom";
 import { TimePicker } from "antd";
 import { format } from "date-fns";
 import useAuth from "../../../../hooks/useAuth";
+import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import dayjs from 'dayjs'
 
-const CreateGatePass = () => {
+const CreateGatePass = (props) => {
   const [setSelectedOption] = useState(null);
   const [setselectTwo] = useState(null);
+  const [isReturnable, setIsReturnable] = useState(false);
   const { checkCookie } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     gatePassType: "",
     requestType: "",
-    LeaveFrom: "",
     date: "",
     time: "",
+    expComeBackDate: "",
+    expComeBackTime: "",
     purpose: "",
     handoverPerson: "",
     place: "",
@@ -47,7 +53,7 @@ const CreateGatePass = () => {
     let cookieExists = checkCookie("accessToken");
     console.log(cookieExists);
     if (!cookieExists.status) {
-      
+
       navigate("/");
     }
   });
@@ -56,26 +62,61 @@ const CreateGatePass = () => {
     event.preventDefault();
     //Fetching data for attendance
     const cookieExists = checkCookie("accessToken");
-    console.log(cookieExists.cookie);
-    
+    let cookieValue = cookieExists.cookie;
+    cookieValue = cookieValue.split('=').at(1);
+
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${process.env.REACT_APP_BASE_URL}/api/employee/gate-pass-creation`,
+      headers: {
+        'accesstoken': cookieValue,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(formData)
+    };
+
+    axios.request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        if(response.status == 200){
+          withReactContent(Swal).fire({
+            title: response.data.text,
+            confirmButtonText: "Ok",
+            cancelButtonText: "No",
+            showCancelButton: false,
+            preConfirm: () => {
+              // trigger parent component re-rendering
+              props.stateChange();
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // clear the form 
+    setFormData({
+      gatePassType: "",
+      requestType: "",
+      date: "",
+      time: "",
+      expComeBackDate: "",
+      expComeBackTime: "",
+      purpose: "",
+      handoverPerson: "",
+      place: "",
+    });
+
+
   }
 
   useEffect(() => {
-    console.log(formData.time);
-    console.log(formData.date);
-    console.log(formData.purpose);
-    console.log(formData.requestType);
-    console.log(formData.place);
-    console.log(formData.gatePassType);
-    console.log(formData.handoverPerson);
+    console.log(JSON.stringify(formData))
   }, [
-    formData.time,
-    formData.date,
-    formData.purpose,
-    formData.requestType,
-    formData.handoverPerson,
-    formData.place,
-    formData.gatePassType,
+    formData
   ]);
   return (
     <>
@@ -110,13 +151,15 @@ const CreateGatePass = () => {
                       <Select
                         placeholder=""
                         // onChange={setSelectedOption}
+                        value={gatePassTypeoptions.find(option => option.label === formData.gatePassType) || gatePassTypeoptions[0]}
                         options={gatePassTypeoptions}
                         styles={customStyles}
                         className="select"
                         required
                         onChange={(event) => {
-                          console.log(event.label);
-                          setFormData(() => ({
+                          event.label === 'Returnable' ? setIsReturnable(true) : setIsReturnable(false);
+                          setFormData(() =>
+                          ({
                             ...formData,
                             gatePassType: event.label,
                           }));
@@ -131,6 +174,7 @@ const CreateGatePass = () => {
                       <Select
                         placeholder=""
                         // onChange={setselectTwo}
+                        value={requestTypeoptions.find(option => option.label === formData.requestType) || requestTypeoptions[0]}
                         options={requestTypeoptions}
                         className="select"
                         styles={customStyles}
@@ -155,6 +199,7 @@ const CreateGatePass = () => {
                               <div className="cal-icon focused ">
                                 <DatePicker
                                   className="form-control floating datetimepicker"
+                                  value={formData.date ? dayjs(formData.date, "DD/MM/YYYY") : null}
                                   dateFormat="dd-MM-yyyy"
                                   onChange={(event) => {
                                     console.log(event);
@@ -170,7 +215,7 @@ const CreateGatePass = () => {
                                       ...formData,
                                       date: `${padWithZeroDate(
                                         event.$D
-                                      )}:${padWithMonth(event.$M)}:${event.$y}`,
+                                      )}/${padWithMonth(event.$M)}/${event.$y}`,
                                     }));
                                   }}
                                 />
@@ -192,6 +237,7 @@ const CreateGatePass = () => {
                                 <TimePicker
                                   placeholder="Select"
                                   styles={customStyles}
+                                  value={formData.time ? dayjs(formData.time, "HH:mm:ss") : null}
                                   onChange={(event) => {
                                     console.log(event);
                                     const padWithZero = (num) =>
@@ -213,6 +259,68 @@ const CreateGatePass = () => {
                       </div>
                     </div>
                   </div>
+                  {isReturnable &&
+                    <div className="col-sm-12">
+                      <div className="show-fixed-amount">
+                        <div className="row">
+                          <div className="col-sm-12">
+                            <div className="input-block mb-3">
+                              <label className="focus-label">Expected Comeback Date</label>
+                              <div className="input-block  form-focus focused">
+                                <div className="cal-icon focused ">
+                                  <DatePicker
+                                    className="form-control floating datetimepicker"
+                                    value={formData.expComeBackDate ? dayjs(formData.expComeBackDate, "DD/MM/YYYY") : null}
+                                    dateFormat="dd-MM-yyyy"
+                                    onChange={(event) => {
+                                      console.log(event);
+                                      const padWithZeroDate = (num) =>
+                                        num < 10 ? `0${num}` : `${num}`;
+                                      const padWithMonth = (num) =>
+                                        num < 9 ? `0${num + 1}` : `${num + 1}`;
+                                      setFormData(() => ({
+                                        ...formData,
+                                        expComeBackDate: `${padWithZeroDate(
+                                          event.$D
+                                        )}/${padWithMonth(event.$M)}/${event.$y}`,
+                                      }));
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-sm-12">
+                            <div className="input-block mb-12">
+                              <label className="focus-label">Expected Time</label>
+                              <div className="form-focus focused">
+                                <div className="">
+                                  <TimePicker
+                                    placeholder="Select"
+                                    value={formData.expComeBackTime ? dayjs(formData.expComeBackTime, "HH:mm:ss") : null}
+                                    styles={customStyles}
+                                    onChange={(event) => {
+                                      console.log(event);
+                                      const padWithZero = (num) =>
+                                        num < 10 ? `0${num}` : `${num}`;
+                                      setFormData(() => ({
+                                        ...formData,
+                                        expComeBackTime: `${padWithZero(
+                                          event.$H
+                                        )}:${padWithZero(event.$m)}:${padWithZero(
+                                          event.$s
+                                        )}`,
+                                      }));
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
                   <div className="col-sm-12">
                     <div className="show-fixed-amount">
                       <div className="row">
@@ -222,6 +330,7 @@ const CreateGatePass = () => {
                             <input
                               className="form-control"
                               type="text"
+                              value={formData.purpose}
                               required
                               onChange={(event) => {
                                 console.log(event.target.value);
@@ -247,6 +356,7 @@ const CreateGatePass = () => {
                             <input
                               className="form-control"
                               type="text"
+                              value={formData.handoverPerson}
                               required
                               onChange={(event) => {
                                 console.log(event.target.value);
@@ -272,6 +382,7 @@ const CreateGatePass = () => {
                             <input
                               className="form-control"
                               type="text"
+                              value={formData.place}
                               required
                               onChange={(event) => {
                                 console.log(event.target.value);
@@ -293,10 +404,10 @@ const CreateGatePass = () => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     type="submit"
-                    // onSubmit={(event)=>{
-                    //   event.preventDefault();
-                    //   submitFormDataForGatePassCreation();
-                    // }}
+                  // onSubmit={(event)=>{
+                  //   event.preventDefault();
+                  //   submitFormDataForGatePassCreation();
+                  // }}
                   >
                     Submit
                   </button>
