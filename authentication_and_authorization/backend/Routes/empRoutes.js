@@ -1,6 +1,8 @@
 const express = require('express');
 const empControllers = require('../Controllers/empControllers'); // router file for routes
+const gatepassController = require('../Controllers/gatePassControllers');
 const authUserThoughMiddleware = require('../middleware/authUserMiddle') // middleware for validations
+
 const router = express.Router();
 
 
@@ -12,6 +14,8 @@ router.get('/employeeSapNumber',authUserThoughMiddleware.checkUser,empController
 router.get('/employeeAttendance',authUserThoughMiddleware.checkUser,empControllers.employeeattendance)
 router.get('/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empControllers.employeeattendanceApply)
 router.get('/empUpperHeirarchy',empControllers.empUpHeirarchy)
+router.post('/gate-pass-creation',authUserThoughMiddleware.checkUserNeeraj,gatepassController.createGatePass)
+router.get('/gatepass-listing', authUserThoughMiddleware.checkUserNeeraj,gatepassController.gatePassListingEmp )
 
 
 module.exports = router;

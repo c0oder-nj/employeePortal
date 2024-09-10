@@ -11,12 +11,14 @@ import "toastify-js/src/toastify.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 
 const EmployeeLeaveModelPopup = (props) => {
   const [selectedDate1, setSelectedDate1] = useState(null);
   const [selectedDate2, setSelectedDate2] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [EndDate, setEndDate] = useState(null);
+  const {checkCookie} = useAuth();
   const form = useForm();
   const { leaveName } = form;
   const [formData, setFormData] = useState({
@@ -114,7 +116,9 @@ const EmployeeLeaveModelPopup = (props) => {
     e.preventDefault();
     console.log("In send Data");
     console.log(JSON.stringify(formData));
-    const value = `${document.cookie}`;
+    let isCookieExist = checkCookie('accessToken')
+    let value = isCookieExist.cookie;
+    value = value.split('=').at(1);
     console.log(value);
     const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApply?value=${value}`;
     const response = await fetch(url, {
@@ -187,26 +191,27 @@ const EmployeeLeaveModelPopup = (props) => {
   };
 
   //Checking for wheter cooie is existing or not
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        console.log("You are in cookiee testing area", cookie);
-        return true;
-      }
-    }
-    return false;
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(";");
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + "=")) {
+  //       console.log("You are in cookiee testing area", cookie);
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
+    if (!cookieExists.status) {
       navigate("react/template/");
     }
 
     const fetchSapNumber = async () => {
       // const url = `http://localhost:3000/api/auth/home?value=${value}`;
-      const value = `${document.cookie}`;
+      let value = cookieExists.cookie;
+      value = value.split('=').at(1);
       console.log(value);
       const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeSapNumber?value=${value}`;
       console.log(url);
