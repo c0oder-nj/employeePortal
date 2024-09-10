@@ -39,7 +39,8 @@ const EmployeeLeave = () => {
         //Fetching data for attendance
     
         let cookieExist = checkCookie('accessToken')
-        const value = cookieExist.cookie;
+        let value = cookieExist.cookie;
+        value = value.split('=').at(1);
         
         // const url = `http://localhost:3000/api/auth/home?value=${value}`;
         //Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai

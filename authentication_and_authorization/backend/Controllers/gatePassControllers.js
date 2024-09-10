@@ -19,7 +19,7 @@ const createGatePass = (req,res)=>{
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/gp_create.htm?app_pernr=${sapId}&gp_date=${formData.date}&gp_time=${formData.time}&req_type=${formData.requestType}&gp_type=${formData.gatePassType}&gp_exp_date=${formData.expComeBackDate}&gp_exp_time=${formData.expComeBackTime}&gp_vp=${formData.place}&gp_purpose=${formData.purpose}&gp_charge=${formData.handoverPerson}`,
+      url: `${process.env.BASE_URL}/gp_create.htm?app_pernr=${sapId}&gp_date=${formData.date}&gp_time=${formData.time}&req_type=${formData.requestType}&gp_type=${formData.gatePassType}&gp_exp_date=${formData.expComeBackDate}&gp_exp_time=${formData.expComeBackTime}&gp_vp=${formData.place}&gp_purpose=${formData.purpose}&gp_charge=${formData.handoverPerson}`,
     };
     
     axios.request(config)
@@ -42,7 +42,7 @@ const gatePassListing = (req,res) => {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `${process.env.BASE_URL_QUALITY}/gatepass_approval_pending.htm?app_pernr=${sapId}`,
+        url: `${process.env.BASE_URL}/gatepass_approval_pending.htm?app_pernr=${sapId}`,
         
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
@@ -67,7 +67,7 @@ const gatePassListingEmp = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/gatepass_listing_emp.htm?sapid=${sapId}`,
+      url: `${process.env.BASE_URL}/gatepass_listing_emp.htm?sapid=${sapId}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -108,7 +108,7 @@ const approveReject = (req,res) => {
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `${process.env.BASE_URL_QUALITY}/gatepass_approva_rejectl.htm?pernr=${sapId}&gp_no=${gpNo}&app_pernr=${approverSapId}&status=${statusText}`,
+    url: `${process.env.BASE_URL}/gatepass_approva_rejectl.htm?pernr=${sapId}&gp_no=${gpNo}&app_pernr=${approverSapId}&status=${statusText}`,
     
     headers: { 
       'Cookie': 'sap-usercontext=sap-client=900'
