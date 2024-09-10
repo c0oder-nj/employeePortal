@@ -28,7 +28,6 @@ const gatePassListing = (req,res) => {
 
 }
 
-
 const approveReject = (req,res) => {
 
   // return res.send("Api hit ");
