@@ -508,14 +508,6 @@ const TravelExpenseReportTable = () => {
     }
 
     if (dateFrom) {
-      // const formattedDate = formatDateForComparison(dateFrom);
-      // console.log("Formatted Date for Comparison:", formattedDate);
-      // results = results.filter((f) => {
-      //   const startDate = convertJsonDateForComparison(f.datb1);
-      //   console.log(startDate);
-      //   console.log(formattedDate);
-      //   return startDate >= formattedDate;
-      // });
       const formatDate = (date) => {
         const d = new Date(date);
         const year = d.getFullYear();

@@ -2,49 +2,54 @@ import React, { useEffect, useState } from "react";
 import Header from "../../../layout/Header";
 import Sidebar from "../../../layout/Sidebar";
 import Breadcrumbs from "../../../../components/Breadcrumbs";
-import { Link , useNavigate } from "react-router-dom";
-import { Avatar_02 } from "../../../../Routes/ImagePath";
 import { Table } from "antd";
-import DeleteModal from "../../../../components/modelpopup/DeleteModal";
+import { DatePicker } from "antd";
 import useAuth from "../../../../hooks/useAuth";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import CreateOdOT from "./CreateOdOt";
+
 const OdOt = () => {
-const {checkCookie} = useAuth();
-const navigate = useNavigate();
-const [gatePassData, setGatePassData] = useState([]);
-const [isCreated, setIsCreated] = useState(false);
+  const { checkCookie } = useAuth();
+  const navigate = useNavigate();
+  const [oDoTData, setOdOtData] = useState([]);
+  const [isCreated, setIsCreated] = useState(false);
+  const [start, setStart] = useState();
+  const [end, setEnd] = useState();
+  const [table, setTable] = useState([]);
+  const [showTable, setShowTable] = useState([]);
 
-const changeParentState = () => {
-  console.log("Inside parent componet called from child component")
-  setIsCreated(prev => !prev);
-}
+  const changeParentState = () => {
+    console.log("Inside parent component called from child component");
+    setIsCreated((prev) => !prev);
+  };
 
+  // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
-      const tokenResult = checkCookie('accessToken');
+      const tokenResult = checkCookie("accessToken");
       if (!tokenResult.status) {
-        navigate('');
+        navigate("/");
         return false;
       }
 
-      let cookie = tokenResult.cookie;
-      cookie = cookie.split('=').at(1);
-
-      console.log("Printing cookie at gatepass component :: ", cookie);
+      let cookie = tokenResult.cookie.split("=").at(1);
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/gatepass-listing`, {
-          method: 'GET',
-          headers: {
-            'accesstoken': cookie,
-            'Access-Control-Allow-Origin' : '*'
+        const response = await fetch(
+          `${process.env.REACT_APP_BASE_URL}/api/employee/odot-show-employee`,
+          {
+            method: "GET",
+            headers: {
+              accesstoken: cookie,
+              "Access-Control-Allow-Origin": "*",
+            },
           }
-        });
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
         return data;
       } catch (error) {
@@ -53,157 +58,190 @@ const changeParentState = () => {
       }
     };
 
-    fetchData().then((data)=>{
-      console.log("Printing data after fetch :: ", data);
-      setGatePassData(data.data)
-    })
-    
-    
+    fetchData().then((data) => {
+      console.log("Fetched data: ", data);
+      setOdOtData(data);
+    });
   }, []);
 
+  // Build the table data based on the fetched oDoTData
+  useEffect(() => {
+    let tempTable = [];
+    oDoTData?.forEach((val, index) => {
+      let temp = {};
+      temp.id = index;
+      temp.odno = val.odno.split("/")[0];
+      temp.odno1 = val.odno.split("/")[1];
+      temp.atn_status = val.atn_status;
+      temp.odaprdt_c = val.odaprdt_c;
+      temp.odstdate_c = val.odstdate_c;
+      temp.odedate_c = val.odedate_c;
+      temp.vplace = val.vplace;
+      temp.purpose1 = val.purpose1;
+      tempTable.push(temp);
+    });
+    setTable(tempTable);
+  }, [oDoTData]);
 
-  const data = [
-    {
-      id: 1,
-      image: Avatar_02,
-      name: "John Doe",
-      role: "Web Designer",
-      fundtype: "Percentage of Basic Salary",
-      employeeshare: "2%",
-      organizationshare: "2%",
-      status: "Pending",
-    },
-  ];
+  // Helper function to convert date strings (in DD.MM.YYYY) to Date objects
+  const parseDate = (dateString) => {
+    const parts = dateString.split('.');
+    return new Date(parts[2], parts[1] - 1, parts[0]); // Convert 'DD.MM.YYYY' to a Date object
+  };
+
+  const handleSearch = () => {
+    console.log("Start date", start);
+    console.log("End date", end);
+
+    let results = table;
+
+    if (start) {
+      const formattedStartDate = new Date(start);
+      console.log("Formatted Start Date:", formattedStartDate);
+
+      results = results.filter((f) => {
+        const recordDate = parseDate(f.odstdate_c);
+        return recordDate >= formattedStartDate;
+      });
+    }
+
+    if (end) {
+      const formattedEndDate = new Date(end);
+      console.log("Formatted End Date:", formattedEndDate);
+
+      results = results.filter((f) => {
+        const recordDate = parseDate(f.odedate_c);
+        return recordDate <= formattedEndDate;
+      });
+    }
+
+    console.log("Filtered results length:", results.length);
+    setShowTable(results);
+  };
+
+  // Re-run the search whenever the start date, end date, or table data changes
+  useEffect(() => {
+    handleSearch();
+  }, [start, end, table]);
 
   const columns = [
     {
-      title: "GatePass No",
-      dataIndex: "GPNO",
-      // sorter: (a, b) => a.GPNO.length - b.GPNO.length,
+      title: "Od Number",
+      dataIndex: "odno",
+    },
+    {
+      title: "Plant Number",
+      dataIndex: "odno1",
+    },
+    {
+      title: "Type",
+      dataIndex: "atn_status",
+      render: (text) => (
+        <div className="dropdown action-label btn btn-white btn-sm btn-rounded">
+          {text === "T" ? "Tour" : "OD"}
+        </div>
+      ),
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "odaprdt_c",
       render: (text) => (
         <div className="dropdown action-label btn btn-white btn-sm btn-rounded">
-            <i
-              className={
-                text.isApproved === "X"
+          <i
+            className={
+              text === "Approved"
                 ? "far fa-dot-circle text-success"
-                : ((text.isRejected === 'X') 
-                ? "far fa-dot-circle text-danger" 
-                : "far fa-dot-circle text-info")
-              }
-            />{" "}
-            {text.isApproved === 'X' ? 'Approved' : (text.isRejected === 'X' ? 'Rejected' : 'Pending')}
+                : text === "Not App"
+                ? "far fa-dot-circle text-danger"
+                : "far fa-dot-circle text-info"
+            }
+          />{" "}
+          {text === "Approved"
+            ? "Approved"
+            : text === "Not App"
+            ? "Rejected"
+            : "Pending"}
         </div>
       ),
-      // sorter: (a, b) => a.status.length - b.status.length,
     },
     {
-      title: "GatePass Type",
-      dataIndex: "GPTYP",
-      // sorter: (a, b) => a.GPTYP.length - b.GPTYP.length,
+      title: "Date from",
+      dataIndex: "odstdate_c",
     },
     {
-      title: "Request Type",
-      dataIndex: "REQTYP",
-      // sorter: (a, b) => a.employeeshare.length - b.employeeshare.length,
+      title: "Date to",
+      dataIndex: "odedate_c",
     },
     {
-      title: "Date",
-      dataIndex: "GPDA",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
-    },
-    {
-      title: "Time",
-      dataIndex: "GPTIME",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
-    },
-    {
-      title: "Expected Comeback Date",
-      dataIndex: "EINDA",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
-    },
-    {
-      title: "Time",
-      dataIndex: "EINTIME",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
-    },
-    {
-      title: "Visit Place",
-      dataIndex: "VPLACE",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
+      title: "Place",
+      dataIndex: "vplace",
     },
     {
       title: "Purpose",
-      dataIndex: "PURPOSE1",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
+      dataIndex: "purpose1",
     },
-    {
-      title: "Closed Date",
-      dataIndex: "CLOSED_DATE",
-      // sorter: (a, b) => a.organizationshare.length - b.organizationshare.length,
-    }
   ];
-
-
-  var table = [];
-
-  gatePassData?.forEach((val, index) => {
-    var temp = {};
-    (temp.id = index);
-      (temp.GPNO = val.GPNO);
-      (temp.GPTYP = val.GPTYP);
-      (temp.GPDA = val.GPDA);
-      (temp.GPTIME = val.GPTIME);
-      (temp.EINDA = val.EINDA);
-      (temp.EINTIME = val.EINTIME);
-      (temp.REQTYP = val.REQTYP);
-      (temp.GPTYP = val.GPTYP);
-      (temp.CLOSED_DATE = val.CLOSED_DATE);
-      (temp.VPLACE = val.VPLACE);
-      (temp.PURPOSE1 = val.PURPOSE1);
-      (temp.status = {'isApproved' : val.APPROVE , 'isRejected' : val.REJECTED , 'isDeleted' : val.DEL}); // isDeleted will use later if need | exist in sap but not in portal
-      table.push(temp);
-  });
-
-  
 
   return (
     <div className="main-wrapper">
       <Header />
       <Sidebar />
       <div className="page-wrapper">
-        {/* Page Content */}
         <div className="content container-fluid">
           <Breadcrumbs
             maintitle="Official Duty/Trip"
-            // title="Dashboard"
-            // subtitle="Provident Fund"
             modal="#create_od_ot"
             name="Create OD/OT"
           />
           <div className="row">
+            <div className="col-sm-6 col-md-3">
+              <div className="input-block form-focus focused">
+                <div className="cal-icon focused">
+                  <DatePicker
+                    className="form-control floating datetimepicker"
+                    selected={start}
+                    onChange={(e) => setStart(e)}
+                    dateFormat="dd-MM-yyyy"
+                  />
+                </div>
+                <label className="focus-label">From</label>
+              </div>
+            </div>
+            <div className="col-sm-6 col-md-3">
+              <div className="input-block form-focus focused">
+                <div className="cal-icon focused">
+                  <DatePicker
+                    className="form-control floating datetimepicker"
+                    selected={end}
+                    onChange={(e) => setEnd(e)}
+                    dateFormat="dd-MM-yyyy"
+                  />
+                </div>
+                <label className="focus-label">To</label>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
-                <Table
-                  className="table-striped mb-0"
-                  columns={columns}
-                  dataSource={table}
-                  // rowKey={(record) => record.id}
-                  pagination={{pageSize : '10'}}
-                />
+                {showTable.length > 0 ? (
+                  <Table
+                    className="table-striped mb-0"
+                    columns={columns}
+                    dataSource={showTable}
+                    pagination={{ pageSize: "10" }}
+                  />
+                ) : (
+                  <>Loading...</>
+                )}
               </div>
             </div>
           </div>
         </div>
-        {/* /Page Content */}
       </div>
 
-      <CreateOdOT stateChange={changeParentState}/>
-      {/* <EditPfModal /> */}
-      {/* <DeleteModal Name="Delete Provident Fund" /> */}
+      <CreateOdOT stateChange={changeParentState} />
     </div>
   );
 };
