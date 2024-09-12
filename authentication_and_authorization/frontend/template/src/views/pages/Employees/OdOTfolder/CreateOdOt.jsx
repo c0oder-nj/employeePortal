@@ -30,8 +30,8 @@ const CreateOdOT = (props) => {
   });
   const typeSelection = [
     { value: "", label: "Select" },
-    { value: "OD", label: "Official Duty" },
-    { value: "TOUR", label: "TOUR" },
+    { value: "On Duty", label: "Official Duty" },
+    { value: "On Tour", label: "TOUR" },
   ];
 
   const requestTypeoptions = [
@@ -43,32 +43,32 @@ const CreateOdOT = (props) => {
 
   const WorkPlace = [
     { value: "", label: "Select" },
-    { value: "01", label: "State Bank of India" },
-    { value: "02", label: "State Bank of Indore" },
-    { value: "03", label: "Other Bank" },
-    { value: "04", label: "Income Tax Office" },
-    { value: "05", label: "Central Excise Office" },
-    { value: "06", label: "Sales Tax Office" },
-    { value: "07", label: "High Court" },
-    { value: "08", label: "District Court" },
-    { value: "09", label: "Labour Court" },
-    { value: "10", label: "ICD" },
-    { value: "11", label: "Indore Godown" },
-    { value: "12", label: "Nagar Nigam" },
-    { value: "13", label: "Pollution Control Board" },
-    { value: "14", label: "MPAKVN Indore" },
-    { value: "15", label: "SPIL Industries" },
-    { value: "16", label: "SEZ Plant" },
-    { value: "17", label: "SEZ Office" },
-    { value: "18", label: "MPFC" },
-    { value: "19", label: "Exhibition" },
-    { value: "20", label: "Seminar" },
-    { value: "21", label: "Others" },
-    { value: "22", label: "Sales Office" },
-    { value: "23", label: "Business Tour" },
-    { value: "24", label: "Training" },
-    { value: "25", label: "Vendor visit" },
-    { value: "26", label: "Vendor Mtl. inspection & Dispatch" }
+    { value: "State Bank of India-01", label: "State Bank of India" },
+    { value: "State Bank of Indore-02", label: "State Bank of Indore" },
+    { value: "Other Bank-03", label: "Other Bank" },
+    { value: "Income Tax Office-04", label: "Income Tax Office" },
+    { value: "Central Excise Office-05", label: "Central Excise Office" },
+    { value: "Sales Tax Office-06", label: "Sales Tax Office" },
+    { value: "High Court-07", label: "High Court" },
+    { value: "District Court-08", label: "District Court" },
+    { value: "Labour Court-09", label: "Labour Court" },
+    { value: "ICD-10", label: "ICD" },
+    { value: "Indore Godown-11", label: "Indore Godown" },
+    { value: "Nagar Nigam-12", label: "Nagar Nigam" },
+    { value: "Pollution Control Board-13", label: "Pollution Control Board" },
+    { value: "MPAKVN Indore-14", label: "MPAKVN Indore" },
+    { value: "SPIL Industries-15", label: "SPIL Industries" },
+    { value: "SEZ Plant-16", label: "SEZ Plant" },
+    { value: "SEZ Office-17", label: "SEZ Office" },
+    { value: "MPFC-18", label: "MPFC" },
+    { value: "Exhibition-19", label: "Exhibition" },
+    { value: "Seminar-20", label: "Seminar" },
+    { value: "Others-21", label: "Others" },
+    { value: "Sales Office-22", label: "Sales Office" },
+    { value: "Business Tour-23", label: "Business Tour" },
+    { value: "Training-24", label: "Training" },
+    { value: "Vendor visit-25", label: "Vendor visit" },
+    { value: "Vendor Mtl. inspection & Dispatch-26", label: "Vendor Mtl. inspection & Dispatch" }
 ];
 
 
@@ -97,51 +97,51 @@ const CreateOdOT = (props) => {
     const cookieExists = checkCookie("accessToken");
     let cookieValue = cookieExists.cookie;
     cookieValue = cookieValue.split('=').at(1);
-    console.log(event)
+    // console.log(event)
+    console.log("You are in formData part of createOdot : ",JSON.stringify(formData));
 
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_BASE_URL}/api/employee/odot-create`,
-      headers: {
-        'accesstoken': cookieValue,
+      url: 'http://localhost:3000/api/employee/odot-create',
+      headers: { 
+        'accessToken': cookieValue,
         'Content-Type': 'application/json'
       },
       data: JSON.stringify(formData)
     };
-
+    
     axios.request(config)
-      .then((response) => {
-        // console.log(JSON.stringify(response.data));
-        if(response.status == 200){
-          withReactContent(Swal).fire({
-            title: response.data.text,
-            confirmButtonText: "Ok",
-            cancelButtonText: "No",
-            showCancelButton: false,
-            preConfirm: () => {
-              // trigger parent component re-rendering
-              props.stateChange();
-            },
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // clear the form 
-    setFormData({
-      gatePassType: "",
-      requestType: "",
-      date: "",
-      time: "",
-      expComeBackDate: "",
-      expComeBackTime: "",
-      purpose: "",
-      handoverPerson: "",
-      place: "",
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      
+        withReactContent(Swal).fire({
+          title: response.data.name,
+          confirmButtonText: "Ok",
+          cancelButtonText: "No",
+          showCancelButton: false,
+          preConfirm: () => {
+            // trigger parent component re-rendering
+            props.stateChange();
+          },
+        });
+      
+    })
+    .catch((error) => {
+      console.log(error);
     });
+    // clear the form 
+    // setFormData({
+    //   dateFrom: "",
+    //   timeFrom: "",
+    //   dateTo:"",
+    //   timeTo:"",
+    //   attendanceType:"",
+    //   placeToVisit:"",
+    //   odWorkPlace:"",
+    //   handOverCharges:"",
+    //   purpose: "",
+    // });
 
 
   }
@@ -325,17 +325,17 @@ const CreateOdOT = (props) => {
                       <Select
                         placeholder=""
                         // onChange={setSelectedOption}
-                        value={typeSelection.find(option => option.label === formData.attendanceType) || typeSelection[0]}
+                        value={typeSelection.find(option => option.value === formData.attendanceType) || typeSelection[1]}
                         options={typeSelection}
                         styles={customStyles}
                         className="select"
                         required
                         onChange={(event) => {
-                          event.label === 'Returnable' ? setIsReturnable(true) : setIsReturnable(false);
+                  
                           setFormData(() =>
                           ({
                             ...formData,
-                            attendanceType: event.label,
+                            attendanceType: event.value,
                           }));
                         }}
                       />
@@ -373,18 +373,18 @@ const CreateOdOT = (props) => {
                             <label className="col-form-label">OD Work Place</label>
                             <Select
                         placeholder=""
-                        // onChange={setSelectedOption}
-                        value={WorkPlace.find(option => option.label === formData.odWorkPlace) || WorkPlace[0]}
+                       
+                        value={WorkPlace.find(option => option.value === formData.odWorkPlace) || WorkPlace[0]}
                         options={WorkPlace}
                         styles={customStyles}
                         className="select"
                         required
                         onChange={(event) => {
-                          // event.label === 'Returnable' ? setIsReturnable(true) : setIsReturnable(false);
+                
                           setFormData(() =>
                           ({
                             ...formData,
-                            odWorkPlace: event.label,
+                            odWorkPlace: event.value,
                           }));
                         }}
                       />

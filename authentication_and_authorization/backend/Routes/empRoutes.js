@@ -17,6 +17,6 @@ router.get('/employeeAttendanceApply',authUserThoughMiddleware.checkUser,empCont
 router.get('/empUpperHeirarchy',empControllers.empUpHeirarchy)
 router.post('/gate-pass-creation',authUserThoughMiddleware.checkUserNeeraj,gatepassController.createGatePass)
 router.get('/gatepass-listing', authUserThoughMiddleware.checkUserNeeraj,gatepassController.gatePassListingEmp )
-router.get('/odot-create',authUserThoughMiddleware.checkUserNeeraj,odotController.createOdOt)
-
+router.post('/odot-create',authUserThoughMiddleware.checkUserNeeraj,odotController.createOdOt)
+router.get('/odot-show-employee',authUserThoughMiddleware.checkUserNeeraj,odotController.odotListingEmp)
 module.exports = router;
