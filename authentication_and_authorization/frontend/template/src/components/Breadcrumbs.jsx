@@ -473,6 +473,36 @@ const Breadcrumbs = (props) => {
       </div>
     );
   }
+  else if(location.pathname === "/od_ot_creation"){
+    console.log("Hello you are in od ot creation ", props);
+    addButton = (
+      <div className="row align-items-center">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            {/* <li className="breadcrumb-item">
+              <Link to="/employee-dashboard">{props.title}</Link>
+            </li> */}
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
+        </div>
+        <div className="col-auto float-end ms-auto">
+          {props.name && 
+          <Link
+            to="#"
+            className="btn add-btn"
+            data-bs-toggle="modal"
+            data-bs-target={props.modal}
+            style={{background : "white"}}
+          >
+            <i className="fa fa-plus" />
+            {props.name}
+          </Link>
+          }
+        </div>
+      </div>
+    );
+  }
   else {
     console.log("Hello 123", props);
     addButton = (

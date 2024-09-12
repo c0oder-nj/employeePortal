@@ -214,6 +214,19 @@ export const SidebarData = [
         ],
       },
       {
+        menuValue: "Official Duty/Trip",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-door-open",
+        subMenus: [
+          {
+            menuValue: "Od/Ot Creation and show",
+            route: "/od_ot_creation",
+            visibility: ["user", "admin"],
+          },
+        ],
+      },
+      {
         menuValue: "Admin",
         hasSubRoute: true,
         showSubRoute: false,

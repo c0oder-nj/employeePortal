@@ -255,7 +255,7 @@ import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import AllEmployee from "../../views/pages/Employees/AllEmpoyee";
 import { AuthProvider } from "../../cookieTimeOut/jwtTokenTime.jsx";
 import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
-
+import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 // custom created components from Neeraj Chittodiya
 import Gatepass from "../../views/pages/Administration/Adminpages/Gatepass.jsx";
 
@@ -326,6 +326,7 @@ const AppRouter = () => {
                   <Route path="/attendance-employee" element={<AttendanceEmployee />} />
                   <Route path="/travel_expense_table" element={<TravelExpenseTable />} />
                   <Route path="/gate_pass_creation" element={<GatePass />} />
+                  <Route path="/od_ot_creation" element={<OdOt />} />
 
                 </Route>
                 
