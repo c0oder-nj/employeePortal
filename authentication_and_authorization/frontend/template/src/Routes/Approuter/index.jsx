@@ -258,6 +258,7 @@ import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
 import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 // custom created components from Neeraj Chittodiya
 import Gatepass from "../../views/pages/Administration/Adminpages/Gatepass.jsx";
+import OdOtApproval from "../../views/pages/Administration/Adminpages/OdOtApproval.jsx";
 
 
 // auth provider using context api 
@@ -337,6 +338,7 @@ const AppRouter = () => {
                     {/* <Route path="/gate-pass-approval" element={<AdminLeave />} /> */}
                     <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
                     <Route path="/gatepass-approval" element={<Gatepass />} />
+                    <Route path="/odot-approval" element={<OdOtApproval />} />
                 </Route>
 
 

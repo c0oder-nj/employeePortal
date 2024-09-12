@@ -37,104 +37,66 @@ const createOdOt = (req,res)=>{
 
 }
 
-// const gatePassListing = (req,res) => {
-//     const sapId = req.sapid;
-//     let config = {
-//         method: 'get',
-//         maxBodyLength: Infinity,
-//         url: `${process.env.BASE_URL}/gatepass_approval_pending.htm?app_pernr=${sapId}`,
-        
-//         headers: { 
-//           'Cookie': 'sap-usercontext=sap-client=900'
-//         }
-//       };
-      
-//       axios.request(config)
-//       .then((response) => {
-//         if(response.status){
-//             return res.send(response.data);
-//         }
-//       })
-//       .catch((error) => {
-//         return res.send(error);
-//       });
 
-// }
+const ododListing = (req,res) => {
 
-// const gatePassListingEmp = (req,res) => {
-//     const sapId = req.sapid;
-//     console.log(sapId);
-//     let config = {
-//       method: 'get',
-//       maxBodyLength: Infinity,
-//       url: `${process.env.BASE_URL}/gatepass_listing_emp.htm?sapid=${sapId}`,
-//       headers: { 
-//         'Cookie': 'sap-usercontext=sap-client=900'
-//       }
-//     };
-    
-//     axios.request(config)
-//     .then((response) => {
-//       console.log(JSON.stringify(response.data));
-//       if(response.status == 200){
-//         return res.send(response.data);
-//       }else{
-//         return res.json({'status' : false, 'message' : 'Some Error Occured'});
-//       }
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// }
+  const sapId = req.sapid;
 
-
-// const approveReject = (req,res) => {
-
-//   // return res.send("Api hit ");
-//   const approverSapId = req.sapid;
-//   const status = req.query.status;
-//   const sapId = req.query.pernr;
-//   const gpNo = req.query.gpno;
-
-//   const statusText = ( status == 1 ? 'approve' : 'reject' );
-
-//   // console.log("Priting variables");
-//   // console.log("Approver sap id :: ", approverSapId);
-//   // console.log("status :: ", status);
-//   // console.log("status text :: ", statusText);
-//   // console.log("GatePass Number :: ", gpNo);
-//   // console.log("employee Pernr :: ", sapId);
-
-//   let config = {
-//     method: 'get',
-//     maxBodyLength: Infinity,
-//     url: `${process.env.BASE_URL}/gatepass_approva_rejectl.htm?pernr=${sapId}&gp_no=${gpNo}&app_pernr=${approverSapId}&status=${statusText}`,
-    
-//     headers: { 
-//       'Cookie': 'sap-usercontext=sap-client=900'
-//     }
-//   };
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL_QUALITY}/od_data_hod.htm?sapid=${sapId}`,
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
   
-//   axios.request(config)
-//   .then((response) => {
-//     if(response.data.at(0).msgtyp == 'S') {
-//       if(status == 1){
-//         return res.json({'status' : true , 'msg' : 'Gate Pass approved Succesfully'});
-//       }else if(status == 0){
-//         return res.json({'status' : true , 'msg' : 'Gate Pass rejected Succesfully'});
-//       }
-//     }else{
-//       return res.send(response.data);
-//     }
-//     console.log("Printing Response :: ", response.data)
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//     return res.send(error)
-//   });
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200) {
+      return res.json({"status" : true, "data" : response.data});
+    }else{
+      return res.json({"status" : false, "data" : "Some error occured"});
+    }
+  })
+  .catch((error) => {
+    return res.json({"status" : false, "data" : error});
+  });
+}
+
+const odotApproval = (req,res) => {
+  const approverId = req.sapid;
+  const odplant = req.query.odplant;
+  const action = req.query.action;
+
+  console.log("---------IN Od ot approval ----------------")
+  console.log("approver id :: " , approverId)
+  console.log("odplant with slash :: " , odplant)
+  console.log("action to perform :: " , action)
+
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL_QUALITY}/od_approve_reject_hod.htm?sapid=${approverId}&odno=${odplant}&action=${action}`,
+    headers: { }
+  };
   
-// }
+  axios.request(config)
+  .then((response) => {
+    console.log(response)
+    if(response.status != 200){
+      return res.json({"status" : false, "message" : "Some error occured while hitting sap api"});
+    }else{
+      const data = response.data.at(0);
+      // console.log("Printng sap api response for od approval :: ", data, " Printing type :: ", typeof data);
+      return res.send(data);
+    }
+  })
+  .catch((error) => {
+    console.log("Printing error :: ", error)
+    return res.json({"status" : false, "message" : error});
+  });
+}
 
-// module.exports = { gatePassListing ,approveReject,createGatePass, gatePassListingEmp }
-
-module.exports = {createOdOt}
+module.exports = {createOdOt, ododListing, odotApproval}

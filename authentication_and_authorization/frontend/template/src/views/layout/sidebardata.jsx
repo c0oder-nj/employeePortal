@@ -252,6 +252,11 @@ export const SidebarData = [
             route: "/gatepass-approval",
             visibility : ['admin']
           },
+          {
+            menuValue: 'OD/OT Approval',
+            route: "/odot-approval",
+            visibility : ['admin']
+          },
         ],
       },
       // {
