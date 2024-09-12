@@ -200,7 +200,7 @@ import EmailContent from "../../views/pages/MainPages/Apps/Email/emailContent.js
 import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
-
+import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 const AppContainer = () => {
   useEffect(() => {
     localStorage.setItem("colorschema", "blue");
@@ -936,7 +936,11 @@ const AppContainer = () => {
       id: 136,
       path: "gate_pass_creation",
       element: <GatePass/>,
-    },
+    },{
+      id:137,
+      path:"od_ot_creation",
+      element:<OdOt/>
+    }
     
   ];
 
