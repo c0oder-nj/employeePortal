@@ -120,15 +120,16 @@ const EmployeeLeaveModelPopup = (props) => {
     let value = isCookieExist.cookie;
     value = value.split('=').at(1);
     console.log(value);
-    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApply?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApply`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Access-Control-Allow-Headers",
         "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Origin": "*",
+        'accesstoken' : value
       },
       body: JSON.stringify(formData),
     }).then((response) => {
@@ -205,47 +206,47 @@ const EmployeeLeaveModelPopup = (props) => {
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
-      navigate("react/template/");
+      navigate("/");
     }
 
-    const fetchSapNumber = async () => {
-      // const url = `http://localhost:3000/api/auth/home?value=${value}`;
-      let value = cookieExists.cookie;
-      value = value.split('=').at(1);
-      console.log(value);
-      const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeSapNumber?value=${value}`;
-      console.log(url);
+    // const fetchSapNumber = async () => {
+    //   // const url = `http://localhost:3000/api/auth/home?value=${value}`;
+    //   let value = cookieExists.cookie;
+    //   value = value.split('=').at(1);
+    //   console.log(value);
+    //   const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeSapNumber?value=${value}`;
+    //   console.log(url);
 
-      sapNumber = await fetch(url, {
-        method: "get",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setFormData(() => ({
-            ...formData,
-            SapNumber: data,
-          }));
+    //   sapNumber = await fetch(url, {
+    //     method: "get",
+    //     headers: {
+    //       "Access-Control-Allow-Origin": "*",
+    //     },
+    //   })
+    //     .then((response) => {
+    //       return response.json();
+    //     })
+    //     .then((data) => {
+    //       setFormData(() => ({
+    //         ...formData,
+    //         SapNumber: data,
+    //       }));
 
-          return data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    //       return data;
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
 
-      console.log(sapNumber);
-      dataToBeSent.sapNumber = sapNumber;
-    };
-    fetchSapNumber();
+    //   console.log(sapNumber);
+    //   dataToBeSent.sapNumber = sapNumber;
+    // };
+    // fetchSapNumber();
   }, []);
 
   console.log(data1[0].leaveType);
-  dataToBeSent.sapNumber = sapNumber;
-  console.log(sapNumber);
+  // dataToBeSent.sapNumber = sapNumber;
+  // console.log(sapNumber);
   console.log(data2);
   var counter = 1;
 

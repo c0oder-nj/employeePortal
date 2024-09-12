@@ -34,6 +34,7 @@ const Login = () => {
 
   // setting autheticated user object
   const { auth, setAuth } = useAuth();
+  const {checkCookie} = useAuth();
 
   const customStyle = {
 
@@ -59,28 +60,13 @@ const Login = () => {
   const [display, setDisplay] = useState('block');
 
   
-  const checkCookie = async ()=>{
-    
-    function checkCookie(cookieName) {
-      const cookies = document.cookie.split(';');
-      for(let i = 0; i < cookies.length; i++) {
-          let cookie = cookies[i].trim();
-          // Check if the cookie name matches the parameter
-          if(cookie.startsWith(cookieName + '=')) {
-              // Cookie found
-              // console.log(cookie);
-              return true;
-          }
-      }
-      // Cookie not found
-      return false;
-  }
-    
-    let cookieExists = checkCookie('accessToken');
-    if(cookieExists){
-      navigate("/employee-dashboard");
+
+  useEffect(()=>{
+    let isCookieExist = checkCookie('accessToken');
+    if(isCookieExist.status){
+      navigate('/employee-dashboard');
     }
-  }
+  }, [])
  
  
   const onSubmit = async (data) => {

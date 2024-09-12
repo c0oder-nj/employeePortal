@@ -16,8 +16,9 @@ const checkUser = async (req,res,next)=> {
     console.log("+++++++++++++++++++++++++++")
     console.log(newValue)
     console.log("+++++++++++++++++++++++++++")
-    headerValue = newValue.split("=")[1];
-    // console.log(headerValue)
+    // headerValue = newValue.split("=")[1]; // commented by neeraj since frontend checkcookie function is changes it is giving now jwt token value only
+    let headerValue = newValue;
+    console.log(headerValue)
     // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
     // console.log(decodedValue);
 

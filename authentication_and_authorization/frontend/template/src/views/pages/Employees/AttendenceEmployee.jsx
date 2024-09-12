@@ -215,7 +215,7 @@ const AttendanceEmployee = () => {
     users.push({
       title: "Remaining Time",
       value: String(remBucketMins).padStart(2, "0"),
-      valuespan: "/120 hrs",
+      valuespan: "/120 Minutes",
       // progressWidth: "30%",
       progressWidth: String((remBucketMins / 120) * 100) + "%",
       progressBarColor:
@@ -234,10 +234,10 @@ const AttendanceEmployee = () => {
 
     const fetchData = async () => {
       //Fetching data for attendance
-      const value = cookieExists.cookie;
-      console.log(value);
+      let value = cookieExists.cookie;
+      value = value.split('=').at(1);
 
-      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus`;
       console.log("Base uri for daily attendance:: ", url);
 
       dataFetchedThroughApi = await fetch(url, {
@@ -273,7 +273,7 @@ const AttendanceEmployee = () => {
     fetchData();
   }, []);
 
-  if (data.length > 0 && isData) {
+  if (data?.length > 0 && isData) {
     console.log(data[0]);
     todayDate = data[0].begdat;
     todayPunchIn = data[0].indz;

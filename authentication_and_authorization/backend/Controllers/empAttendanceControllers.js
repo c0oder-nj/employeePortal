@@ -26,11 +26,7 @@ const employeesapNumber = async (req,res)=>{
 const employeeDailyAttendnceStatus = async (req,res)=>{
     console.log("Hello You are in attendance status");
 
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
   console.log(sapNumber)
   let config = {
       method: 'get',

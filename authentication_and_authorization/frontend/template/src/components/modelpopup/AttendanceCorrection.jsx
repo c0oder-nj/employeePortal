@@ -7,12 +7,14 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import useAuth from "../../hooks/useAuth";
 
 const AllEmployeeAddPopup = (props) => {
   console.log("In attendance",props.data);
   const [sapid,setSapId] = useState(props.data);
   const [startDate, setStartDate] = useState(null);
   const navigate = useNavigate();
+  const {checkCookie} = useAuth();
   const [formData,setFormData] = useState({
     SapNumber : props.data || "",
     status : "",
@@ -33,9 +35,11 @@ const AllEmployeeAddPopup = (props) => {
     e.preventDefault();
     // console.log("In send Data")
     console.log(JSON.stringify(formData));
-    const value = `${document.cookie}`;
+    const isCookieExist = checkCookie('accessToken');
+    let value = isCookieExist.cookie;
+    value = value.split('=').at(1);
     console.log(value)
-    const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus`;
     
     const response = await fetch(url, {
         method: "POST",
@@ -43,7 +47,8 @@ const AllEmployeeAddPopup = (props) => {
             'content-type': 'application/json',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
             'Access-Control-Allow-Methods': 'POST',
-            'Access-Control-Allow-Origin' : '*'
+            'Access-Control-Allow-Origin' : '*',
+            'accesstoken' : value
         },
         body: JSON.stringify(formData)
     }).then((response)=>{
@@ -99,41 +104,22 @@ const AllEmployeeAddPopup = (props) => {
     }),
   };
   var dataFetchedThroughApi=null;
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for(let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if(cookie.startsWith(cookieName + '=')) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   for(let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if(cookie.startsWith(cookieName + '=')) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   useEffect(()=>{
     let cookieExists = checkCookie('accessToken');
-    if(!cookieExists){
-      navigate("react/template/");
+    if(!cookieExists.status){
+      navigate("/");
     }
-
-    // var fetchData = async ()=>{
-    // const value = `${document.cookie}`;
-    //     console.log(value)
-        
-    //     const url = `http://localhost:3000/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus?value=${value}`;
-    //     console.log(url);
-        
-    //     dataFetchedThroughApi = await fetch
-    //     (url).then((response)=>{
-    //       return response.json();
-    //     }).then((data) => {
-    //     //   setData(data.employeeAttendance);
-    //       return data;
-    //     }).catch((error)=>{
-    //       console.log("Error");
-    //     });
-    // }
-    // fetchData();
   },[]);
 
   const handleDateChange1 = (date) => {

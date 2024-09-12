@@ -75,14 +75,14 @@ app.get(
 );
 app.get(
   "/api/employee/employeeAttendance",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeattendance
 );
 
 //For Leave creation
 app.post(
   "/api/employee/employeeAttendanceApply",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeLeaveCreation
 );
 
@@ -95,7 +95,7 @@ app.get(
 
 app.get(
   "/api/DailyAttendance/employeeDailyAttendnceStatus",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.employeeDailyAttendnceStatus
 );
 app.post(
