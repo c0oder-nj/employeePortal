@@ -7,7 +7,8 @@ import { DatePicker } from "antd";
 import useAuth from "../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import CreateOdOT from "./CreateOdOt";
-
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 const OdOt = () => {
   const { checkCookie } = useAuth();
   const navigate = useNavigate();
@@ -85,20 +86,21 @@ const OdOt = () => {
 
   // Helper function to convert date strings (in DD.MM.YYYY) to Date objects
   const parseDate = (dateString) => {
+    console.log("Date string in parsed date :: ", dateString)
     const parts = dateString.split('.');
-    return new Date(parts[2], parts[1] - 1, parts[0]); // Convert 'DD.MM.YYYY' to a Date object
+    // console.log("date parts :: ", parts);
+    return new Date(parts[2], parts[1] - 1, parts[0],0, 0, 0, 0); // Convert 'DD.MM.YYYY' to a Date object
   };
 
   const handleSearch = () => {
     console.log("Start date", start);
     console.log("End date", end);
+    
 
     let results = table;
 
     if (start) {
       const formattedStartDate = new Date(start);
-      console.log("Formatted Start Date:", formattedStartDate);
-
       results = results.filter((f) => {
         const recordDate = parseDate(f.odstdate_c);
         return recordDate >= formattedStartDate;
@@ -114,7 +116,15 @@ const OdOt = () => {
         return recordDate <= formattedEndDate;
       });
     }
-
+    if(start > end){
+      withReactContent(Swal).fire({
+        title: "End date is greater than start date",
+        preConfirm: () => {
+          setStart();
+          setEnd();
+        },
+      });
+    }
     console.log("Filtered results length:", results.length);
     setShowTable(results);
   };

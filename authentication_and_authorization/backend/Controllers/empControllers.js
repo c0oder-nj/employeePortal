@@ -181,17 +181,7 @@ const employeeLeaveCreation = async (req,res) =>{
 }
 
 const employeesapNumber = async (req,res)=>{
-
-  // var value = 4629
-
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
-  console.log(sapNumber)
-
-  return res.json(sapNumber);
+  return res.json(req.sapid);
 }
 
 var responseArr = [];
@@ -227,13 +217,14 @@ const fetchEmpData = async (sapid) => {
 //Function to show the leave approval request to HOD
 const employeeLeaveStatus = async (req,res)=>{
   
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
 
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   
-  var sapNumber = decodedValue.empCode;
+  // var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
   console.log(sapNumber)
   
   let config = {

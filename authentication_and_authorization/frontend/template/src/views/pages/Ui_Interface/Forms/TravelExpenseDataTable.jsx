@@ -37,7 +37,9 @@ const TravelExpenseDataTable = (props) => {
 
 
   const isCookieExist = checkCookie('accessToken');
-  let value = isCookieExist.cookie;
+  if(!isCookieExist.status){
+    navigate('/');
+  }
   const setColums = [
     // {
     //     title: "Sap Number",
@@ -163,12 +165,12 @@ const TravelExpenseDataTable = (props) => {
     console.log("Sap and trip number", sapNumber, tripNumber);
     const fetchData = async () => {
       const isCookie = checkCookie('accessToken');
-      console.log(isCookie.cookie);
+      let value = isCookie.cookie.split('=').at(1);
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
+      fetch(url, { headers: { "Access-Control-Allow-Origin": "*"  , 'accesstoken' : value} })
         .then((response) => {
           return response.json();
         })
@@ -199,13 +201,14 @@ const TravelExpenseDataTable = (props) => {
     console.log("Your data in showTable", props);
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
+    let value = checkCookie('accessToken').cookie.split('=').at(1);
     const fetchData = async () => {
       
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
+      fetch(url, { headers: { "Access-Control-Allow-Origin": "*" , 'accesstoken' : value } })
         .then((response) => {
           return response.json();
         })
@@ -257,11 +260,12 @@ const TravelExpenseDataTable = (props) => {
       const fetchData = async () => {
         // const value = `${document.cookie}`;
         // console.log(value);
+        let value = checkCookie('accessToken').cookie.split('=').at(1);
 
         console.log("Printing values in useEffect", sapNumber, tripNumber);
-        const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
+        const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
         console.log(url);
-        fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
+        fetch(url, { headers: { "Access-Control-Allow-Origin": "*" , 'accesstoken' : value} })
           .then((response) => {
             return response.json();
           })
@@ -475,10 +479,11 @@ const TravelExpenseDataTable = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       // const value = `${document.cookie}`;
+      const value = checkCookie('accessToken').cookie.split('=').at(1)
       console.log("Printing value at 478 for travelexpense data in local :: ",value);
-      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap`;
       console.log(url);
-      await fetch(url, { headers: { "Access-Control-Allow-Origin": "*" } })
+      await fetch(url, { headers: { "Access-Control-Allow-Origin": "*", 'accesstoken' : value } })
         .then((response) => {
           return response.json();
         })

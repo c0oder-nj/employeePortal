@@ -68,11 +68,11 @@ const employeeDailyAttendnceCorrection = async (req,res)=>{
 //Funtion for attendance correction of logged in employee
 const allEmployeeDailyAttendnceCorrection = async (req,res)=>{
   // console.log("Your value",req.body)
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  var sapNumber = req.sapid;
 
   const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/hod_emp_attendance.htm?sapid=${sapNumber}`);
   console.log("From data",result.data);
@@ -84,11 +84,13 @@ const allEmployeeDailyAttendnceCorrection = async (req,res)=>{
 
 const allEmployeeDailyAttendnceApproveReject = async (req,res)=>{
   // console.log("Your value",req.body)
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  // var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
+
 
   if(req.query.option==1){
 

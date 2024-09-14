@@ -21,11 +21,16 @@ const TableAvatar = () => {
     }
 
     const fetchData = async () => {
-      const value = cookieExists.cookie
-      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
+      let value = cookieExists.cookie;
+      value = value.split("=").at(1);
+
+      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection`;
       console.log("Printing uri at frontend :: ", url);
       await fetch(url, {
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: {
+           "Access-Control-Allow-Origin": "*" ,
+           "accessToken" : value
+        }
       })
         .then((response) => response.json())
         .then((data) => {

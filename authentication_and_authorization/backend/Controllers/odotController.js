@@ -19,7 +19,7 @@ const createOdOt = (req,res)=>{
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/od_create.htm?app_pernr=${sapId}&atnds_status=${formData.attendanceType}&app_od_from=${formData.dateFrom}&app_od_to=${formData.dateTo}&app_od_visitplace=${formData.placeToVisit}&app_od_workplace=${formData.odWorkPlace}&app_od_purpose1=${formData.purpose}&app_od_charge=${formData.handOverCharges}&Frm_tim=${formData.timeFrom}`,
+      url: `${process.env.BASE_URL}/od_create.htm?app_pernr=${sapId}&atnds_status=${formData.attendanceType}&app_od_from=${formData.dateFrom}&app_od_to=${formData.dateTo}&app_od_visitplace=${formData.placeToVisit}&app_od_workplace=${formData.odWorkPlace}&app_od_purpose1=${formData.purpose}&app_od_charge=${formData.handOverCharges}&Frm_tim=${formData.timeFrom}`,
     };
     
     axios.request(config)
@@ -45,7 +45,7 @@ const ododListing = (req,res) => {
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `${process.env.BASE_URL_QUALITY}/od_data_hod.htm?sapid=${sapId}`,
+    url: `${process.env.BASE_URL}/od_data_hod.htm?sapid=${sapId}`,
     headers: { 
       'Cookie': 'sap-usercontext=sap-client=900'
     }
@@ -75,7 +75,7 @@ const odotListingEmp = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/od_data_emp.htm?sapid=${sapId}`,
+      url: `${process.env.BASE_URL}/od_data_emp.htm?sapid=${sapId}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -108,7 +108,7 @@ const odotApproval = (req,res) => {
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `${process.env.BASE_URL_QUALITY}/od_approve_reject_hod.htm?sapid=${approverId}&odno=${odplant}&action=${action}`,
+    url: `${process.env.BASE_URL}/od_approve_reject_hod.htm?sapid=${approverId}&odno=${odplant}&action=${action}`,
     headers: { }
   };
   

@@ -25,9 +25,9 @@ const TravelExpenseReportTable = () => {
     }
 
     const fetchData = async () => {
-      const value = cookieExists.cookie;
-      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showTravelExpenseToHOD?value=${value}`;
-      await fetch(url, {headers : {'Access-Control-Allow-Origin' : '*'}})
+      const value = cookieExists.cookie.split('=').at(1);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showTravelExpenseToHOD`;
+      await fetch(url, {headers : {'Access-Control-Allow-Origin' : '*', 'accesstoken' : value}})
         .then((response) => response.json())
         .then((data) => {
           if(data.status==false){
@@ -391,12 +391,11 @@ const TravelExpenseReportTable = () => {
     const [sapNumber, tripNumber] = [props.PERNR, props.REINR];
     console.log("In hod travel approval", sapNumber, tripNumber);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
-      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/approveTravelExpenseByHOD?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const value = checkCookie('accessToken').cookie.split('=').at(1);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/approveTravelExpenseByHOD?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
       fetch(url, {
-        headers : {'Access-Control-Allow-Origin' : '*'}
+        headers : {'Access-Control-Allow-Origin' : '*' , 'accesstoken' : value}
       })
         .then((response) => {
           return response.json();
