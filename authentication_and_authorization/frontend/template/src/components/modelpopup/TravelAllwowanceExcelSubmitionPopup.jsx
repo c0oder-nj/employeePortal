@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import withReactContent from "sweetalert2-react-content";
+import useAuth from "../../hooks/useAuth";
 
 const TravelAllwowanceExcelSubmitionPopup = () => {
   const [data, setData] = useState([]);
@@ -20,6 +21,7 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
   const [selectCostCenter, setSelectCostCenter] = useState([]);
   const [isDomestic, setIsDomestic] = useState(true);
   const navigate = useNavigate();
+  const {checkCookie} = useAuth();
   const [formData, setFormData] = useState({
     Country: "",
     TimeStart: "",
@@ -58,11 +60,13 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const value = checkCookie('accessToken').cookie.split('=').at(1);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/countryAndCostCenterCode`;
       console.log(url);
       await fetch(url, {
         headers : {
-          'Access-Control-Allow-Origin' : '*'
+          'Access-Control-Allow-Origin' : '*',
+          'accesstoken' : value
         }
       })
         .then((response) => {
@@ -234,10 +238,9 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
     } else {
       console.log("In send Data");
       console.log(JSON.stringify(formData));
-      const value = `${document.cookie}`;
-      console.log(value);
+      const value = checkCookie('accessToken').cookie.split('=').at(1);
       // const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
-      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/domesticTravelExpens?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/domesticTravelExpens`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -245,7 +248,8 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
           "Access-Control-Allow-Headers":
           "Content-Type, Authorization, Access-Control-Allow-Headers",
           "Access-Control-Allow-Methods": "POST",
-          'Access-Control-Allow-Origin' : '*'
+          'Access-Control-Allow-Origin' : '*',
+          'accesstoken' : value
         },
         body: JSON.stringify(formData),
       }).then((response) => {
@@ -275,10 +279,9 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
     e.preventDefault();
     console.log("In send Data");
     console.log(JSON.stringify(formData));
-    const value = `${document.cookie}`;
-    console.log(value);
+    const value = checkCookie('accessToken').cookie.split('=').at(1);
     // const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
-    const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/domesticTravelExpens?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/domesticTravelExpens`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -286,7 +289,8 @@ const TravelAllwowanceExcelSubmitionPopup = () => {
         "Access-Control-Allow-Headers":
         "Content-Type, Authorization, Access-Control-Allow-Headers",
         "Access-Control-Allow-Methods": "POST",
-        'Access-Control-Allow-Origin' : '*'
+        'Access-Control-Allow-Origin' : '*',
+        'accesstoken' : value
       },
       body: JSON.stringify(formData),
     }).then((response) => {

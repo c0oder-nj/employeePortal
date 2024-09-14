@@ -12,38 +12,44 @@ import { base_url } from "../../../base_urls";
 import user from "../../../user";
 import { AuthProvider } from "../../../cookieTimeOut/jwtTokenTime";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
+
 const Holidays = () => {
   const [users, setUsers] = useState([]);
   const [holidays, setHolidays] = useState([]);
   const navigate = useNavigate();
+  const {checkCookie} = useAuth();
   var holidaysArray;
 
-    function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        const accesstoken = cookie.split('=')[1];
-        return { status: true, accesstoken };
-      }
-    }
-    return { status: false, accesstoken: null };
-  }
+  //   function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + '=')) {
+  //       const accesstoken = cookie.split('=')[1];
+  //       return { status: true, accesstoken };
+  //     }
+  //   }
+  //   return { status: false, accesstoken: null };
+  // }
 
   useEffect(() => {
     const fetchData = async () => {
       console.log("Fetching data...");
       const tokenResult = checkCookie('accessToken');
       if (!tokenResult.status) {
-        navigate('');
+        navigate('/');
         return false;
       }
+
+      let value = tokenResult.cookie;
+      value = value.split('=').at(1);
 
       try {
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/holidays`, {
           method: 'GET',
           headers: {
-            'accesstoken': tokenResult.accesstoken,
+            'accesstoken': value,
             'Access-Control-Allow-Origin' : '*'
           }
         });

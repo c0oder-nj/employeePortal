@@ -16,13 +16,13 @@ const employeeattendance = async (req,res)=>{
 
     // var value = 4629
 
-    console.log(req.query.value)
-    const newValue = req.query.value;
-    headerValue = newValue.split("=")[1];
-    // console.log("Your : ",headerValue)
-    var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-    // console.log(decodedValue)
-    var sapNumber = decodedValue.empCode;
+    // console.log(req.query.value)
+    // const newValue = req.query.value;
+    // headerValue = newValue.split("=")[1];
+    // // console.log("Your : ",headerValue)
+    // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+    // // console.log(decodedValue)
+    var sapNumber = req.sapid;
     console.log(sapNumber)
     
     let config = {
@@ -157,9 +157,13 @@ const employeeattendanceApply = async (req,res)=>{
 
 // Create a leave application 
 const employeeLeaveCreation = async (req,res) =>{
+  const sapNumber = req.sapid;
   console.log("Your value",req.body)
+  console.log("Printing sap number :: ", sapNumber)
 
-  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+  // return res.send("api hit");
+
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${sapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
   console.log(result.data);
   console.log("Your cookie is working")
 
@@ -177,17 +181,7 @@ const employeeLeaveCreation = async (req,res) =>{
 }
 
 const employeesapNumber = async (req,res)=>{
-
-  // var value = 4629
-
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
-  console.log(sapNumber)
-
-  return res.json(sapNumber);
+  return res.json(req.sapid);
 }
 
 var responseArr = [];
@@ -223,13 +217,14 @@ const fetchEmpData = async (sapid) => {
 //Function to show the leave approval request to HOD
 const employeeLeaveStatus = async (req,res)=>{
   
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
 
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   
-  var sapNumber = decodedValue.empCode;
+  // var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
   console.log(sapNumber)
   
   let config = {

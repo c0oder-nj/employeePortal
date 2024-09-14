@@ -64,10 +64,10 @@ const RequireAuth = ({ allowedRoles }) => {
 
 
 
-    console.log("Printing from require auth componet :: ", JSON.stringify(auth));
+    // console.log("Printing from require auth componet :: ", JSON.stringify(auth));
     
-    console.log("Roles in auth object :: -> ", auth.roles);
-    console.log("Allowed roles in prop :: -> ", allowedRoles);
+    // console.log("Roles in auth object :: -> ", auth.roles);
+    // console.log("Allowed roles in prop :: -> ", allowedRoles);
 
 
 

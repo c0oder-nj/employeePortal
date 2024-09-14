@@ -50,18 +50,22 @@ const AdminLeave = () => {
     }
     const fetchData = async () => {
       //Fetching data for attendance
-      const value = cookieExists.cookie
+      let value = cookieExists.cookie;
+      console.log("PRinting token at :: ", value)
+      value = value.split('=').at(1);
+      console.log("token after splitting :: ", value);
 
       // const url = `http://localhost:3000/api/auth/home?value=${value}`;
       // Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
       // const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
 
-      const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeLeaveApproval?value=${value}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeLeaveApproval`;
       // console.log(url);
 
       dataFetchedThroughApi = await fetch(url, {
         headers: {
           "Access-Control-Allow-Origin": "*",
+          'accesstoken' : value
         },
       })
         .then((response) => {
@@ -120,15 +124,18 @@ const AdminLeave = () => {
   async function fetchDataFromApproveReject(option, type) {
     //Fetching data for attendance
     const cookieExists = checkCookie('accessToken');
-    const value = cookieExists.value;
-    console.log(value);
+    let value = cookieExists.cookie;
+    // console.log(value);
+    value = value.split('=').at(1);
+    console.log("Printing value at approval function :: ", value);
 
-    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApproveReject?value=${value}&option=${option}&type=${type}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApproveReject?option=${option}&type=${type}`;
     console.log(url);
 
     await fetch(url, {
       headers: {
         "Access-Control-Allow-Origin": "*",
+        'accesstoken' : value
       },
     })
       .then((response) => {

@@ -4,43 +4,45 @@ import { Link,  useLocation, useNavigate } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import { useEffect, useState } from "react";
+import useAuth from "../../../hooks/useAuth";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
+  const {checkCookie} = useAuth();
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        const accesstoken = cookie.split('=')[1];
-        return { status: true, accesstoken };
-      }
-    }
-    return { status: false, accesstoken: null };
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + '=')) {
+  //       const accesstoken = cookie.split('=')[1];
+  //       return { status: true, accesstoken };
+  //     }
+  //   }
+  //   return { status: false, accesstoken: null };
+  // }
 
 
 
     useEffect(() => {
-      const checkCk = checkCookie('accessToken');
-      if(checkCk.status === false){
-        return navigate('/');
-      }
+
   
     const fetchData = async () => {
-      const tokenResult = checkCookie('accessToken');
-      if (!tokenResult.status) {
+      let isCookieExist = checkCookie('accessToken');
+      if(!isCookieExist.status){
         navigate('/');
         return false;
       }
+
+      let value = isCookieExist.cookie;
+      value = value.split('=').at(1);
 
       try {
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/employee_profile`, {
           method: 'GET',
           headers: {
-            'accesstoken': tokenResult.accesstoken,
+            'accesstoken': value,
             'Access-Control-Allow-Origin' : '*'
           }
         });

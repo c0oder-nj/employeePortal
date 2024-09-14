@@ -70,32 +70,32 @@ app.post("/TestAPI", express.raw({ type: "*/*" }), (req, res) => {
 //For Employee attendance need to add middleware
 app.get(
   "/api/employee/employeeSapNumber",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeesapNumber
 );
 app.get(
   "/api/employee/employeeAttendance",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeattendance
 );
 
 //For Leave creation
 app.post(
   "/api/employee/employeeAttendanceApply",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeLeaveCreation
 );
 
 //Leave showing to HOD
 app.get(
   "/api/employee/employeeLeaveApproval",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeLeaveStatus
 );
 
 app.get(
   "/api/DailyAttendance/employeeDailyAttendnceStatus",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.employeeDailyAttendnceStatus
 );
 app.post(
@@ -106,69 +106,70 @@ app.post(
 //Api to show all the previous day daily attendance of all the employees who are under HOD
 app.get(
   "/api/DailyAttendance/allEmployeeDailyAttendnceCorrection",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.allEmployeeDailyAttendnceCorrection
 );
 
 //Api for approve and reject of leave
 app.get(
   "/api/employee/employeeAttendanceApproveReject",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.allEmployeeDailyAttendnceApproveReject
 )
 
 //Information about country code and cost center
 app.get(
   "/api/TravelExpense/countryAndCostCenterCode",
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.countryCodeAndCostCenter
 );
 
 //Employee's domestic leave approval
 app.post(
   "/api/TravelExpense/domesticTravelExpens",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.domesticTravelAllowance
 );
 
 //Show all travel expense using sap only
 app.get(
   "/api/TravelExpense/showExpenseUsingSap",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseUsingSap
 );
 
 //Show travel expense using sap and travel code
 app.get(
   "/api/TravelExpense/showExpenseUsingSapAndCode",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseUsingSapAndTravelCode
 );
 
 //Delete Travel expense using sap and trip number
 app.get(
   "/api/TravelExpense/deleteExpenseUsingSapAndCode",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseDelete
 );
 
 //Create travel expense using sap and trip number
 app.get(
   "/api/TravelExpense/createRequestExpenseUsingSapAndCode",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseCreate
 );
 
 //Show travel expense approval to HOD
 app.get(
   "/api/TravelExpense/showTravelExpenseToHOD",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.showTravelExpenseHodApproval
 );
 
 //Approve travel expense by HOD
 app.get(
   "/api/TravelExpense/approveTravelExpenseByHOD",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseHodApproval
 );
 

@@ -113,10 +113,12 @@ const CreateOdOT = (props) => {
     
     axios.request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
-      
+      console.log(response.data,typeof response.data)
+      // console.log(JSON.stringify(response.data));
+        // let message = JSON.parse(response.data[0])
+        // console.log("Message here : ",message,typeof message);
         withReactContent(Swal).fire({
-          title: response.data.name,
+          title: response.data.msg,
           confirmButtonText: "Ok",
           cancelButtonText: "No",
           showCancelButton: false,

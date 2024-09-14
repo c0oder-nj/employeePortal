@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { base_url } from "../../../base_urls";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../hooks/useAuth";
+// import { TokenExpiredError } from "jsonwebtoken";
 
 const EmployeeLeave = () => {
   const [users, setUsers] = useState([]);
@@ -39,13 +40,16 @@ const EmployeeLeave = () => {
         //Fetching data for attendance
     
         let cookieExist = checkCookie('accessToken')
+        console.log("Printing response of cookie exist :: ", cookieExist)
         let value = cookieExist.cookie;
         value = value.split('=').at(1);
         
         // const url = `http://localhost:3000/api/auth/home?value=${value}`;
         //Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
-        const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendance?value=${value}`;
+        const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendance`;
         console.log(url);
+
+        console.log("Printing token before fetch :: ", value);
         
         dataFetchedThroughApi = await fetch
         (url, {headers: {'Access-Control-Allow-Origin' : '*', 'accesstoken' : value}}).then((response)=>{
@@ -63,6 +67,7 @@ const EmployeeLeave = () => {
           }
 
           //Value will be initialized after getting a response
+          console.log("Printing data after fetch :: ", data);
           leaveSet(data.leave)
           console.log("Printing")
           setUsers(data.leaveInfo)
@@ -88,7 +93,7 @@ const EmployeeLeave = () => {
   console.log("All emp value : ",allEmp)
 
  
-  const userElements = users.map((user, index) => ({
+  const userElements = users?.map((user, index) => ({
     key: index,
     leavetype: user.lev_typ,
     from: user.lev_frm,
@@ -260,7 +265,7 @@ const EmployeeLeave = () => {
           />
 
           <div className="row">
-            {leaveInfo.map((stat, index) => (
+            {leaveInfo?.map((stat, index) => (
               console.log(stat),
               <div className="col-md-3" key={index}>
                 <div className="stats-info">

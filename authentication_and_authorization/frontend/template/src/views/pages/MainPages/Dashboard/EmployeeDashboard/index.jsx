@@ -10,6 +10,8 @@ import ChartHeirarichy from "./ChartHeirarichy";
 import './oc_style.css'
 // import {JwtTokenTimeExpire} from "../../../../../cookieTimeOut/JwtTokenTimeExpire.jsx";
 import JwtTokenTimeExpire from "../../../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../../../hooks/useAuth";
+import { t } from "i18next";
 // import jwt from "jsonwebtoken"
 
 const EmployeeDashboard = () => {
@@ -24,6 +26,7 @@ const EmployeeDashboard = () => {
   const [statisticsTimeFrame, setStatisticsTimeFrame] = useState("Week");
   const [workingHoursTimeFrame, setWorkingHoursTimeFrame] = useState("Week");
   const [heirarchyData, setHeirarchyData] = useState([]);
+  const {checkCookie} = useAuth();
 
   const [chartOptions, setChartOptions] = useState({
     series: [],
@@ -142,18 +145,18 @@ const EmployeeDashboard = () => {
 
   // function definition and declaration
   // ---------- Checkcookie function -----------------
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    console.log(document.cookie);
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        const accesstoken = cookie.split('=')[1];
-        return { status: true, accesstoken };
-      }
-    }
-    return { status: false, accesstoken: null };
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   console.log(document.cookie);
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + '=')) {
+  //       const accesstoken = cookie.split('=')[1];
+  //       return { status: true, accesstoken };
+  //     }
+  //   }
+  //   return { status: false, accesstoken: null };
+  // }
 
   // ------------ check cookie function end--------------------
 
@@ -270,7 +273,7 @@ const EmployeeDashboard = () => {
     const fetchData = async () => {
 
       console.log("Fetching data...");
-      const tokenResult = checkCookie('accessToken');
+      let tokenResult = checkCookie('accessToken');
       console.log("Printing token at employee dashbaord :: ", tokenResult);
       if (!tokenResult.status) {
         console.log(tokenResult)
@@ -279,11 +282,12 @@ const EmployeeDashboard = () => {
       }
 
       try {
-        console.log(tokenResult.accesstoken);
+        const cookieValue = tokenResult.cookie.split('=').at(1);
+        console.log(cookieValue);
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/employee_dashboard`, {
           method: 'GET',
           headers: {
-            'accesstoken': tokenResult.accesstoken,
+            'accesstoken': cookieValue,
             'Access-Control-Allow-Origin': '*'
           }
         });

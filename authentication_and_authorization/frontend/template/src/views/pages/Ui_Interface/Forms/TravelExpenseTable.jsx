@@ -9,6 +9,8 @@ import AddSalaryModal from "../../../../components/modelpopup/AddSalaryModal";
 import TravelAllwowanceExcelSubmitionPopup from "../../../../components/modelpopup/TravelAllwowanceExcelSubmitionPopup";
 import TravelExpenseDataTable from "./TravelExpenseDataTable";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../../../hooks/useAuth";
+
 const TravelExpenseTable = () => {
   const [setSelectedOption] = useState(null);
   const [setSelecttwo] = useState(null);
@@ -19,6 +21,7 @@ const TravelExpenseTable = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [focused, setFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const {checkCookie} = useAuth();
 
   const handleLabelClick = () => {
     setFocused(true);
@@ -81,17 +84,17 @@ const TravelExpenseTable = () => {
     }),
   };
   
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        const accesstoken = cookie.split('=')[1];
-        return { status: true, accesstoken };
-      }
-    }
-    return { status: false, accesstoken: null };
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + '=')) {
+  //       const accesstoken = cookie.split('=')[1];
+  //       return { status: true, accesstoken };
+  //     }
+  //   }
+  //   return { status: false, accesstoken: null };
+  // }
   useEffect(()=>{
     const checkCk = checkCookie('accessToken');
     if(checkCk.status === false){
