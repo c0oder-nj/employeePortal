@@ -90,7 +90,7 @@ const Coff = () => {
       console.log("Fetched data: ", data.data.response);
       if(data.data.response.length==0){
         withReactContent(Swal).fire({
-          title: "You have no C-off in your account",
+          title: "You have no C-OFF in your account",
           preConfirm: () => {
             navigate("/employee-dashboard");
           },
@@ -111,6 +111,7 @@ const Coff = () => {
       temp.indz = val.indz;
       temp.iodz = val.iodz;
       temp.totdz = val.totdz;
+      temp.status_text=val.status_text;
       tempTable.push(temp);
     });
     setTable(tempTable);
@@ -166,6 +167,7 @@ const Coff = () => {
   }, [start, end, table]);
 
   const columns = [
+    
     {
       title: "Start Date",
       dataIndex: "begdat",
@@ -187,8 +189,7 @@ const Coff = () => {
       title: "Action",
       id: "pernr",
       render: (id) =>
-        id.antrg_text == "Trip Completed" ||
-        id.antrg_text == "Trip Approved" ? (
+        id.status_text == "Pending"? (
           ""
         ) : (
           <div className="dropdown dropdown-action text-end">
@@ -224,73 +225,28 @@ const Coff = () => {
           </div>
         ),
     },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   render: (text) => (
-    //     <div className="dropdown action-label text-center">
-    //       <Link
-    //         className="btn btn-white btn-sm btn-rounded dropdown-toggle"
-    //         to="#"
-    //         data-bs-toggle="dropdown"
-    //         aria-expanded="false"
-    //       >
-    //         <i className={"far fa-dot-circle text-success"} />
-    //         {"Apply"}
-    //       </Link>
-    //       <div className="dropdown-menu dropdown-menu-right">
-    //         <button
-    //           className="dropdown-item"
-    //           onClick={(event) => {
-    //             withReactContent(Swal).fire({
-    //               title: "Do you want to Apply for C-OFF?",
-    //               confirmButtonText: "Yes",
-    //               cancelButtonText: "No",
-    //               showCancelButton: true,
-    //               preConfirm: () => {
-    //                 // fetchDataFromApproveReject(1, text[1]);
-    //               },
-    //             });
-    //           }}
-    //         >
-    //           <i className="far fa-dot-circle text-success" /> Apply
-    //         </button>
-    //       </div>
-    //     </div>
-    //   )
-
-    // },
-    // {
-    //   title: "Type",
-    //   dataIndex: "atn_status",
-    //   render: (text) => (
-    //     <div className="dropdown action-label btn btn-white btn-sm btn-rounded">
-    //       {text === "T" ? "Tour" : "OD"}
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   title: "Status",
-    //   dataIndex: "odaprdt_c",
-    //   render: (text) => (
-    //     <div className="dropdown action-label btn btn-white btn-sm btn-rounded">
-    //       <i
-    //         className={
-    //           text === "Approved"
-    //             ? "far fa-dot-circle text-success"
-    //             : text === "Not App"
-    //             ? "far fa-dot-circle text-danger"
-    //             : "far fa-dot-circle text-info"
-    //         }
-    //       />{" "}
-    //       {text === "Approved"
-    //         ? "Approved"
-    //         : text === "Not App"
-    //         ? "Rejected"
-    //         : "Pending"}
-    //     </div>
-    //   ),
-    // }
+    {
+      title: "Status",
+      dataIndex: "status_text",
+      render: (text) => (
+        <div className="dropdown action-label btn btn-white btn-sm btn-rounded">
+          <i
+            className={
+              text === "New C-off"
+                ? "far fa-dot-circle text-success"
+                : text === "Pending"
+                ? "far fa-dot-circle text-info"
+                : "far fa-dot-circle text-danger"
+            }
+          />{" "}
+          {text === "New C-off"
+            ? "New C-OFF"
+            : text === "Pending"
+            ? "Pending"
+            : "Rejected"}
+        </div>
+      ),
+    }
   ];
 
   
@@ -339,9 +295,7 @@ const Coff = () => {
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
-            maintitle="C-Off"
-            modal="#create_od_ot"
-            name="Create OD/OT"
+            maintitle="C-OFF"
           />
           <div className="row">
             <div className="col-sm-6 col-md-3">
@@ -406,7 +360,7 @@ const Coff = () => {
                       type="text"
                       className="form-control"
                       required
-                      placeholder="type your purpose"
+                      placeholder="type Sap ID"
                       onChange={(event) => {
                         setFormData(() => ({
                           ...formData,
@@ -422,7 +376,7 @@ const Coff = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Responsible Person"
+                      placeholder="Reason"
                       required
                       onChange={(event) => {
                         setFormData(() => ({
@@ -434,8 +388,8 @@ const Coff = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-6 col-md-6">
-                    <div className="input-block form-focus focused">
+                  <div className="col-sm-6 col-md-6" >
+                    <div className="input-block form-focus focused" style={{marginLeft : "5%"}}>
                       <div className="cal-icon focused">
                         <DatePicker
                           className="form-control floating datetimepicker"
@@ -456,7 +410,7 @@ const Coff = () => {
                   </div>
                 </div>
                 <div className="row">
-                <div className="input-block mb-3">
+                <div className="input-block mb-3" style={{marginLeft : "3%"}}> 
                       <label className="col-form-label">Attendance Status</label>
 
                       <Select

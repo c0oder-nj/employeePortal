@@ -135,7 +135,7 @@ export const SidebarData = [
             visibility: ["user", "admin"],
           },
           {
-            menuValue: "C-Off",
+            menuValue: "C-OFF",
             route: "/c-off",
             visibility: ["user", "admin"],
           },
