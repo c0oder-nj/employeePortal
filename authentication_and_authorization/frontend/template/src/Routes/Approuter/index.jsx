@@ -259,6 +259,7 @@ import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 // custom created components from Neeraj Chittodiya
 import Gatepass from "../../views/pages/Administration/Adminpages/Gatepass.jsx";
 import OdOtApproval from "../../views/pages/Administration/Adminpages/OdOtApproval.jsx";
+import CoffApproval from "../../views/pages/Administration/Adminpages/CoffApproval.jsx";
 
 
 // auth provider using context api 
@@ -282,6 +283,8 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    console.log("Continue calling scroll to top");
+    console.log(pathname);
   }, [pathname]);
 
   return null;
@@ -339,6 +342,7 @@ const AppRouter = () => {
                     <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
                     <Route path="/gatepass-approval" element={<Gatepass />} />
                     <Route path="/odot-approval" element={<OdOtApproval />} />
+                    <Route path="/coff-approval" element={<CoffApproval />} />
                 </Route>
 
 

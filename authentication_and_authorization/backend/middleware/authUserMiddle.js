@@ -103,25 +103,17 @@ const checkUserRoles = (req,res,next) => {
         req.mail = decodedValue.emailIdShakti;
         req.address = decodedValue.empAddress;
     } catch (error) {
-        return res.json({ "status": false, "message": "Invalid JWT Token or problem at decoding jwt value" });
-    }
 
-
-    try{
-        var decodedValue = jwt.verify(newValue, process.env.JWT_SECRET_KEY);
-        console.log(decodedValue);
-        req.sapid = decodedValue.empCode;
-        console.log("JWT is valid:", decodedValue);
-    }catch(err){
-        if (err.name === 'TokenExpiredError') {
+        if (error.name === 'TokenExpiredError') {
             console.log("JWT has expired at neeraj side.");
-            // return res.redirect('/')
             return res.json({"status" : false,"type":"Token Expired","message":"Token has been expired"})
-        } else {
-            console.log("JWT is invalid:", err.message);
+        }
+        else {
+            console.log("JWT is invalid:", error.message);
             return res.json({ "status": false,"type":"Token Invalid", "message": "Unauthorized Access" });
           }
     }
+
     next()
 }
 

@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import Swal from 'sweetalert2';
 import React, { useContext, useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Applogo , bgImageLogin } from "../../../Routes/ImagePath";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -35,6 +35,7 @@ const Login = () => {
   // setting autheticated user object
   const { auth, setAuth } = useAuth();
   const {checkCookie} = useAuth();
+  const {state} = useLocation();
 
   const customStyle = {
 
@@ -61,12 +62,19 @@ const Login = () => {
 
   
 
-  useEffect(()=>{
-    let isCookieExist = checkCookie('accessToken');
-    if(isCookieExist.status){
-      navigate('/employee-dashboard');
-    }
-  }, [])
+
+  // apply this check on requireAuth when cookie exist then not let user to Login.jsx page
+  // useEffect(()=>{
+  //   console.log("Printing values of state :: ", state)
+  //   if(state.status == false && state.type == "Token Expired"){
+  //     console.log("Token has been expired :: ", state);
+  //   }else{
+  //     let isCookieExist = checkCookie('accessToken');
+  //     if(isCookieExist.status){
+  //       navigate('/employee-dashboard');
+  //     }
+  //   }
+  // }, [])
  
  
   const onSubmit = async (data) => {

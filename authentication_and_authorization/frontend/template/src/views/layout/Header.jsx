@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
 import './header.css';
+import useAuth from "../../hooks/useAuth";
 import {
   Applogo,
   Avatar_02,
@@ -32,6 +33,7 @@ const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profile, setProfile] = useState(false);
   const [flagImage, setFlagImage] = useState(lnEnglish);
+  const {handleLogOut} = useAuth();
 
   const handlesidebar = () => {
     document.body.classList.toggle("mini-sidebar");
@@ -93,21 +95,24 @@ const Header = (props) => {
             : lnGerman
     );
   };
-  const deleteCookie = (cookieName) => {
-    // location.href = 'localhost:3001/react/template';
-   //Need To implement 
-   console.log(document.cookie);
-   const [key, value] = document.cookie.split("=");
-   document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";    
-  };
-  const handleLogout = ()=>{
-    // console.log(document.cookie);
-    // localStorage.clear();
-    deleteCookie('accessToken');
-    localStorage.clear();
+  // const deleteCookie = (cookieName) => {
+  //  console.log(document.cookie);
+  //  const [key, value] = document.cookie.split("=");
+  //  document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";    
+  // };
+  // const handleLogout = ()=>{
+  //   // console.log(document.cookie);
+  //   // localStorage.clear();
+  //   deleteCookie('accessToken');
+  //   localStorage.clear();
         
-    // window.location.href = '/react/template'; // old login endpoint
-    window.location.href = '/'; //new login endpoint
+  //   // window.location.href = '/react/template'; // old login endpoint
+  //   window.location.href = '/'; //new login endpoint
+  // }
+
+
+  const logoutUser = () => {
+    handleLogOut('accessToken');
   }
   return (
     <div className="header" style={{ right: "0px" }}>
@@ -386,7 +391,7 @@ const Header = (props) => {
             {/* <Link className="dropdown-item" to="/settings/companysetting">
               Settings
             </Link> */}
-            <Link className="dropdown-item" to="/" onClickCapture={handleLogout}>
+            <Link className="dropdown-item" to="/" onClickCapture={logoutUser}>
               Logout
             </Link>
           </div>

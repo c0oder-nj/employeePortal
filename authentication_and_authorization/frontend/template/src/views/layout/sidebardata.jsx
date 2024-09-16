@@ -257,6 +257,11 @@ export const SidebarData = [
             route: "/odot-approval",
             visibility : ['admin']
           },
+          {
+            menuValue: 'Coff Approval',
+            route: "/coff-approval",
+            visibility : ['admin']
+          },
         ],
       },
       // {
