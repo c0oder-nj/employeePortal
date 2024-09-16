@@ -134,6 +134,11 @@ export const SidebarData = [
             route: "/attendance-employee",
             visibility: ["user", "admin"],
           },
+          {
+            menuValue: "C-Off",
+            route: "/c-off",
+            visibility: ["user", "admin"],
+          },
           // {
           //   menuValue: 'Departments',
           //   route: "/departments",

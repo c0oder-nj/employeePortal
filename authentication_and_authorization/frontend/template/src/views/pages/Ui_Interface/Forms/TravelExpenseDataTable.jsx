@@ -34,11 +34,9 @@ const TravelExpenseDataTable = (props) => {
     outComingText: "",
   });
 
-
-
-  const isCookieExist = checkCookie('accessToken');
-  if(!isCookieExist.status){
-    navigate('/');
+  const isCookieExist = checkCookie("accessToken");
+  if (!isCookieExist.status) {
+    navigate("/");
   }
   const setColums = [
     // {
@@ -164,13 +162,15 @@ const TravelExpenseDataTable = (props) => {
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
     const fetchData = async () => {
-      const isCookie = checkCookie('accessToken');
-      let value = isCookie.cookie.split('=').at(1);
+      const isCookie = checkCookie("accessToken");
+      let value = isCookie.cookie.split("=").at(1);
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url, { headers: { "Access-Control-Allow-Origin": "*"  , 'accesstoken' : value} })
+      fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+      })
         .then((response) => {
           return response.json();
         })
@@ -201,14 +201,14 @@ const TravelExpenseDataTable = (props) => {
     console.log("Your data in showTable", props);
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
-    let value = checkCookie('accessToken').cookie.split('=').at(1);
+    let value = checkCookie("accessToken").cookie.split("=").at(1);
     const fetchData = async () => {
-      
-
       console.log("Printing values in useEffect", sapNumber, tripNumber);
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url, { headers: { "Access-Control-Allow-Origin": "*" , 'accesstoken' : value } })
+      fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+      })
         .then((response) => {
           return response.json();
         })
@@ -260,12 +260,14 @@ const TravelExpenseDataTable = (props) => {
       const fetchData = async () => {
         // const value = `${document.cookie}`;
         // console.log(value);
-        let value = checkCookie('accessToken').cookie.split('=').at(1);
+        let value = checkCookie("accessToken").cookie.split("=").at(1);
 
         console.log("Printing values in useEffect", sapNumber, tripNumber);
         const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
         console.log(url);
-        fetch(url, { headers: { "Access-Control-Allow-Origin": "*" , 'accesstoken' : value} })
+        fetch(url, {
+          headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+        })
           .then((response) => {
             return response.json();
           })
@@ -479,11 +481,16 @@ const TravelExpenseDataTable = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       // const value = `${document.cookie}`;
-      const value = checkCookie('accessToken').cookie.split('=').at(1)
-      console.log("Printing value at 478 for travelexpense data in local :: ",value);
+      const value = checkCookie("accessToken").cookie.split("=").at(1);
+      console.log(
+        "Printing value at 478 for travelexpense data in local :: ",
+        value
+      );
       const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap`;
       console.log(url);
-      await fetch(url, { headers: { "Access-Control-Allow-Origin": "*", 'accesstoken' : value } })
+      await fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+      })
         .then((response) => {
           return response.json();
         })
@@ -497,7 +504,10 @@ const TravelExpenseDataTable = (props) => {
               return;
             }
           }
-          console.log("Printing travel data in data.travel_data :: ",data.travel_data);
+          console.log(
+            "Printing travel data in data.travel_data :: ",
+            data.travel_data
+          );
           setDataFetched(data.travel_data.data);
           setApiData(data.travel_data.data);
           return data;
@@ -586,7 +596,7 @@ const TravelExpenseDataTable = (props) => {
   //     return d.toISOString().split('T')[0]; // Convert to YYYY-MM-DD for comparison
   // };
 
-//New search implemented start
+  //New search implemented start
 
   const formatDateForComparison = (date) => {
     const d = new Date(date);
@@ -623,7 +633,6 @@ const TravelExpenseDataTable = (props) => {
     }
 
     if (dateTo) {
-      
       const formattedDate = formatDateForComparison(dateTo);
       console.log("Formatted Date for Comparison:", formattedDate);
       results = results.filter((f) => {
@@ -638,7 +647,7 @@ const TravelExpenseDataTable = (props) => {
   useEffect(() => {
     handleSearch();
   }, [searchTerm, dateFrom, dateTo]);
-//New search implemented ends here
+  //New search implemented ends here
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
   return (
@@ -863,9 +872,8 @@ const TravelExpenseDataTable = (props) => {
                           formData.outComingText
                         );
                       }}
-                      
                     >
-                    Create Trip
+                      Create Trip
                     </button>
                   </div>
                   <div className="col-6">
