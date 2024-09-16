@@ -50,7 +50,7 @@ const cOffApplication = (req,res)=>{
     "iodz": "06:00:00",
     "totdz": "08:00:00",
     "pernr2":data.responsiblePersonSap,
-    "test_reason":data.reason,
+    "reason":data.reason,
     "LEAVETYPE":data.leaveType
   })
   dataToBeSent = JSON.stringify(dataToBeSent);
