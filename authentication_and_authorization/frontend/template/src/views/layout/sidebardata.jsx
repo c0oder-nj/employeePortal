@@ -262,6 +262,11 @@ export const SidebarData = [
             route: "/odot-approval",
             visibility : ['admin']
           },
+          {
+            menuValue: 'Employee Confirmation',
+            route: "/employee-confirmation",
+            visibility : ['admin']
+          },
         ],
       },
       // {

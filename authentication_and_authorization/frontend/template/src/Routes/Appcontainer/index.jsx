@@ -202,6 +202,8 @@ import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
 import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
+import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
+import { elements } from "chart.js";
 const AppContainer = () => {
   useEffect(() => {
     localStorage.setItem("colorschema", "blue");
@@ -945,8 +947,11 @@ const AppContainer = () => {
       id:138,
       path:"c-off",
       element:<Coff/>
+    },{
+      id:139,
+      path:"employee-confirmation",
+      element:<ConfirmationHOD/>
     }
-    
   ];
 
   const ChatRoutingeObjects = [

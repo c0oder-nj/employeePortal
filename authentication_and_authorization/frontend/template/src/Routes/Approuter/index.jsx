@@ -260,7 +260,7 @@ import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 import Gatepass from "../../views/pages/Administration/Adminpages/Gatepass.jsx";
 import OdOtApproval from "../../views/pages/Administration/Adminpages/OdOtApproval.jsx";
 import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
-
+import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
 // auth provider using context api 
 // import { AuthProvider } from "../../Context/AuthProvider.jsx";
 import RequireAuth from "../../components/RequireAuth.jsx";
@@ -340,6 +340,7 @@ const AppRouter = () => {
                     <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
                     <Route path="/gatepass-approval" element={<Gatepass />} />
                     <Route path="/odot-approval" element={<OdOtApproval />} />
+                    <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
                 </Route>
 
 
