@@ -124,4 +124,63 @@ const confimExtendTerminateByHod = async(req,res)=>{
   //Second Fill the data of the form
   
 }
-module.exports = {confirmationListingToHOD,confimExtendTerminateByHod}
+
+const confirmationShowPptAndFormData = async(req,res)=>{
+  const sapId = req.sapid;
+  console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
+  console.log("Form Data",req.body);
+  // return res.json({"status" : true, "data" : "Showing data of ppt form to HOD for particular employee"});
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL_QUALITY}/hodfinalapprovallisting.htm?sapid=${sapId}`,
+    
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
+  console.log(config.url);
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200) {
+      return res.json({"status" : true, "data" : response.data});
+    }else{
+      return res.json({"status" : false, "data" : "Some error occured"});
+    }
+  })
+  .catch((error) => {
+    return res.json({"status" : false, "data" : error});
+  });
+}
+
+const assesmentDataShow= async(req,res)=>{
+  const sapId = req.sapid;
+  console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
+  console.log("Form Data",req.body);
+  // return res.json({"status" : true, "data" : "Showing data of ppt form to HOD for particular employee"});
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL_QUALITY}/hodassesmentformdatagetapi.htm?sapid=${req.query.value}`,
+    
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
+  console.log(config.url);
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200) {
+      return res.json({"status" : true, "data" : response.data});
+    }else{
+      return res.json({"status" : false, "data" : "Some error occured"});
+    }
+  })
+  .catch((error) => {
+    return res.json({"status" : false, "data" : error});
+  });
+}
+
+module.exports = {confirmationListingToHOD,confimExtendTerminateByHod,confirmationShowPptAndFormData,assesmentDataShow}

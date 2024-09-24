@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
 import { Link } from "react-router-dom";
@@ -6,92 +6,106 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AddSalaryModal from "../../../../../components/modelpopup/AddSalaryModal";
-import SalaryTable from "./SalaryTable";
+import EmployeeConfirmationDetails from "./EmployeeConfirmationDetails";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../../../../hooks/useAuth";
 
-const EmployeeSalary = () => {
-  const [setSelectedOption] = useState(null);
-  const [setSelecttwo] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedDateTwo, setSelectedDateTwo] = useState(null);
 
-  const [dateTwo, setdateTwo] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-
-  const handleLabelClick = () => {
-    setFocused(true);
-  };
-
-  const handleInputBlur = () => {
-    if (inputValue === "") {
-      setFocused(false);
+const EmployeeConfirmationFromDetails = () => {
+  
+  // Function for checking a cookie 
+  const navigate = useNavigate();
+  const {checkCookie} = useAuth(); 
+  useEffect(()=>{
+    const checkCk = checkCookie('accessToken');
+    if(checkCk.status === false){
+      return navigate('/');
     }
-  };
+  },[]);
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    if (value !== "" && !focused) {
-      setFocused(true);
-    }
-  };
+  // const [setSelectedOption] = useState(null);
+  // const [setSelecttwo] = useState(null);
+  // const [selectedDate, setSelectedDate] = useState(null);
+  // const [selectedDateTwo, setSelectedDateTwo] = useState(null);
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
+  // const [dateTwo, setdateTwo] = useState(false);
+  // const [isFocused, setIsFocused] = useState(false);
+  // const [focused, setFocused] = useState(false);
+  // const [inputValue, setInputValue] = useState("");
 
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
+  // const handleLabelClick = () => {
+  //   setFocused(true);
+  // };
 
-  const handleFocustwo = () => {
-    setdateTwo(true);
-  };
-  const handleBlurtwo = () => {
-    setdateTwo(false);
-  };
+  // const handleInputBlur = () => {
+  //   if (inputValue === "") {
+  //     setFocused(false);
+  //   }
+  // };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const handleDateChangeTwo = (date) => {
-    setSelectedDateTwo(date);
-  };
-  const options = [
-    { value: "--Select--", label: "--Select--" },
-    { value: "Employee", label: "Employee" },
-    { value: "Manager", label: "Manager" },
-  ];
+  // const handleInputChange = (e) => {
+  //   const value = e.target.value;
+  //   setInputValue(value);
+  //   if (value !== "" && !focused) {
+  //     setFocused(true);
+  //   }
+  // };
 
-  const optionsTwo = [
-    { value: "--Select--", label: "--Select--" },
-    { value: "Cash", label: "Cash" },
-    { value: "Cheque", label: "Cheque" },
-  ];
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
-      color: state.isFocused ? "#fff" : "#000",
-      "&:hover": {
-        backgroundColor: "#ff9b44",
-      },
-    }),
-  };
+  // const handleFocus = () => {
+  //   setIsFocused(true);
+  // };
+
+  // const handleBlur = () => {
+  //   setIsFocused(false);
+  // };
+
+  // const handleFocustwo = () => {
+  //   setdateTwo(true);
+  // };
+  // const handleBlurtwo = () => {
+  //   setdateTwo(false);
+  // };
+
+  // const handleDateChange = (date) => {
+  //   setSelectedDate(date);
+  // };
+  // const handleDateChangeTwo = (date) => {
+  //   setSelectedDateTwo(date);
+  // };
+  // const options = [
+  //   { value: "--Select--", label: "--Select--" },
+  //   { value: "Employee", label: "Employee" },
+  //   { value: "Manager", label: "Manager" },
+  // ];
+
+  // const optionsTwo = [
+  //   { value: "--Select--", label: "--Select--" },
+  //   { value: "Cash", label: "Cash" },
+  //   { value: "Cheque", label: "Cheque" },
+  // ];
+  // const customStyles = {
+  //   option: (provided, state) => ({
+  //     ...provided,
+  //     backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
+  //     color: state.isFocused ? "#fff" : "#000",
+  //     "&:hover": {
+  //       backgroundColor: "#ff9b44",
+  //     },
+  //   }),
+  // };
   return (
     <>
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
-            maintitle="Employee Salary"
-            title="Dashboard"
-            subtitle="Salary"
-            modal="#add_salary"
-            name="Add Salary"
+            maintitle="Employee Assesment Form and PPT"
+            // title="Dashboard"
+            // subtitle="Salary"
+            // modal="#add_salary"
+            // name="Add Salary"
           />
 
-          <div className="row filter-row">
+          {/* <div className="row filter-row">
             <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
               <div
                 className={
@@ -181,14 +195,14 @@ const EmployeeSalary = () => {
                 Search{" "}
               </Link>
             </div>
-          </div>
+          </div> */}
 
-          <SalaryTable />
+          <EmployeeConfirmationDetails />
         </div>
       </div>
-      <AddSalaryModal />
+      {/* <AddSalaryModal /> */}
     </>
   );
 };
 
-export default EmployeeSalary;
+export default EmployeeConfirmationFromDetails;

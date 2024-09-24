@@ -17,6 +17,7 @@ router.get('/odot-approval',authUserThoughMiddleware.checkUserNeeraj, odotContro
 router.get('/employee-confirmation-listing-hod',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confirmationListingToHOD)
 //Router for confirm ,extend and termination by the HOd
 router.post('/hod-confim-extend-terminate',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confimExtendTerminateByHod)
-
-
+//Router to show the details of form and ppt of employee to hod
+router.get('/hod-show-form-ppt-details',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confirmationShowPptAndFormData)
+router.get('/assesment-form',authUserThoughMiddleware.checkUserNeeraj,confirmationController.assesmentDataShow);
 module.exports = router;

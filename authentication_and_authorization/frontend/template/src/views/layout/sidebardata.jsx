@@ -267,6 +267,12 @@ export const SidebarData = [
             route: "/employee-confirmation",
             visibility : ['admin']
           },
+          {
+            menuValue: 'HOD Employee Confirmation Details',
+            route: "/HOD-Employee-Confirmation-Details",
+            visibility : ['admin']
+          },
+          
         ],
       },
       // {

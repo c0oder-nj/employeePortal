@@ -104,7 +104,7 @@ import SubCategory from "../../views/pages/HR/Accounting/Categories/subCategory"
 import Budgets from "../../views/pages/HR/Accounting/Budgets.jsx";
 import BudgetExpenses from "../../views/pages/HR/Accounting/BudgetExpenses";
 import BudgetRevenues from "../../views/pages/HR/Accounting/BudgetRevenue";
-import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeSalary.jsx";
+import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeConfirmation/index.jsx";
 import PaySlip from "../../views/pages/HR/Payroll/Payslip";
 import PayrollItems from "../../views/pages/HR/Payroll/PayrollItems.jsx";
 import Policies from "../../views/pages/HR/Policies";
@@ -203,7 +203,10 @@ import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
 import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
 import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
 import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
-import { elements } from "chart.js";
+import EmployeeConfirmationFromDetails from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetails.jsx";
+import Assesment from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/AssesAndPpt/AssesmentForm.jsx";
+
+
 const AppContainer = () => {
   useEffect(() => {
     localStorage.setItem("colorschema", "blue");
@@ -951,6 +954,14 @@ const AppContainer = () => {
       id:139,
       path:"employee-confirmation",
       element:<ConfirmationHOD/>
+    },{
+      id:140,
+      path:"HOD-Employee-Confirmation-Details",
+      element:<EmployeeConfirmationFromDetails/>
+    },{
+      id:141,
+      path:"assesment-view",
+      element:<Assesment/>
     }
   ];
 
