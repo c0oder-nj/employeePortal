@@ -407,6 +407,26 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
+  } else if (location.pathname === "/assesment-view") {
+    const handlePrint = () => {
+      window.print(); 
+    };
+    addButton = (
+      <div className="row">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+        </div>
+        <div className="col-auto float-end ms-auto">
+          <div className="btn-group btn-group-sm">
+            {/* <button className="btn btn-white">CSV</button> */}
+            <button className="btn btn-white " onClick={handlePrint}>PDF</button>
+            {/* <button className="btn btn-white">
+              <i className="fa fa-print fa-lg" onClick={handlePrint}/> Print
+            </button> */}
+          </div>
+        </div>
+      </div>
+    );
   } else if (location.pathname === "/interview-questions") {
     addButton = (
       <div className="row align-items-center">

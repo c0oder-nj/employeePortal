@@ -197,13 +197,26 @@ const AttendanceEmployee = () => {
       return { totSecs, bucket };
     }
 
+    function calcTotalSecondsForLateMin(filtData) {
+      let totSecs = 0;
+      filtData.forEach((entry) => {
+
+        const workedSecs = parseTotSeconds(entry.late_min);
+        console.log(workedSecs);
+        totSecs += workedSecs;
+      });
+
+      return Math.floor(120-(totSecs/60));
+    }
+
     const { totSecs, bucket } = calcTotalSeconds(filtData);
     const totHours = Math.floor(totSecs / 3600);
     const remSecsAfterHours = totSecs % 3600;
     const totMins = Math.floor(remSecsAfterHours / 60);
     const remSecs = remSecsAfterHours % 60;
-    const remBucketMins = Math.floor(bucket / 60);
-
+    // const remBucketMins = Math.floor(bucket / 60);
+    console.log(calcTotalSecondsForLateMin(filtData));
+    const remBucketMins = calcTotalSecondsForLateMin(filtData);
     console.log(
       `Total hours worked this month (excluding today): ${String(
         totHours
@@ -212,6 +225,7 @@ const AttendanceEmployee = () => {
       ).padStart(2, "0")}`
     );
     console.log(`Remaining minutes in the bucket: ${remBucketMins}`);
+    console.log(`Total sec: ${totSecs}`);
     users.push({
       title: "Remaining Time",
       value: String(remBucketMins).padStart(2, "0"),

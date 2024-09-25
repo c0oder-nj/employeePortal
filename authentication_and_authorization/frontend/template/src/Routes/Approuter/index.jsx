@@ -158,7 +158,7 @@ import SubCategory from "../../views/pages/HR/Accounting/Categories/subCategory"
 import Budgets from "../../views/pages/HR/Accounting/Budgets.jsx";
 import BudgetExpenses from "../../views/pages/HR/Accounting/BudgetExpenses";
 import BudgetRevenues from "../../views/pages/HR/Accounting/BudgetRevenue";
-import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeSalary.jsx";
+import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeConfirmation/index.jsx";
 import PaySlip from "../../views/pages/HR/Payroll/Payslip";
 import PayrollItems from "../../views/pages/HR/Payroll/PayrollItems.jsx";
 import Policies from "../../views/pages/HR/Policies";
@@ -265,6 +265,10 @@ import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
 
 import EmpConfirmationPPT from "../../views/pages/Employees/confirmation/EmpConfirmationPPT.jsx";
 
+import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
+// import EmployeeConfirmationFromDetails from "../../views/pages/HR/Payroll/EmployeeConfirmation/index.jsx";
+import EmployeeConfirmationFromDetails from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetails.jsx";
+import Assesment from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/AssesAndPpt/AssesmentForm.jsx";
 // auth provider using context api 
 // import { AuthProvider } from "../../Context/AuthProvider.jsx";
 import RequireAuth from "../../components/RequireAuth.jsx";
@@ -348,6 +352,9 @@ const AppRouter = () => {
                     <Route path="/gatepass-approval" element={<Gatepass />} />
                     <Route path="/odot-approval" element={<OdOtApproval />} />
                     <Route path="/coff-approval" element={<CoffApproval />} />
+                    <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
+                    <Route path="/HOD-Employee-Confirmation-Details" element={<EmployeeConfirmationFromDetails />} />
+                    <Route path="/assesment-view" element={<Assesment />} />
                 </Route>
 
 

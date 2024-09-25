@@ -280,6 +280,17 @@ export const SidebarData = [
             route: "/coff-approval",
             visibility : ['admin']
           },
+          {
+            menuValue: 'Employee Confirmation',
+            route: "/employee-confirmation",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'HOD Employee Confirmation Details',
+            route: "/HOD-Employee-Confirmation-Details",
+            visibility : ['admin']
+          },
+          
         ],
       },
       // {
