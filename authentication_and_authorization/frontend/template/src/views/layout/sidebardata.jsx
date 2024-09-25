@@ -134,6 +134,11 @@ export const SidebarData = [
             route: "/attendance-employee",
             visibility: ["user", "admin"],
           },
+          {
+            menuValue: "C-OFF",
+            route: "/c-off",
+            visibility: ["user", "admin"],
+          },
           // {
           //   menuValue: 'Departments',
           //   route: "/departments",
@@ -222,6 +227,19 @@ export const SidebarData = [
           {
             menuValue: "Od/Ot Creation and show",
             route: "/od_ot_creation",
+            visibility: ["user", "admin"],
+          },
+        ],
+      },
+      {
+        menuValue: "Confirmation",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-user-check",
+        subMenus: [
+          {
+            menuValue: "Confirmation Emp PPT",
+            route: "/confirm-emp-ppt",
             visibility: ["user", "admin"],
           },
         ],

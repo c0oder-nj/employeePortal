@@ -3,6 +3,8 @@ const empControllers = require('../Controllers/empControllers'); // router file 
 const gatepassController = require('../Controllers/gatePassControllers');
 const odotController = require("../Controllers/odotController");
 const authUserThoughMiddleware = require('../middleware/authUserMiddle') // middleware for validations
+const coffController = require('../Controllers/coffController')
+const confirmationController = require('../Controllers/confirmationController');
 
 const router = express.Router();
 
@@ -19,4 +21,7 @@ router.post('/gate-pass-creation',authUserThoughMiddleware.checkUserNeeraj,gatep
 router.get('/gatepass-listing', authUserThoughMiddleware.checkUserNeeraj,gatepassController.gatePassListingEmp )
 router.post('/odot-create',authUserThoughMiddleware.checkUserNeeraj,odotController.createOdOt)
 router.get('/odot-show-employee',authUserThoughMiddleware.checkUserNeeraj,odotController.odotListingEmp)
+router.get('/coff-list',authUserThoughMiddleware.checkUserNeeraj,coffController.cOffListing)
+router.post('/coff-application',authUserThoughMiddleware.checkUserNeeraj,coffController.cOffApplication)
+router.post('/emp-ppt-data',authUserThoughMiddleware.checkUserNeeraj,confirmationController.empConfPPT)
 module.exports = router;

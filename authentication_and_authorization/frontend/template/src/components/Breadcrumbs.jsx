@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Breadcrumbs = (props) => {
   const location = useLocation();
-  console.log(location.pathname);
+  // console.log(location.pathname);
   let addButton = null;
   if (location.pathname === "/attendance-employee") {
     console.log(props);
@@ -503,8 +503,18 @@ const Breadcrumbs = (props) => {
       </div>
     );
   }
+  else if(location.pathname === "/c-off"){
+    console.log("Hello 123", props,location.pathname);
+    addButton = (
+      <div className="row align-items-center">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+        </div>
+      </div>
+    );
+  }
   else {
-    console.log("Hello 123", props);
+    // console.log("Hello 123", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">

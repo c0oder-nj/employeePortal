@@ -261,6 +261,9 @@ import Gatepass from "../../views/pages/Administration/Adminpages/Gatepass.jsx";
 import OdOtApproval from "../../views/pages/Administration/Adminpages/OdOtApproval.jsx";
 import CoffApproval from "../../views/pages/Administration/Adminpages/CoffApproval.jsx";
 
+import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
+
+import EmpConfirmationPPT from "../../views/pages/Employees/confirmation/EmpConfirmationPPT.jsx";
 
 // auth provider using context api 
 // import { AuthProvider } from "../../Context/AuthProvider.jsx";
@@ -331,6 +334,8 @@ const AppRouter = () => {
                   <Route path="/travel_expense_table" element={<TravelExpenseTable />} />
                   <Route path="/gate_pass_creation" element={<GatePass />} />
                   <Route path="/od_ot_creation" element={<OdOt />} />
+                  <Route path="/c-off" element={<Coff/>}/>
+                  <Route path="/confirm-emp-ppt" element={<EmpConfirmationPPT/>}/>
 
                 </Route>
                 

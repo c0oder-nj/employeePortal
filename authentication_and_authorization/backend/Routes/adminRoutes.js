@@ -11,7 +11,7 @@ router.get('/gate-pass-listing',authUserThoughMiddleware.checkUserNeeraj, gatepa
 router.get('/approve-reject',authUserThoughMiddleware.checkUserNeeraj, gatepassController.approveReject )
 router.get('/odot-listing',authUserThoughMiddleware.checkUserNeeraj, odotController.ododListing )
 router.get('/odot-approval',authUserThoughMiddleware.checkUserNeeraj, odotController.odotApproval )
-router.get('/coff-listing',authUserThoughMiddleware.checkUserNeeraj, cOffController.cOffListing )
+router.get('/coff-listing',authUserThoughMiddleware.checkUserNeeraj, cOffController.cOffListingHod )
 router.post('/coff-approval',authUserThoughMiddleware.checkUserNeeraj, cOffController.cOffApproval )
 
 

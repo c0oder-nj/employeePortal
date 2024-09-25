@@ -201,6 +201,7 @@ import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
 import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
+import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
 const AppContainer = () => {
   useEffect(() => {
     localStorage.setItem("colorschema", "blue");
@@ -940,6 +941,10 @@ const AppContainer = () => {
       id:137,
       path:"od_ot_creation",
       element:<OdOt/>
+    },{
+      id:138,
+      path:"c-off",
+      element:<Coff/>
     }
     
   ];
