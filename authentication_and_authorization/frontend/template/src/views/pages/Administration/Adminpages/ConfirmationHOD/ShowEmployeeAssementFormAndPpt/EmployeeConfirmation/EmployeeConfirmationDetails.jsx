@@ -102,7 +102,7 @@ const EmployeeConfirmationDetails = () => {
       title: "Confirmation Form(PPT)",
       dataIndex: "pernr",
       render: (text) => (
-        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text}>
+        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text + '-ppt'}>
           Generate PPT
         </Link>
       ),
@@ -111,7 +111,7 @@ const EmployeeConfirmationDetails = () => {
       title: "Assessment Form",
       dataIndex: "pernr",
       render: (text) => (
-        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text}>
+        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text + '-assessment'}>
           Generate Form
         </Link>
       ),
