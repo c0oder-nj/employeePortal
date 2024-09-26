@@ -232,6 +232,19 @@ export const SidebarData = [
         ],
       },
       {
+        menuValue: "Confirmation (HR)",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-user-cog",
+        subMenus: [
+          {
+            menuValue: "Confimation",
+            route: "/hr-leave",
+            visibility: ["admin"],
+          }
+        ],
+      },
+      {
         menuValue: "Admin",
         hasSubRoute: true,
         showSubRoute: false,

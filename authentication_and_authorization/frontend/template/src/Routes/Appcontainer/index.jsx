@@ -205,8 +205,7 @@ import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
 import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
 import EmployeeConfirmationFromDetails from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetails.jsx";
 import Assesment from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/AssesAndPpt/AssesmentForm.jsx";
-
-
+import EmployeeConfirmationFromDetailsHR from "../../views/pages/Administration/Adminpages/HRConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHR.jsx";
 const AppContainer = () => {
   useEffect(() => {
     localStorage.setItem("colorschema", "blue");
@@ -962,6 +961,10 @@ const AppContainer = () => {
       id:141,
       path:"assesment-view",
       element:<Assesment/>
+    },{
+      id:142,
+      path:"hr-leave",
+      element:<EmployeeConfirmationFromDetailsHR/>
     }
   ];
 

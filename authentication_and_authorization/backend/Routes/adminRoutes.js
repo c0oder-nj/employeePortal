@@ -20,4 +20,8 @@ router.post('/hod-confim-extend-terminate',authUserThoughMiddleware.checkUserNee
 //Router to show the details of form and ppt of employee to hod
 router.get('/hod-show-form-ppt-details',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confirmationShowPptAndFormData)
 router.get('/assesment-form',authUserThoughMiddleware.checkUserNeeraj,confirmationController.assesmentDataShow);
+
+//Router for final confirmation remark and approval from HOD side after viewing ppt and assesment form
+router.post('/final-hod-remark',authUserThoughMiddleware.checkUserNeeraj,confirmationController.sendApprovalToHrFromHOD); 
+
 module.exports = router;

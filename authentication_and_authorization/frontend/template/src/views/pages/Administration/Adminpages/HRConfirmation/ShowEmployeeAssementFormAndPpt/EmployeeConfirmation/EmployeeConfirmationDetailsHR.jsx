@@ -5,10 +5,11 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Table } from "antd";
 import axios from "axios";
+// import useAuth from "../../../../../../../hooks/useAuth";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-const EmployeeConfirmationDetails = () => {
+const EmployeeConfirmationDetailsHR = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
   const { checkCookie } = useAuth();
@@ -18,7 +19,7 @@ const EmployeeConfirmationDetails = () => {
   });
   //Use effect for showing data just for testing
   useEffect(() => {
-    console.log("Showing data to be send", apiData);
+    console.log("Showing data to be send in hr side ", apiData);
   }, [apiData]);
 
   useEffect(() => {
@@ -145,7 +146,7 @@ const EmployeeConfirmationDetails = () => {
             );
           }}
         >
-          Final Approval
+        Final Approval
         </Link>
       ),
     },
@@ -218,7 +219,7 @@ const EmployeeConfirmationDetails = () => {
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
-                <h3>Hod Remark</h3>
+                <h3>HR Remark</h3>
                 <p>Sap Number : </p>
               </div>
               <div className="modal-btn delete-action">
@@ -278,4 +279,4 @@ const EmployeeConfirmationDetails = () => {
   );
 };
 
-export default EmployeeConfirmationDetails;
+export default EmployeeConfirmationDetailsHR;
