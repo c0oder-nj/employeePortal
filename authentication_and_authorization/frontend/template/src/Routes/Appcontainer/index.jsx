@@ -205,7 +205,8 @@ import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
 import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
 import EmployeeConfirmationFromDetails from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetails.jsx";
 import Assesment from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/AssesAndPpt/AssesmentForm.jsx";
-
+import EmployeeConfirmationFromDetailsHR from "../../views/pages/Administration/Adminpages/HRConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHR.jsx";
+import EmployeeConfirmationFromDetailsHRHead from "../../views/pages/Administration/Adminpages/HRHeadConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHRHead.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -962,7 +963,16 @@ const AppContainer = () => {
       id:141,
       path:"assesment-view",
       element:<Assesment/>
+    },{
+      id:142,
+      path:"hr-leave",
+      element:<EmployeeConfirmationFromDetailsHR/>
+    },{
+      id:143,
+      path:"hr-head-leave",
+      element:<EmployeeConfirmationFromDetailsHRHead/>
     }
+    
   ];
 
   const ChatRoutingeObjects = [
@@ -992,7 +1002,6 @@ const AppContainer = () => {
       element: <IncomingCall />,
     },
   ];
-
 
   const ComponentsRoutingeObjects = [
     {

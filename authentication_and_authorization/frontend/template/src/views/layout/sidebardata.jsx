@@ -139,6 +139,11 @@ export const SidebarData = [
             route: "/c-off",
             visibility: ["user", "admin"],
           },
+          {
+            menuValue: "Confirmation Emp PPT",
+            route: "/confirm-emp-ppt",
+            visibility: ["user", "admin"],
+          },
           // {
           //   menuValue: 'Departments',
           //   route: "/departments",
@@ -231,17 +236,34 @@ export const SidebarData = [
           },
         ],
       },
+      // {
+      //   menuValue: "Confirmation",
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: "la la-user-check",
+      //   subMenus: [
+      //     {
+      //       menuValue: "Confirmation Emp PPT",
+      //       route: "/confirm-emp-ppt",
+      //       visibility: ["user", "admin"],
+      //     },
+      //   ],
+      // },
       {
-        menuValue: "Confirmation",
+        menuValue: "Confirmation (HR)",
         hasSubRoute: true,
         showSubRoute: false,
-        icon: "la la-user-check",
+        icon: "la la-user-cog",
         subMenus: [
           {
-            menuValue: "Confirmation Emp PPT",
-            route: "/confirm-emp-ppt",
-            visibility: ["user", "admin"],
-          },
+            menuValue: "Confimation",
+            route: "/hr-leave",
+            visibility: ["hrlvl1"],
+          },{
+            menuValue: "Confimation(Head HR)",
+            route: "/hr-head-leave",
+            visibility: ["hrlvl2"],
+          }
         ],
       },
       {

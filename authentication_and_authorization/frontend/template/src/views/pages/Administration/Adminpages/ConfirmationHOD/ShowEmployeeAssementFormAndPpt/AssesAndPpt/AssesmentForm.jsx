@@ -391,6 +391,10 @@ const Assesment = () => {
 
                                 <h5 className="mb-3 ">Employees’s Progress</h5>
                                 <div className="border p-4 mb-3">
+
+                                  <div className="description" style={{'float' : 'right'}}>
+                                    <b>A*</b> - Excellent <b>B*</b> - Good <b>C*</b> - Average <b>D*</b> - Poor
+                                  </div>
                                   
                                   <table className="table table-hover table-bordered border-primary table-striped">
                                     <thead className="fw-bold">

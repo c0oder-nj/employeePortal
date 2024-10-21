@@ -5,10 +5,11 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Table } from "antd";
 import axios from "axios";
+// import useAuth from "../../../../../../../hooks/useAuth";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-const EmployeeConfirmationDetails = () => {
+const EmployeeConfirmationDetailsHR = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
   const { checkCookie } = useAuth();
@@ -18,7 +19,7 @@ const EmployeeConfirmationDetails = () => {
   });
   //Use effect for showing data just for testing
   useEffect(() => {
-    console.log("Showing data to be send", apiData);
+    console.log("Showing data to be send in hr side ", apiData);
   }, [apiData]);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const EmployeeConfirmationDetails = () => {
         "Printing value at 478 for travelexpense data in local :: ",
         value
       );
-      const url = `${process.env.REACT_APP_BASE_URL}/api/admin/hod-show-form-ppt-details`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/admin/hrlv1-lisitng`;
       console.log(url);
       await fetch(url, {
         headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
@@ -102,7 +103,11 @@ const EmployeeConfirmationDetails = () => {
       title: "Confirmation Form(PPT)",
       dataIndex: "pernr",
       render: (text) => (
-        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text + '-ppt'}>
+        <Link
+          className="btn btn-sm btn-primary"
+          to="/assesment-view"
+          state={text + '-ppt'}
+        >
           Generate PPT
         </Link>
       ),
@@ -111,7 +116,11 @@ const EmployeeConfirmationDetails = () => {
       title: "Assessment Form",
       dataIndex: "pernr",
       render: (text) => (
-        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text + '-assessment'}>
+        <Link
+          className="btn btn-sm btn-primary"
+          to="/assesment-view"
+          state={text + '-assessment'}
+        >
           Generate Form
         </Link>
       ),
@@ -137,7 +146,7 @@ const EmployeeConfirmationDetails = () => {
             );
           }}
         >
-          Final Approval
+        Final Approval
         </Link>
       ),
     },
@@ -151,11 +160,11 @@ const EmployeeConfirmationDetails = () => {
     let cookieValue = cookieExists.cookie;
     cookieValue = cookieValue.split('=').at(1);
     console.log(JSON.stringify(formData));
-
+    console.log(`${process.env.REACT_APP_BASE_URL}/api/admin/hr-approval`);
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_BASE_URL}/api/admin/final-hod-remark`,
+      url: `${process.env.REACT_APP_BASE_URL}/api/admin/hr-approval`,
       headers: {
         'accesstoken': cookieValue,
         'Content-Type': 'application/json'
@@ -210,8 +219,8 @@ const EmployeeConfirmationDetails = () => {
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
-                <h3>Hod Remark</h3>
-                <p>Sap Number : </p>
+                <h3>HR Remark</h3>
+                <p>Sap Number : {formData?.employeeSapNumber} </p>
               </div>
               <div className="modal-btn delete-action">
                 <div className="row">
@@ -270,4 +279,4 @@ const EmployeeConfirmationDetails = () => {
   );
 };
 
-export default EmployeeConfirmationDetails;
+export default EmployeeConfirmationDetailsHR;

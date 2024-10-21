@@ -8,7 +8,7 @@ import axios from "axios";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-const EmployeeConfirmationDetails = () => {
+const EmployeeConfirmationDetailsHRHead = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
   const { checkCookie } = useAuth();
@@ -18,7 +18,7 @@ const EmployeeConfirmationDetails = () => {
   });
   //Use effect for showing data just for testing
   useEffect(() => {
-    console.log("Showing data to be send", apiData);
+    console.log("Showing data to be send in hr side ", apiData);
   }, [apiData]);
 
   useEffect(() => {
@@ -102,7 +102,11 @@ const EmployeeConfirmationDetails = () => {
       title: "Confirmation Form(PPT)",
       dataIndex: "pernr",
       render: (text) => (
-        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text + '-ppt'}>
+        <Link
+          className="btn btn-sm btn-primary"
+          to="/assesment-view"
+          state={text}
+        >
           Generate PPT
         </Link>
       ),
@@ -111,7 +115,11 @@ const EmployeeConfirmationDetails = () => {
       title: "Assessment Form",
       dataIndex: "pernr",
       render: (text) => (
-        <Link className="btn btn-sm btn-primary" to="/assesment-view" state={text + '-assessment'}>
+        <Link
+          className="btn btn-sm btn-primary"
+          to="/assesment-view"
+          state={text}
+        >
           Generate Form
         </Link>
       ),
@@ -137,7 +145,7 @@ const EmployeeConfirmationDetails = () => {
             );
           }}
         >
-          Final Approval
+        Final Approval
         </Link>
       ),
     },
@@ -151,11 +159,11 @@ const EmployeeConfirmationDetails = () => {
     let cookieValue = cookieExists.cookie;
     cookieValue = cookieValue.split('=').at(1);
     console.log(JSON.stringify(formData));
-
+    console.log(`${process.env.REACT_APP_BASE_URL}/api/admin/hr-approval`);
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_BASE_URL}/api/admin/final-hod-remark`,
+      url: `${process.env.REACT_APP_BASE_URL}/api/admin/hr-approval`,
       headers: {
         'accesstoken': cookieValue,
         'Content-Type': 'application/json'
@@ -210,7 +218,7 @@ const EmployeeConfirmationDetails = () => {
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
-                <h3>Hod Remark</h3>
+                <h3>HR Remark</h3>
                 <p>Sap Number : </p>
               </div>
               <div className="modal-btn delete-action">
@@ -241,8 +249,6 @@ const EmployeeConfirmationDetails = () => {
                   <div className="col-6">
                     <button className="btn btn-primary continue-btn"
                     onClick={(event) => {
-                      
-                    
                       sendRemarkAndConfirmation(event); 
                     }}>
                       Approve
@@ -270,4 +276,4 @@ const EmployeeConfirmationDetails = () => {
   );
 };
 
-export default EmployeeConfirmationDetails;
+export default EmployeeConfirmationDetailsHRHead;
