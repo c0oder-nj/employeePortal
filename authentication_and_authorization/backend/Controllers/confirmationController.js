@@ -25,7 +25,7 @@ const empConfPPT = (req,res) => {
     let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/empconfirmationppt.htm?data=${jsonStringData}`,
+    url: `${process.env.BASE_URL_QUALITY}/empconfirmationppt.htm?data=${jsonStringData}`,
     headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
     }

@@ -69,6 +69,7 @@ const getEmpPunchData = (req, res) => {
 
 const pushEmpData = (req, res) => {
     // const sapid = req.query.sapid;
+    console.log("Printing request body :: ", req.body);
     const sapIdArray = req.body.sapIdArray;
     console.log(sapIdArray, typeof sapIdArray);
     var negativeCount = 0;

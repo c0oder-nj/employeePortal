@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
   credentials: true,
-  origin: ["http://empportal.shaktipumps.com/", "http://localhost:3000", "http://localhost:3001", "http://www.empportal.shaktipumps.com" ], // Whitelist the domains you want to allow 
+  origin: ["http://empportal.shaktipumps.com/", "https://customerportal.shaktipumps.com/" , "http://localhost:3000", "http://localhost:3001", "http://www.empportal.shaktipumps.com" ], // Whitelist the domains you want to allow 
    origin : '*',
   methods: "GET, POST, PUT, DELETE, HEAD, OPTIONS",
 };
@@ -176,6 +176,7 @@ app.get(
 
 app.use("/api", routes);
 
+
 app.get("/get_cookie", (req, res) => {
   console.log(req.session.username);
   res.status(200).send("Cookie printed to console");
@@ -192,6 +193,14 @@ app.get("/destroy_cookie", (req, res) => {
 
 //for encoding a password
 app.get("/encode_me", authControllers.encodePassword);
+
+
+
+// customer portal api endpoints
+
+
+
+
 
 const port = process.env.port || 3000;
 
