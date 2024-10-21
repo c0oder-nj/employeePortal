@@ -23,5 +23,9 @@ router.get('/assesment-form',authUserThoughMiddleware.checkUserNeeraj,confirmati
 
 //Router for final confirmation remark and approval from HOD side after viewing ppt and assesment form
 router.post('/final-hod-remark',authUserThoughMiddleware.checkUserNeeraj,confirmationController.sendApprovalToHrFromHOD); 
+router.post('/hr-approval',authUserThoughMiddleware.checkUserNeeraj,confirmationController.hrlvl1Controller);
+
+router.get('/hrlv1-lisitng',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confirmationShowPptAndFormDataHrlvl1)
+
 
 module.exports = router;

@@ -240,7 +240,11 @@ export const SidebarData = [
           {
             menuValue: "Confimation",
             route: "/hr-leave",
-            visibility: ["admin"],
+            visibility: ["hrlvl1"],
+          },{
+            menuValue: "Confimation(Head HR)",
+            route: "/hr-head-leave",
+            visibility: ["hrlvl2"],
           }
         ],
       },

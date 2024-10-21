@@ -154,6 +154,36 @@ const confirmationShowPptAndFormData = async(req,res)=>{
   });
 }
 
+const confirmationShowPptAndFormDataHrlvl1 = async(req,res)=>{
+  const sapId = req.sapid;
+  console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
+  console.log("Form Data",req.body);
+  // return res.json({"status" : true, "data" : "Showing data of ppt form to HOD for particular employee"});
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL_QUALITY}/confirmationhrdatalisting.htm`,
+    
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
+  console.log(config.url);
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200) {
+      return res.json({"status" : true, "data" : response.data});
+    }else{
+      return res.json({"status" : false, "data" : "Some error occured"});
+    }
+  })
+  .catch((error) => {
+    return res.json({"status" : false, "data" : error});
+  });
+}
+
+
 const assesmentDataShow= async(req,res)=>{
   const sapId = req.sapid;
   console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
@@ -213,9 +243,39 @@ const sendApprovalToHrFromHOD = async(req,res)=>{
   })
   .catch((error) => {
     return res.status(400).json({"status" : false, "message" : error});
-  });
-
-  
+  }); 
 }
 
-module.exports = {sendApprovalToHrFromHOD,confirmationListingToHOD,confimExtendTerminateByHod,confirmationShowPptAndFormData,assesmentDataShow}
+const hrlvl1Controller = async(req,res)=>{
+  const sapId = req.sapid;
+  console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
+  console.log("Form Data",req.body);
+  // return res.json({"status" : true, "data" : "Hello data form final HOD approval"});
+  console.log("Printing data after stringify",req.body);
+  let hod_remark = req.body.remarkText;
+  hod_remark = encodeURIComponent(hod_remark)
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    // url: `${process.env.BASE_URL_QUALITY}/hodfinalapprovalapi.htm?hod_remark=${hod_remark}&empSapId=${req.body.employeeSapNumber}`,
+    url :`${process.env.BASE_URL_QUALITY}/empconfirmationhrapproval.htm?hr_sapid=${sapId}&emp_sapid=${req.body.employeeSapNumber}&hr_remark=${hod_remark}`,
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
+  console.log(config.url);
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200) {
+      return res.status(200).json({"status" : true, "message" : "Employee has been confirmed from your side and sent to HR for final confirmation"});
+    }else{
+      return res.status(400).json({"status" : false, "message" : "Some error occured in first api"});
+    }
+  })
+  .catch((error) => {
+    return res.status(400).json({"status" : false, "message" : error});
+  });
+}
+
+module.exports = {confirmationShowPptAndFormDataHrlvl1,hrlvl1Controller,sendApprovalToHrFromHOD,confirmationListingToHOD,confimExtendTerminateByHod,confirmationShowPptAndFormData,assesmentDataShow}

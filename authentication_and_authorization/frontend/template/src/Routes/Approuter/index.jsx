@@ -265,6 +265,7 @@ import ConfirmationHOD from "../../views/pages/Administration/Adminpages/Confirm
 import EmployeeConfirmationFromDetails from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetails.jsx";
 import Assesment from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/AssesAndPpt/AssesmentForm.jsx";
 import EmployeeConfirmationFromDetailsHR from "../../views/pages/Administration/Adminpages/HRConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHR.jsx";
+import EmployeeConfirmationFromDetailsHRHead from "../../views/pages/Administration/Adminpages/HRHeadConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHRHead.jsx";
 // auth provider using context api 
 // import { AuthProvider } from "../../Context/AuthProvider.jsx";
 import RequireAuth from "../../components/RequireAuth.jsx";
@@ -336,8 +337,12 @@ const AppRouter = () => {
 
                 </Route>
                 
+
+                
+
                 <Route element={<RequireAuth allowedRoles={['admin']} />}>
                     {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
+                    {console.log("In admin part")}
                     <Route path="/adminattendance" element={<AttendenceAdmin />} />
                     <Route path="/adminleaves" element={<AdminLeave />} />
                     {/* <Route path="/gate-pass-approval" element={<AdminLeave />} /> */}
@@ -350,8 +355,7 @@ const AppRouter = () => {
                     {/* <Route path="/hr-leave" element={<EmployeeConfirmationFromDetailsHR />} /> */}
                 </Route>
 
-                
-                <Route element={<RequireAuth allowedRoles={['admin,user,hrlvl1,hrlvl2']} />}>
+                <Route element={<RequireAuth allowedRoles={['hrlvl1','admin','user']} />}>
                     <Route path="/adminattendance" element={<AttendenceAdmin />} />
                     <Route path="/adminleaves" element={<AdminLeave />} />
                     <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
@@ -360,9 +364,22 @@ const AppRouter = () => {
                     <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
                     <Route path="/HOD-Employee-Confirmation-Details" element={<EmployeeConfirmationFromDetails />} />
                     <Route path="/assesment-view" element={<Assesment />} />
+                    {console.log("Hello HR Section")}
                     <Route path="/hr-leave" element={<EmployeeConfirmationFromDetailsHR />} />
                 </Route>
-
+                
+                <Route element={<RequireAuth allowedRoles={['hrlvl2']} />}>
+                    <Route path="/adminattendance" element={<AttendenceAdmin />} />
+                    <Route path="/adminleaves" element={<AdminLeave />} />
+                    <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
+                    <Route path="/gatepass-approval" element={<Gatepass />} />
+                    <Route path="/odot-approval" element={<OdOtApproval />} />
+                    <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
+                    <Route path="/HOD-Employee-Confirmation-Details" element={<EmployeeConfirmationFromDetails />} />
+                    <Route path="/assesment-view" element={<Assesment />} />
+                    <Route path="/hr-head-leave" element={<EmployeeConfirmationFromDetailsHRHead />} />
+                    {console.log("Hello Head HR Section")}
+                </Route>
 
 
                   {/* <Route path="/job-list" element={<JobList />} />

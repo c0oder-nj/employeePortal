@@ -5,11 +5,10 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Table } from "antd";
 import axios from "axios";
-// import useAuth from "../../../../../../../hooks/useAuth";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-const EmployeeConfirmationDetailsHR = () => {
+const EmployeeConfirmationDetailsHRHead = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
   const { checkCookie } = useAuth();
@@ -35,7 +34,7 @@ const EmployeeConfirmationDetailsHR = () => {
         "Printing value at 478 for travelexpense data in local :: ",
         value
       );
-      const url = `${process.env.REACT_APP_BASE_URL}/api/admin/hrlv1-lisitng`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/admin/hod-show-form-ppt-details`;
       console.log(url);
       await fetch(url, {
         headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
@@ -250,8 +249,6 @@ const EmployeeConfirmationDetailsHR = () => {
                   <div className="col-6">
                     <button className="btn btn-primary continue-btn"
                     onClick={(event) => {
-                      
-                    
                       sendRemarkAndConfirmation(event); 
                     }}>
                       Approve
@@ -279,4 +276,4 @@ const EmployeeConfirmationDetailsHR = () => {
   );
 };
 
-export default EmployeeConfirmationDetailsHR;
+export default EmployeeConfirmationDetailsHRHead;
