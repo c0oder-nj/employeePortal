@@ -24,10 +24,10 @@ const EmployeeConfirmationFromDetailsHRHead = () => {
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
-            maintitle="Employee Assesment Form and PPT"
+            maintitle="Employee Assesment Form and PPT show to Head HR"
           />
-          {/* <EmployeeConfirmationDetailsHRHead /> */}
-          <EmployeeConfirmationFromDetailsHRHead/>
+          <EmployeeConfirmationDetailsHRHead />
+          {/* <EmployeeConfirmationFromDetailsHRHead/> */}
         </div>
       </div>
       {/* <AddSalaryModal /> */}

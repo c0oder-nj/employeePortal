@@ -208,7 +208,7 @@ const EmployeeConfirmationDetailsHRHead = () => {
                 // rowKey={(record) => record.id}
               />
             ) : (
-              "Loading"
+              "Loading in Head HR"
             )}
           </div>
         </div>
