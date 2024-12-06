@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "jose": "^5.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "otp-generator": "^4.0.1"
   }
 }

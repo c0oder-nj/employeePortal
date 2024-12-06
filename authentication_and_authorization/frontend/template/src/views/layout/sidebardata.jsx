@@ -1,14 +1,14 @@
+import useAuth from "../../hooks/useAuth";
+// const {auth} = useAuth();
 
 export const SidebarData = [
-
-
-{
-    tittle: 'MAIN',
+  {
+    tittle: "MAIN",
     showAsTab: false,
     separateRoute: false,
     menu: [
       {
-        menuValue: 'Dashboard',
+        menuValue: "Dashboard",
         hasSubRoute: true,
         showSubRoute: false,
         route: "#",
@@ -17,10 +17,12 @@ export const SidebarData = [
           // {
           //   menuValue: 'Admin Dashboard',
           //   route: "/admin-dashboard",
+          //   visibility : ['admin']
           // },
           {
-            menuValue: 'Employee Dashboard',
+            menuValue: "Employee Dashboard",
             route: "/employee-dashboard",
+            visibility: ["user", "admin"],
           },
           // {
           //   menuValue: 'Deals Dashboard',
@@ -88,65 +90,80 @@ export const SidebarData = [
     ],
   },
   {
-    tittle: 'EMPLOYEES',
+    tittle: "EMPLOYEES",
     showAsTab: false,
     separateRoute: false,
     menu: [
       {
-        menuValue: 'General',
+        menuValue: "General",
         hasSubRoute: true,
         showSubRoute: false,
         route: "#",
         icon: "la la-user",
         subMenus: [
+          // {
+          //   menuValue: 'All Employees',
+          //   route: "/employees",
+          // },
           {
-            menuValue: 'All Employees',
-            route: "/employees",
-          },
-          {
-            menuValue: 'Holidays',
+            menuValue: "Holidays",
             route: "/holidays",
+            visibility: ["user", "admin"],
           },
+          // {
+          //   menuValue: 'Leaves(Admin)',
+          //   route: "/adminleaves",
+          //   visibility : ['admin']
+          // },
           {
-            menuValue: 'Leaves(Admin)',
-            route: "/adminleaves",
-          },
-          {
-            menuValue: 'Leaves(Employee)',
+            menuValue: "Leaves(Employee)",
             route: "/leaves-employee",
+            visibility: ["user", "admin"],
           },
+          // {
+          //   menuValue: 'Leave Settings',
+          //   route: "/leave-settings",
+          // },
+          // {
+          //   menuValue: 'Attendance (Admin)',
+          //   route: "/adminattendance",
+          //   visibility : ['admin']
+          // },
           {
-            menuValue: 'Leave Settings',
-            route: "/leave-settings",
-          },
-          {
-            menuValue: 'Attendance (Admin)',
-            route: "/adminattendance",
-          },
-          {
-            menuValue: 'Attendance (Employee)',
+            menuValue: "Attendance (Employee)",
             route: "/attendance-employee",
+            visibility: ["user", "admin"],
           },
           {
-            menuValue: 'Departments',
-            route: "/departments",
+            menuValue: "C-OFF",
+            route: "/c-off",
+            visibility: ["user", "admin"],
           },
           {
-            menuValue: 'Designations',
-            route: "/designations",
+            menuValue: "Confirmation Emp PPT",
+            route: "/confirm-emp-ppt",
+            visibility: ["user", "admin"],
           },
-          {
-            menuValue: 'Timesheet',
-            route: "/timesheet",
-          },
-          {
-            menuValue: 'Shift & Schedule',
-            route: "/shift-scheduling",
-          },
-          {
-            menuValue: 'Overtime',
-            route: "/overtime",
-          },
+          // {
+          //   menuValue: 'Departments',
+          //   route: "/departments",
+          // },
+          // {
+          //   menuValue: 'Designations',
+          //   route: "/designations",
+          // },
+          // {
+          //   menuValue: 'Timesheet',
+          //   route: "/timesheet",
+          // },
+          // {
+          //   menuValue: 'Shift & Schedule',
+          //   route: "/shift-scheduling",
+          // },
+          // {
+          //   menuValue: 'Overtime',
+          //   route: "/overtime",
+          // },
         ],
       },
       // commenting clients menu below
@@ -157,42 +174,168 @@ export const SidebarData = [
       //   route: "/clients",
       //   icon: "la la-users",
       // },
+      // {
+      //   menuValue: 'KRA',
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: "la la-file-image",
+      //   subMenus: [
+      //     {
+      //       menuValue: 'Report',
+      //       route: "/kra_report",
+      //       visibility : ['user', 'admin']
+      //     }
+      //   ],
+      // },
       {
-        menuValue: 'Travel Allownace',
+        menuValue: "Travel Allownace",
         hasSubRoute: true,
         showSubRoute: false,
         icon: "la la-rocket",
         subMenus: [
-          // {
-          //   // menuValue: 'Domestic Travel Allownace',
-          //   // route: "/excel-file-upload",
-          // },
-          // {
-          //   // menuValue: 'Domestic Travel Allownace(Working on it)',
-          //   // route: "/excel-info-file-upload",
-          // },
-          // {
-          //   // menuValue: 'International Travel Allowance',
-          //   // // route: "/tasks",
-          // },
           {
-            menuValue: 'Travel Reports',
+            menuValue: "Travel Reports",
             route: "/travel_expense_table",
+            visibility: ["user", "admin"],
           },
+          // {
+          //   menuValue: 'HOD travel approval',
+          //   route: "/hod_travel_expense_approval",
+          //   visibility : ['admin']
+          // },
+        ],
+      },
+      {
+        menuValue: "Gate Pass",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-door-open",
+        subMenus: [
           {
-            menuValue: 'HOD travel approval',
-            route: "/hod_travel_expense_approval",
+            menuValue: "Gate Pass Creation",
+            route: "/gate_pass_creation",
+            visibility: ["user", "admin"],
+          },
+          // {
+          //   menuValue: 'HOD travel approval',
+          //   route: "/hod_travel_expense_approval",
+          //   visibility : ['admin']
+          // },
+        ],
+      },
+      {
+        menuValue: "Official Duty/Trip",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-plane-departure",
+        subMenus: [
+          {
+            menuValue: "Od/Ot Creation and show",
+            route: "/od_ot_creation",
+            visibility: ["user", "admin"],
           },
         ],
       },
       {
-        menuValue: 'Clients',
-        hasSubRoute: false,
+        menuValue: "Key Responsibility Area",
+        hasSubRoute: true,
         showSubRoute: false,
-        route: "/clients",
-        icon: "la la-users",
+        icon: "la la-box-open",
+        subMenus: [
+          {
+            menuValue: "Create KRA Template",
+            route: "/create-kra-template",
+            visibility: ["user", "admin"],
+          },
+        ],
       },
-    
+      // {
+      //   menuValue: "Confirmation",
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: "la la-user-check",
+      //   subMenus: [
+      //     {
+      //       menuValue: "Confirmation Emp PPT",
+      //       route: "/confirm-emp-ppt",
+      //       visibility: ["user", "admin"],
+      //     },
+      //   ],
+      // },
+      {
+        menuValue: "Confirmation (HR)",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-user-cog",
+        subMenus: [
+          {
+            menuValue: "Confimation",
+            route: "/hr-leave",
+            visibility: ["hrlvl1"],
+          },{
+            menuValue: "Confimation(Head HR)",
+            route: "/hr-head-leave",
+            visibility: ["hrlvl2"],
+          }
+        ],
+      },
+      {
+        menuValue: "Admin",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-user-cog",
+        subMenus: [
+          {
+            menuValue: "Leaves Approval",
+            route: "/adminleaves",
+            visibility: ["admin"],
+          },
+          {
+            menuValue: "Employee Attendance",
+            route: "/adminattendance",
+            visibility: ["admin"],
+          },
+          {
+            menuValue: "Travel Approval",
+            route: "/hod_travel_expense_approval",
+            visibility: ["admin"],
+          },
+          {
+            menuValue: 'GatePass Approval',
+            route: "/gatepass-approval",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'OD/OT Approval',
+            route: "/odot-approval",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'Coff Approval',
+            route: "/coff-approval",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'Employee Confirmation',
+            route: "/employee-confirmation",
+            visibility : ['admin']
+          },
+          {
+            menuValue: 'HOD Employee Confirmation Details',
+            route: "/HOD-Employee-Confirmation-Details",
+            visibility : ['admin']
+          },
+          
+        ],
+      },
+      // {
+      //   menuValue: 'Clients',
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: "/clients",
+      //   icon: "la la-users",
+      // },
+
       // commenting projects menu below
       // {
       //   menuValue: 'Projects',
@@ -230,13 +373,13 @@ export const SidebarData = [
       //       menuValue: 'Ticket Details',
       //       route: "/ticket-details",
       //     },
-        
+
       //   ],
       // },
     ],
   },
-
-
+  
+  
 
   // commentign all below menu fields
   // {
@@ -300,8 +443,7 @@ export const SidebarData = [
   //   showAsTab: false,
   //   separateRoute: false,
   //   menu: [
-    
-    
+
   //     {
   //       menuValue: 'Sales',
   //       hasSubRoute: true,
@@ -356,7 +498,7 @@ export const SidebarData = [
   //           menuValue: 'Budget Expenses',
   //           route: "/budget-expenses",
   //         },
-         
+
   //       ],
   //     },
 
@@ -378,8 +520,7 @@ export const SidebarData = [
   //           menuValue: 'Payroll Items',
   //           route: "/payroll-items",
   //         },
-         
-         
+
   //       ],
   //     },
   //     {
@@ -527,7 +668,6 @@ export const SidebarData = [
   //           icon: "la la-times-circle",
   //         },
 
-          
   //   ],
   // },
 
@@ -616,7 +756,7 @@ export const SidebarData = [
   //           route: "/company-settings",
   //           icon: "la la-cog",
   //         },
-      
+
   //   ],
   // },
   // {
@@ -740,13 +880,10 @@ export const SidebarData = [
   //             }
   //           ]
   //         }
-          
+
   //   ],
   // },
- 
- 
-  
- 
+
   // {
   //   tittle: 'UI INTERFACE',
   //   showAsTab: false,
@@ -869,7 +1006,7 @@ export const SidebarData = [
   //             { menuValue: "Data Table", route: "/data-tables" }
   //           ]
   //         }
-          
+
   //   ],
   // },
   // {
@@ -880,7 +1017,7 @@ export const SidebarData = [
   //     {
   //       menuValue: 'Documentation',
   //       hasSubRoute: false,
-  //       showSubRoute: false,       
+  //       showSubRoute: false,
   //       route: "#",
   //       icon: "la la-file-text",
   //     },
@@ -900,11 +1037,10 @@ export const SidebarData = [
   //       icon: "la la-share-alt",
   //       subMenus: [
   //         { menuValue: "Level 1", route: "#" },
-         
+
   //       ]
   //     },
-     
-    
+
   //   ],
   // },
 ];

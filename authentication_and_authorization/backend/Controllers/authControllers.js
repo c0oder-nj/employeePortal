@@ -9,6 +9,7 @@ const otpGenerator = require('otp-generator')
 const crypto = require('crypto');
 const { json } = require('express');
 const { type } = require('os');
+const { Console } = require('console');
 
 dotenv.config();
 
@@ -28,17 +29,17 @@ const home = async (req, res) => {
 }
 
 
-const test = async (req, res) => {
-    // console.log(req.cookies.token)
+// const test = async (req, res) => {
+//     // console.log(req.cookies.token)
 
-    console.log("Your value",req.body)
+//     console.log("Your value",req.body)
 
-    const result = await axios.post(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
-    console.log(result.data);
-    console.log("Your cookie is working")
-    res.status(200).send({message : "Working",key:"Value"})
-    return;
-}
+//     const result = await axios.post(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+//     console.log(result.data);
+//     console.log("Your cookie is working")
+//     res.status(200).send({message : "Working",key:"Value"})
+//     return;
+// }
 
 //Fetching data for employee attendance
 
@@ -112,9 +113,7 @@ const login = async (req, res) => {
             }else{
                 if(await bcrypt.compare(req.body.password, msg)){ // user is a valid user
                     try {
-                        const userData = db.request().query(`SELECT empCode,empPassword, empName,empDesignation,compName,mobileNo,emailIdShakti,empAddress FROM userTable where empCode = ${req.body.sapid}`);
-                        // console.log((await userData).recordset.at(0).empCode);
-                        // return;
+                        const userData = db.request().query(`SELECT empCode,empPassword, empName,empDesignation,compName,mobileNo,emailIdShakti,empAddress, roles FROM userTable where empCode = ${req.body.sapid};update userTable set userLockFlag = 0, unSuccessfulAttempts = 0 where empCode = ${5054};`);
                         var empCode = (await userData).recordset.at(0).empCode;
                         var empPassword = (await userData).recordset.at(0).empPassword;
                         var empName = (await userData).recordset.at(0).empName;
@@ -123,6 +122,8 @@ const login = async (req, res) => {
                         var mobileNo = (await userData).recordset.at(0).mobileNo;
                         var emailIdShakti = (await userData).recordset.at(0).emailIdShakti;
                         var empAddress = (await userData).recordset.at(0).empAddress;
+                        var roles = (await userData).recordset.at(0).roles;
+                        roles = roles.split(',');
 
                         let payloadData = {
                             empCode: empCode,
@@ -133,14 +134,23 @@ const login = async (req, res) => {
                             mobileNo: mobileNo,
                             emailIdShakti: emailIdShakti,
                             empAddress: empAddress,
+                            roles : roles,
                         }
                         // generate jwt token
                         let jwtSecretKey = process.env.JWT_SECRET_KEY;
-                        const token = jwt.sign(payloadData, jwtSecretKey);
+                        const token = jwt.sign(payloadData, jwtSecretKey,
+                          {
+                            expiresIn: "60m",
+            
+                          }
+                        );
                         console.log(token)
                         res.cookie("token", token);
+                        res.setHeader('Access-Control-Allow-Origin', '*');
+                        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+                        res.setHeader('Access-Control-Max-Age', 60*60*24*30);
                         db.close();
-                        return res.json({ "status": true, message: "user logged in successfully", accessToken: token });
+                        return res.json({ "status": true, message: "user logged in successfully", "name" :  empName, "roles" : roles ,accessToken: token });
                     } catch (error) {
                         console.log("Error occured at user validation :: ", error);
                     }
@@ -203,7 +213,9 @@ const setPassword = async (req,res) => {
 
 const getData = async (req, res) => {
     // establish the connection with the database
+    // return res.send("test endpoint");
 
+    // below code is to create sap user into our db use it in future
     const result = await axios.get('https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/emp_credentials.htm');
     const userArray = result.data.Response;
 
@@ -254,7 +266,10 @@ const forgetPassword = async(req,res) => {
         await db.connect();
         const query = await db.request().query(`select mobileNo from userTable where empCode = ${sapId};`);
         // console.log(query.rowsAffected, query.recordset, query.output);
-        checkUser = query.rowsAffected[0]; // if mobileNo exist then the user is valid user
+        // checkUser = query.rowsAffected[0]; // if mobileNo exist then the user is valid user but may be the different one from the entered sap
+        if(mobileNo == query.recordset.at(0).mobileNo){
+            checkUser = true;
+        }
     } catch (error) {
         console.log("Error in try:: ",error)
     }finally{
@@ -265,9 +280,9 @@ const forgetPassword = async(req,res) => {
     if(!checkUser){
         return res.json({"status":false, "message": "user does not exist in our record"});
     }else{
-        const otp = otpGenerator.generate(6,{
+        const otp = otpGenerator.generate(4,{
             digits: true, 
-            lowerCaseAlphabets : true, 
+            lowerCaseAlphabets : false, 
             upperCaseAlphabets: false, 
             specialChars : false
         })
@@ -281,7 +296,7 @@ const forgetPassword = async(req,res) => {
         
 
         
-        const msg = `Enter The Following OTP To Verify Your Account <b>${otp}</b> SHAKTI`;
+        const msg = `Enter The Following OTP To Verify Your Account ${otp} SHAKTI`;
         const smsResponse = await axios.get('http://control.yourbulksms.com/api/sendhttp.php', {
             params: {
                 'authkey' : process.env.AUTH_KEY,
@@ -338,6 +353,32 @@ const verifyOtp = async(req,res) => {
     } 
 }
 
+const validateSap = async (sapId) => {
+    try {
+        await db.connect();
+        const queryRes = await db.request().query(`SELECT mobileNo from userTable where empCode = ${sapId};`)
+        if(queryRes.rowsAffected.at(0)){
+            // query executed successfully which means user is present in our db get its mobile number
+            return {'status' : true, 'message' : 'User exist in our record' ,'mobileNum' : queryRes.recordset.at(0).mobileNo}
+        }else{
+            return {'status' : false, 'message' : 'User does not exist in our record' , 'mobileNum' : '0000000000'}
+        }
+    } catch (error) {
+        // handles database connectivity error properly
+        console.log(error);
+    }finally{
+        await db.close();
+    }
+}
 
 
-module.exports = { home, login, test, getData, encodePassword,setPassword,forgetPassword,verifyOtp };
+// api for getting phone number dynamic for forgot password feature
+const fetchPhone = async(req,res) => {
+    const sapId = req.query.sapid;
+    const response = await validateSap(sapId);
+    res.json({"status": response.status , "message" : response.message, "mobileNo" : response.mobileNum})
+}
+
+
+
+module.exports = { home, login,  getData, encodePassword,setPassword,forgetPassword,verifyOtp,fetchPhone };

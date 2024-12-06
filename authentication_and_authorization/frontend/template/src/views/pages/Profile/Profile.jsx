@@ -1,13 +1,17 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { Avatar_02, Avatar_16 } from "../../../Routes/ImagePath";
-import { Link,  useLocation } from "react-router-dom";
+import { Link,  useLocation, useNavigate } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
+import { useEffect, useState } from "react";
+import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const Profile = () => {
-  const location = useLocation();
-  const {empData} = location.state; // destructred if pass multiple values in state attribute
-  // console.log("printing location data :: ", empData);
+  const navigate = useNavigate();
+  const [empData, setEmpData] = useState({});
+  const [isLoading, setisLoading] = useState(false);
+  const {checkCookie} = useAuth();
 
   // function checkCookie(cookieName) {
   //   const cookies = document.cookie.split(';');
@@ -22,6 +26,50 @@ const Profile = () => {
   // }
 
 
+
+    useEffect(() => {
+
+    setisLoading(true);
+    const fetchData = async () => {
+      let isCookieExist = checkCookie('accessToken');
+      if(!isCookieExist.status){
+        navigate('/');
+        return false;
+      }
+
+      let value = isCookieExist.cookie;
+      value = value.split('=').at(1);
+
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/employee/employee_profile`, {
+          method: 'GET',
+          headers: {
+            'accesstoken': value,
+            'Access-Control-Allow-Origin' : '*'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching data", error);
+        return false;
+      }
+    };
+
+    fetchData().then((data)=>{
+      console.log("when fetchdata completes :: ", data);
+      setisLoading(false);
+      setEmpData(data);
+    })
+    
+    
+  }, []);
+  
+
   return (
     <div className="page-wrapper">
        <div className="content container-fluid">
@@ -32,7 +80,14 @@ const Profile = () => {
           modal="#add_indicator"
           name="Add New"
         />
-        <div className="card mb-0">
+
+        {
+          isLoading && <ShaktiLoader page='view-profile'/>
+        }
+        
+        
+
+        <div className="card mb-0" style={{display : isLoading ? 'none' : "block"}}>
           <div className="card-body">
             <div className="row">
               <div className="col-md-12">
@@ -73,7 +128,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Phone:</div>
                             <div className="text">
-                              <Link to={`tel:${empData.telnr}`}>
+                              <Link target="_blank" to={`tel:${empData.telnr}`}>
                                 {empData.telnr}
                               </Link>
                             </div>
@@ -81,7 +136,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Email Personal:</div>
                             <div className="text">
-                              <Link to={`mailto:${empData.usrid}`}>
+                              <Link target="_blank" to={`mailto:${empData.usrid}`}>
                                 {empData.usrid}
                               </Link>
                             </div>
@@ -89,7 +144,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Email Company:</div>
                             <div className="text">
-                              <Link to={`mailto:${empData.usrid_long}`}>
+                              <Link target="_blank" to={`mailto:${empData.usrid_long}`}>
                                 {empData.usrid_long}
                               </Link>
                             </div>
@@ -109,7 +164,7 @@ const Profile = () => {
                           <li>
                             <div className="title">Reports to:</div>
                             <div className="text">
-                              <Link to="profile">
+                              <Link to="/profile">
                                 {empData.f_ename}
                               </Link>
                             </div>
@@ -118,7 +173,8 @@ const Profile = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="pro-edit">
+                  {/* commenting edit icon */}
+                  {/* <div className="pro-edit">
                     <Link
                       data-bs-target="#profile_info"
                       data-bs-toggle="modal"
@@ -127,14 +183,14 @@ const Profile = () => {
                     >
                       <i className="fa-solid fa-pencil"></i>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="card tab-box">
+        <div className="card tab-box" style={{display : isLoading ? 'none' : 'block'}}>
           <div className="row user-tabs">
             <div className="col-lg-12 col-md-12 col-sm-12 line-tabs">
               <ul className="nav nav-tabs nav-tabs-bottom">
@@ -144,10 +200,11 @@ const Profile = () => {
                     data-bs-toggle="tab"
                     className="nav-link active"
                   >
-                    Profile
+                    {/* Profile */}
+                    Other Info
                   </Link>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Link
                     to="#emp_projects"
                     data-bs-toggle="tab"
@@ -155,8 +212,8 @@ const Profile = () => {
                   >
                     Projects
                   </Link>
-                </li>
-                <li className="nav-item">
+                </li> */}
+                {/* <li className="nav-item">
                   <Link
                     to="#bank_statutory"
                     data-bs-toggle="tab"
@@ -165,8 +222,8 @@ const Profile = () => {
                     Bank &amp; Statutory
                     <small className="text-danger ms-1">(Admin Only)</small>
                   </Link>
-                </li>
-                <li className="nav-item">
+                </li> */}
+                {/* <li className="nav-item">
                   <Link
                     to="#emp_assets"
                     data-bs-toggle="tab"
@@ -174,12 +231,17 @@ const Profile = () => {
                   >
                     Assets
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
         </div>
-        <ProfileTab profile={empData}/>
+
+        {
+          !isLoading &&  <ProfileTab profile={empData}/>
+        }
+        
+
       </div> 
     </div>
   );

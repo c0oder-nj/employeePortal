@@ -24,8 +24,6 @@ import GoalType from "../../views/pages/Performance/Goals/GoalType";
 import Trainers from "../../views/pages/Performance/Training/Trainers";
 import Training from "../../views/pages/Performance/Training/Training";
 import TrainingType from "../../views/pages/Performance/Training/TrainingType";
-
-// import EmployeeProfile from "../../views/pages/Pages/profile/employeeprofile";
 import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard";
 import EmployeeDashboard from "../../views/pages/MainPages/Dashboard/EmployeeDashboard";
 import Chat from "../../views/pages/MainPages/Apps/chat";
@@ -106,7 +104,7 @@ import SubCategory from "../../views/pages/HR/Accounting/Categories/subCategory"
 import Budgets from "../../views/pages/HR/Accounting/Budgets.jsx";
 import BudgetExpenses from "../../views/pages/HR/Accounting/BudgetExpenses";
 import BudgetRevenues from "../../views/pages/HR/Accounting/BudgetRevenue";
-import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeSalary.jsx";
+import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeConfirmation/index.jsx";
 import PaySlip from "../../views/pages/HR/Payroll/Payslip";
 import PayrollItems from "../../views/pages/HR/Payroll/PayrollItems.jsx";
 import Policies from "../../views/pages/HR/Policies";
@@ -201,6 +199,14 @@ import RecentFiles from "../../views/pages/MainPages/Apps/FileManager/recentFile
 import EmailContent from "../../views/pages/MainPages/Apps/Email/emailContent.jsx";
 import EmailView from "../../views/pages/MainPages/Apps/Email/emailView.jsx";
 import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
+import GatePass from "../../views/pages/Employees/Gatepassfolder/GatePass.jsx";
+import OdOt from "../../views/pages/Employees/OdOTfolder/OdOt.jsx";
+import Coff from "../../views/pages/Employees/Coff/Coff.jsx";
+import ConfirmationHOD from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ConfirmationHOD.jsx";
+import EmployeeConfirmationFromDetails from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetails.jsx";
+import Assesment from "../../views/pages/Administration/Adminpages/ConfirmationHOD/ShowEmployeeAssementFormAndPpt/AssesAndPpt/AssesmentForm.jsx";
+import EmployeeConfirmationFromDetailsHR from "../../views/pages/Administration/Adminpages/HRConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHR.jsx";
+import EmployeeConfirmationFromDetailsHRHead from "../../views/pages/Administration/Adminpages/HRHeadConfirmation/ShowEmployeeAssementFormAndPpt/EmployeeConfirmation/EmployeeConfirmationFromDetailsHRHead.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -933,7 +939,40 @@ const AppContainer = () => {
       id: 135,
       path: "hod_travel_expense_approval",
       element: <HodTravelExpenseShow/>,
-    },
+    },{
+      id: 136,
+      path: "gate_pass_creation",
+      element: <GatePass/>,
+    },{
+      id:137,
+      path:"od_ot_creation",
+      element:<OdOt/>
+    },{
+      id:138,
+      path:"c-off",
+      element:<Coff/>
+    },{
+      id:139,
+      path:"employee-confirmation",
+      element:<ConfirmationHOD/>
+    },{
+      id:140,
+      path:"HOD-Employee-Confirmation-Details",
+      element:<EmployeeConfirmationFromDetails/>
+    },{
+      id:141,
+      path:"assesment-view",
+      element:<Assesment/>
+    },{
+      id:142,
+      path:"hr-leave",
+      element:<EmployeeConfirmationFromDetailsHR/>
+    },{
+      id:143,
+      path:"hr-head-leave",
+      element:<EmployeeConfirmationFromDetailsHRHead/>
+    }
+    
   ];
 
   const ChatRoutingeObjects = [
@@ -963,6 +1002,7 @@ const AppContainer = () => {
       element: <IncomingCall />,
     },
   ];
+
   const ComponentsRoutingeObjects = [
     {
       id: 1,
@@ -970,6 +1010,7 @@ const AppContainer = () => {
       element: <Components />,
     },
   ];
+
   const EmailRoutingeObjects = [
     {
       id: 1,
@@ -989,6 +1030,7 @@ const AppContainer = () => {
    
   
   ];
+
   const SettingsRoutingeObjects = [
     {
       id: 1,
@@ -1056,6 +1098,7 @@ const AppContainer = () => {
       element: <CronSetting />,
     },
   ];
+  
   const ProjectRoutingeObjects = [
     {
       id: 1,
@@ -1180,7 +1223,7 @@ const AppContainer = () => {
  
   const SidebarLayout = () => (
     <>
-      <Header />
+      <Header/>
       <Sidebar />
       <OffCanvas />
       <Outlet />
@@ -1240,6 +1283,11 @@ const AppContainer = () => {
     }
   };
 
+
+  // routingObjects.map((item, index)=>{
+  //   console.log(`<Route path="/${item.path}" element={<${item.element.type.name}/>} />`)
+  // })
+
   return (
     <>
       <div className="main-wrapper" onClick={mobileResponsive}>
@@ -1256,6 +1304,7 @@ const AppContainer = () => {
               <Route key={item.id} path={item.path} element={item.element} />
             ))}
           </Route>
+
           <Route path={"/*"} element={<ComponentSidebarLayout />}>
             {ComponentsRoutingeObjects.map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />

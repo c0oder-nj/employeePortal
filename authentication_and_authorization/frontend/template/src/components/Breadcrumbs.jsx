@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Breadcrumbs = (props) => {
   const location = useLocation();
+  // console.log(location.pathname);
   let addButton = null;
   if (location.pathname === "/attendance-employee") {
     console.log(props);
@@ -23,6 +24,8 @@ const Breadcrumbs = (props) => {
             className="btn add-btn"
             data-bs-toggle="modal"
             data-bs-target={props.modal}
+            style={{backgroundColor:"white",
+            }}
           >
             <i className="fa fa-plus" /> {props.name}
           </Link>
@@ -48,6 +51,7 @@ const Breadcrumbs = (props) => {
     //     </div>
     //   </div>
     // );
+    console.log("Hello", props);
     if(props.modal=="#travel_allwowance"){
     addButton =
       (
@@ -65,6 +69,7 @@ const Breadcrumbs = (props) => {
                   className="btn add-btn"
                   data-bs-toggle="modal"
                   data-bs-target={props.modal}
+                  style={{backgroundColor : "white"}}
                 >
                   <i className="fa fa-plus" /> {props.name}
                 </Link>
@@ -76,6 +81,7 @@ const Breadcrumbs = (props) => {
                   // data-bs-toggle="modal"
                   // data-bs-target={props.modal}
                   target="_blank"
+                  style={{backgroundColor : "white"}}
                 >
                   <i className="fa fa-plus" /> Download Excel
                 </Link>
@@ -91,6 +97,7 @@ const Breadcrumbs = (props) => {
     console.log("Hello", props);
   } 
   else if(location.pathname === "/hod_travel_expense_approval"){
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -171,7 +178,7 @@ const Breadcrumbs = (props) => {
           <h3 className="page-title">{props.maintitle}</h3>
           <ul className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/admin-dashboard">{props.title}</Link>
+              <Link to="/employee-dashboard">{props.title}</Link>
             </li>
             <li className="breadcrumb-item active">{props.subtitle}</li>
           </ul>
@@ -179,6 +186,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === '/profile'){
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -204,7 +212,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/settings/notifications-settings" ||
     location.pathname === "/settings/toxbox-setting" ||
     location.pathname === "/settings/cron-setting"
-  ) {
+  ) {console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col-sm-12">
@@ -213,6 +221,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === "/admin-dashboard") {
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -224,6 +233,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (location.pathname === "/invoice-view") {
+    console.log("Hello", props);
     addButton = (
       <div className="row">
         <div className="col">
@@ -254,6 +264,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/employees" ||
     location.pathname === "/employees-list"
   ) {
+    console.log("Hello", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">
@@ -320,6 +331,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/leave-reports" ||
     location.pathname === "/daily-reports"
   ) {
+    console.log("Hello", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">
@@ -395,6 +407,26 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
+  } else if (location.pathname === "/assesment-view") {
+    const handlePrint = () => {
+      window.print(); 
+    };
+    addButton = (
+      <div className="row">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+        </div>
+        <div className="col-auto float-end ms-auto">
+          <div className="btn-group btn-group-sm">
+            {/* <button className="btn btn-white">CSV</button> */}
+            <button className="btn btn-white " onClick={handlePrint}>PDF</button>
+            {/* <button className="btn btn-white">
+              <i className="fa fa-print fa-lg" onClick={handlePrint}/> Print
+            </button> */}
+          </div>
+        </div>
+      </div>
+    );
   } else if (location.pathname === "/interview-questions") {
     addButton = (
       <div className="row align-items-center">
@@ -430,28 +462,103 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  } else {
+  } 
+  else if(location.pathname === "/gate_pass_creation"){
+    console.log("Hello you are in gate pass creation ", props);
+    addButton = (
+      <div className="row align-items-center">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            {/* <li className="breadcrumb-item">
+              <Link to="/employee-dashboard">{props.title}</Link>
+            </li> */}
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
+        </div>
+        <div className="col-auto float-end ms-auto">
+          {props.name && 
+          <Link
+            to="#"
+            className="btn add-btn"
+            data-bs-toggle="modal"
+            data-bs-target={props.modal}
+            style={{background : "white"}}
+          >
+            <i className="fa fa-plus" />
+            {props.name}
+          </Link>
+          }
+        </div>
+      </div>
+    );
+  }
+  else if(location.pathname === "/od_ot_creation"){
+    console.log("Hello you are in od ot creation ", props);
+    addButton = (
+      <div className="row align-items-center">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            {/* <li className="breadcrumb-item">
+              <Link to="/employee-dashboard">{props.title}</Link>
+            </li> */}
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
+        </div>
+        <div className="col-auto float-end ms-auto">
+          {props.name && 
+          <Link
+            to="#"
+            className="btn add-btn"
+            data-bs-toggle="modal"
+            data-bs-target={props.modal}
+            style={{background : "white"}}
+          >
+            <i className="fa fa-plus" />
+            {props.name}
+          </Link>
+          }
+        </div>
+      </div>
+    );
+  }
+  else if(location.pathname === "/c-off"){
+    console.log("Hello 123", props,location.pathname);
+    addButton = (
+      <div className="row align-items-center">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+        </div>
+      </div>
+    );
+  }
+  else {
+    // console.log("Hello 123", props);
     addButton = (
       <div className="row align-items-center">
         <div className="col">
           <h3 className="page-title">{props.maintitle}</h3>
           <ul className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/admin-dashboard">{props.title}</Link>
+              <Link to="/employee-dashboard">{props.title}</Link>
             </li>
             <li className="breadcrumb-item active">{props.subtitle}</li>
           </ul>
         </div>
         <div className="col-auto float-end ms-auto">
+          {props.name && 
           <Link
             to="#"
             className="btn add-btn"
             data-bs-toggle="modal"
             data-bs-target={props.modal}
+            style={{background : "white"}}
           >
             <i className="fa fa-plus" />
             {props.name}
           </Link>
+          }
         </div>
       </div>
     );

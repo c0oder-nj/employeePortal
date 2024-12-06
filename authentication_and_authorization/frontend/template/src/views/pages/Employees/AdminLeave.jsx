@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { Table } from "antd";
 import {
   Avatar_01,
@@ -25,6 +27,11 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { AdminLeaveAddModelPopup } from "../../../components/modelpopup/AdminLeaveModelPopup";
 import SearchBox from "../../../components/SearchBox";
 import LeaveFilter from "../../../components/LeaveFilter";
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import { useAccordionButton } from "react-bootstrap";
+import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
+
 const AdminLeave = () => {
   const [setPendingLeaves, setPendingLeavesFunction] = useState([]);
   const [displayVariable, displayVariableSet] = useState("none");
@@ -32,39 +39,37 @@ const AdminLeave = () => {
   const [casualLeave, setCasualLeave] = useState("");
   const [allEmp, allEmpFunction] = useState([]);
   const [isFetchedData, isFetchedDataFunction] = useState(false);
+  const {checkCookie, isLoading, setIsLoading} = useAuth();
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
 
-  //Cookie checking
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
     const fetchData = async () => {
       //Fetching data for attendance
-      const value = `${document.cookie}`;
-      console.log(value);
+      let value = cookieExists.cookie;
+      console.log("PRinting token at :: ", value)
+      value = value.split('=').at(1);
+      console.log("token after splitting :: ", value);
 
       // const url = `http://localhost:3000/api/auth/home?value=${value}`;
       // Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
       // const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
 
-      const url = `http://localhost:3000/api/employee/employeeLeaveApproval?value=${value}`;
-      console.log(url);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeLeaveApproval`;
+      // console.log(url);
 
-      dataFetchedThroughApi = await fetch(url)
+      dataFetchedThroughApi = await fetch(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          'accesstoken' : value
+        },
+      })
         .then((response) => {
           return response.json();
         })
@@ -72,7 +77,32 @@ const AdminLeave = () => {
           //Value will be initialized after getting a response
           // leaveSet(data.leave)
           console.log(data);
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
+          console.log(
+            typeof data.employeePendingLeave,
+            typeof [],
+            data.employeePendingLeave,
+            []
+          );
+          if (data.employeePendingLeave.length == 0) {
+            console.log("Line 86");
+            withReactContent(Swal).fire({
+              title: "No leaves are available for approval !!!",
+              preConfirm: () => {
+                navigate("/employee-dashboard");
+              },
+            });
+          }
           console.log("Printing");
+          setIsLoading(false);
           setPendingLeavesFunction(data.employeePendingLeave);
           // setUsers(data.leaveInfo)
           // console.log()
@@ -90,24 +120,34 @@ const AdminLeave = () => {
     fetchData();
   }, []);
 
-  if (setPendingLeaves.length > 0) {
+  if (setPendingLeaves.length > 0){
     console.log("You are in frontend posrtion ", setPendingLeaves);
   }
 
-  async function fetchDataFromApproveReject(option,type) {
+  async function fetchDataFromApproveReject(option, type) {
+    setIsLoading(true);
     //Fetching data for attendance
-    const value = `${document.cookie}`;
-    console.log(value);
+    const cookieExists = checkCookie('accessToken');
+    let value = cookieExists.cookie;
+    // console.log(value);
+    value = value.split('=').at(1);
+    console.log("Printing value at approval function :: ", value);
 
-    const url = `http://localhost:3000/api/employee/employeeAttendanceApproveReject?value=${value}&option=${option}&type=${type}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApproveReject?option=${option}&type=${type}`;
     console.log(url);
 
-    await fetch(url)
+    await fetch(url, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        'accesstoken' : value
+      },
+    })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         console.log(data[0].msg);
+        setIsLoading(false);
         Toastify({
           text: data[0].msg,
           duration: 3000,
@@ -162,18 +202,47 @@ const AdminLeave = () => {
               className="dropdown-item"
               onClick={(event) => {
                 // console.log(event);
-                fetchDataFromApproveReject(1,text[1]);
+                // fetchDataFromApproveReject(1, text[1]);
+
+                // withReactContent(Swal).fire({
+                //   title: "Do you want to approve leave",
+                //   preConfirm: () => {
+                //     // navigate("/employee-dashboard");
+                //     fetchDataFromApproveReject(1, text[1]);
+                //   },
+                // });
+
+                withReactContent(Swal).fire({
+                  title: "Do you want to Approve leave?",
+                  confirmButtonText: "Yes, Approve it",  
+                  cancelButtonText: "No, Decline it",        
+                  showCancelButton: true,                
+                  preConfirm: () => {
+                    fetchDataFromApproveReject(1, text[1]);
+                  },
+                });
+
               }}
             >
-              <i className="far fa-dot-circle text-success" /> Approved
+              <i className="far fa-dot-circle text-success" /> Approve
             </button>
             <button
               className="dropdown-item"
               onClick={() => {
-                fetchDataFromApproveReject(2,text[1]);
+                // fetchDataFromApproveReject(2, text[1]);
+                withReactContent(Swal).fire({
+                  title: "Do you want to decline leave?",
+                  confirmButtonText: "Yes, decline it",  // Custom confirm button text
+                  cancelButtonText: "No, keep it",        // Custom cancel button text
+                  showCancelButton: true,                 // Shows the cancel button
+                  preConfirm: () => {
+                    fetchDataFromApproveReject(2, text[1]);
+                  },
+                });
+                
               }}
             >
-              <i className="far fa-dot-circle text-danger" /> Declined
+              <i className="far fa-dot-circle text-danger" /> Decline
             </button>
 
             {/* <Link className="dropdown-item" 
@@ -292,6 +361,11 @@ const AdminLeave = () => {
   ];
   return (
     <>
+
+    {
+      isLoading && <ShaktiLoader />
+    }
+
       {setPendingLeaves.length > 0 && (
         <div className="page-wrapper">
           {/* Page Content */}
@@ -301,8 +375,8 @@ const AdminLeave = () => {
               maintitle="Leaves"
               title="Dashboard"
               subtitle="Leaves"
-              modal="#add_leave"
-              name="Add Leave"
+              // modal="#add_leave"
+              // name="Add Leave"
             />
             {/* /Page Header */}
             {/* Leave Statistics */}
@@ -322,12 +396,12 @@ const AdminLeave = () => {
               </div>
             ))}
           </div> */}
-            <LeaveFilter />
+            {/* <LeaveFilter /> */}
             {/* /Leave Statistics */}
             <div className="row">
               <div className="col-md-12">
                 <div className="table-responsive">
-                  <SearchBox />
+                  {/* <SearchBox /> */}
                   <Table
                     columns={columns}
                     dataSource={table}

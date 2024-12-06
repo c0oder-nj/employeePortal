@@ -16,20 +16,20 @@ const employeeattendance = async (req,res)=>{
 
     // var value = 4629
 
-    console.log(req.query.value)
-    const newValue = req.query.value;
-    headerValue = newValue.split("=")[1];
-    // console.log("Your : ",headerValue)
-    var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-    // console.log(decodedValue)
-    var sapNumber = decodedValue.empCode;
+    // console.log(req.query.value)
+    // const newValue = req.query.value;
+    // headerValue = newValue.split("=")[1];
+    // // console.log("Your : ",headerValue)
+    // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+    // // console.log(decodedValue)
+    var sapNumber = req.sapid;
     console.log(sapNumber)
     
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
         // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5051',
-        url:`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+        url:`${process.env.BASE_URL}/apply_leave.htm?pernr=${sapNumber}`, 
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
         }
@@ -39,21 +39,22 @@ const employeeattendance = async (req,res)=>{
       const employeeAttendanceData = 
       await axios.request(config)
       .then((response) => {
-        // console.log((response.data));
+        console.log(typeof response.data);
         console.log("Here")
         return response.data;
       })
       .catch((error) => {
         console.log(error);
       });
-
+  
+      // console.log(employeeAttendanceData);
 
     // console.log(employeeAttendanceData.leavebalance)
     sendEmployeeData.leave = employeeAttendanceData.leavebalance
     sendEmployeeData.leaveInfo = employeeAttendanceData.leaveemp
     sendEmployeeData.companyEmployee = employeeAttendanceData.activeemployee 
     console.log("szldvhlkzsjhvb;lzshvblksdzfhvblkzsdfvlkzsdfvblkzsdf")
-    // console.log(sendEmployeeData)
+    console.log(sendEmployeeData)
     return res.json(sendEmployeeData); 
 }
 
@@ -157,9 +158,13 @@ const employeeattendanceApply = async (req,res)=>{
 
 // Create a leave application 
 const employeeLeaveCreation = async (req,res) =>{
+  const sapNumber = req.sapid;
   console.log("Your value",req.body)
+  console.log("Printing sap number :: ", sapNumber)
 
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${req.body.SapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
+  // return res.send("api hit");
+
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/leave_create.htm?app_pernr=${sapNumber}&app_leave_type=${req.body.LeaveType}&app_leave_duration=${req.body.LeaveDuration}&app_leave_from=${req.body.LeaveFrom}&app_leave_to=${req.body.LeaveTo}&tim_fr=${req.body.TimeFrom}&tim_to=${req.body.TimeTo}&app_leave_reason=${req.body.LeaveReason}&app_per_chrg1=${req.body.LeaveCharge1}&app_per_chrg2=${req.body.LeaveCharge2}&app_per_chrg3=&app_per_chrg4=`);
   console.log(result.data);
   console.log("Your cookie is working")
 
@@ -177,21 +182,8 @@ const employeeLeaveCreation = async (req,res) =>{
 }
 
 const employeesapNumber = async (req,res)=>{
-
-  // var value = 4629
-
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
-  console.log(sapNumber)
-
-  return res.json(sapNumber);
+  return res.json(req.sapid);
 }
-
-
-
 
 var responseArr = [];
 const fetchEmpData = async (sapid) => {
@@ -226,20 +218,21 @@ const fetchEmpData = async (sapid) => {
 //Function to show the leave approval request to HOD
 const employeeLeaveStatus = async (req,res)=>{
   
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
+
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
   
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  
-  var sapNumber = decodedValue.empCode;
+  // var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
   console.log(sapNumber)
   
   let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5089',
-      // url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+      // url: `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5089`,
+      url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -270,9 +263,6 @@ const employeeLeaveStatus = async (req,res)=>{
   return res.json(sendEmployeeData);
 }
 
-
-
-
 const employeeDashboard = async(req,res) =>{
   responseArr = []
   console.log("Came under controller")
@@ -291,6 +281,14 @@ const employeeDashboard = async(req,res) =>{
   })
 }
 
+const holidays = async (req,res) => {
+  const response = await apiService.onlyUri('/holidays.htm' , 'get');
+  if(response.status){
+    return res.send(response);
+  }else{
+    return res.json({ "status": false, "message": "Some error at controller fuction api" })
+  }
+}
 const empUpHeirarchy = async(req,res) => {
   responseArr = [];
   const sapid = req.query.sapid;
@@ -300,8 +298,53 @@ const empUpHeirarchy = async(req,res) => {
 }
 
 
+const employeeProfile = async (req,res) => {
+  const sapid = req.sapid;
+  const queryObject = {
+    sapid: sapid
+  }
+  const response = await apiService.apiUsingFtech('/employee_profile.htm', queryObject, 'get');
+  if(response.status){
+    return res.send(response.data.at(0));
+  }else{
+    return res.send({'status' : false, 'message' : 'Cannot get data for your profile. Pleae contact admin'})
+  }
+}
+
+
+
+const getRoles = async (req,res) => {
+  const pernr = req.sapid;
+  let status; // employee ppt status (whether the ppt available for filling or not)
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL}/check_for_emp_ppt.htm?pernr=${pernr}`,
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200){
+      status = response.data.status;
+    }else{
+      status = false;
+    }
+    return res.json({'user': true,'name' : req.name, 'roles' : req.roles, 'sapid' : req.sapid, 'designation' : req.designation, 'mobile' : req.mobile, 'email' : req.mail , 'address' : req.address, 'status' : status });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+
+  
+}
+
 
 
 // module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeProfile};
-module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeDashboard,empUpHeirarchy};
+module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeLeaveCreation,employeeLeaveStatus,employeeDashboard,empUpHeirarchy, holidays,employeeProfile,getRoles};
 // module.exports = {employeeattendance,employeeattendanceApply,employeesapNumber,employeeDashboard};

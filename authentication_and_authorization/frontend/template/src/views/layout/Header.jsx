@@ -7,10 +7,13 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
+import './header.css';
+import useAuth from "../../hooks/useAuth";
 import {
   Applogo,
   Avatar_02,
   headerlogo,
+  Applogowhite,
   lnEnglish,
   lnFrench,
   lnGerman,
@@ -30,6 +33,7 @@ const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profile, setProfile] = useState(false);
   const [flagImage, setFlagImage] = useState(lnEnglish);
+  const {handleLogOut} = useAuth();
 
   const handlesidebar = () => {
     document.body.classList.toggle("mini-sidebar");
@@ -39,6 +43,7 @@ const Header = (props) => {
   };
 
   const themes = localStorage.getItem("theme");
+
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -73,6 +78,7 @@ const Header = (props) => {
   const Value = JSON.parse(Credencial);
   const UserName = Value?.email?.split("@")[0];
   const ProfileName = UserName?.charAt(0).toUpperCase() + UserName?.slice(1);
+  const username = localStorage.getItem("username");
 
   const { t, i18n } = useTranslation();
 
@@ -89,31 +95,36 @@ const Header = (props) => {
             : lnGerman
     );
   };
-  const deleteCookie = (cookieName) => {
-    // location.href = 'localhost:3001/react/template';
-   //Need To implement 
-   console.log(document.cookie);
-   const [key, value] = document.cookie.split("=");
-   document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";
-    
-  };
-  const handleLogout = ()=>{
-    // console.log(document.cookie);
-    // localStorage.clear();
-    deleteCookie('accessToken');
+  // const deleteCookie = (cookieName) => {
+  //  console.log(document.cookie);
+  //  const [key, value] = document.cookie.split("=");
+  //  document.cookie = key+"="+value+";expires=22 Aug 1999 12:00:00 UTC;";    
+  // };
+  // const handleLogout = ()=>{
+  //   // console.log(document.cookie);
+  //   // localStorage.clear();
+  //   deleteCookie('accessToken');
+  //   localStorage.clear();
         
-    window.location.href = '/react/template';
+  //   // window.location.href = '/react/template'; // old login endpoint
+  //   window.location.href = '/'; //new login endpoint
+  // }
+
+
+  const logoutUser = () => {
+    handleLogOut('accessToken');
   }
   return (
     <div className="header" style={{ right: "0px" }}>
       {/* Logo */}
       <div className="header-left">
-        <Link to="/admin-dashboard" className="logo">
-          <img src={headerlogo}  alt="img" />
+        <Link to="/employee-dashboard" className="logo">
+          {/* <img src={headerlogo}  alt="img" /> */}
+          <img src={Applogowhite} className="img-fluid app-logo-white" alt="img" />
         </Link>
-        <Link to="/admin-dashboard" className="logo2">
+        {/* <Link to="/admin-dashboard" className="logo2">
           <img src={Applogo} width={40} height={40} alt="img" />
-        </Link>
+        </Link> */}
       </div>
       {/* /Logo */}
       <Link
@@ -136,7 +147,7 @@ const Header = (props) => {
       </Link>
       {/* Header Title */}
       <div className="page-title-box">
-        <h3>Dreams Technologies</h3>
+        <h3>Shakti Pumps</h3>
       </div>
       {/* /Header Title */}
       <Link
@@ -149,8 +160,9 @@ const Header = (props) => {
       </Link>
       {/* Header Menu */}
       <ul className="nav user-menu">
-        {/* Search */}
-        <li className="nav-item">
+        
+        {/* commented search icon */}
+        {/* <li className="nav-item">
           <div className="top-nav-search">
             <Link to="#" className="responsive-search">
               <i className="fa fa-search" />
@@ -166,11 +178,10 @@ const Header = (props) => {
               </button>
             </form>
           </div>
-        </li>
-        {/* /Search */}
-        {/* Flag */}
+        </li> */}
 
-        <li className="nav-item dropdown has-arrow flag-nav">
+        {/* Commented language icon */}
+        {/* <li className="nav-item dropdown has-arrow flag-nav">
           <Link
             className="nav-link dropdown-toggle"
             data-bs-toggle="dropdown"
@@ -209,10 +220,11 @@ const Header = (props) => {
               <img src={lnGerman} alt="Flag" height="16" /> German
             </Link>
           </div>
-        </li>
-        {/* /Flag */}
-        {/* Notifications */}
-        <li className="nav-item dropdown">
+        </li> */}
+
+
+        {/* commented alert icons */}
+        {/* <li className="nav-item dropdown">
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -284,10 +296,10 @@ const Header = (props) => {
               </Link>
             </div>
           </div>
-        </li>
-        {/* /Notifications */}
-        {/* Message Notifications */}
-        <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
+        </li> */}
+
+        {/* commented message icon */}
+        {/* <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -351,8 +363,7 @@ const Header = (props) => {
               </Link>
             </div>
           </div>
-        </li>
-        {/* /Message Notifications */}
+        </li> */}
         <li className="nav-item dropdown has-arrow main-drop">
           <Link
             to="#"
@@ -365,7 +376,9 @@ const Header = (props) => {
               <img src={Avatar_02} alt="img" />
               <span className="status online" />
             </span>
-            <span>{ProfileName ? `${ProfileName}` : "Admin"}</span>
+            {/* <span>{ProfileName ? `${ProfileName}` : "Admin"}</span> */}
+            {/* <span>{props.name ? `${props.name}` : "Admin"}</span> */}
+            <span>{username ? `${username}` : "Welcome"}</span>
           </Link>
           <div
             className={`dropdown-menu dropdown-menu-end ${profile ? "show" : ""
@@ -374,17 +387,16 @@ const Header = (props) => {
             <Link className="dropdown-item" to="/profile">
               My Profile
             </Link>
-            <Link className="dropdown-item" to="/settings/companysetting">
+            {/* commenting profile settings link */}
+            {/* <Link className="dropdown-item" to="/settings/companysetting">
               Settings
-            </Link>
-            <Link className="dropdown-item" to="/" onClickCapture={handleLogout}>
+            </Link> */}
+            <Link className="dropdown-item" to="/" onClickCapture={logoutUser}>
               Logout
             </Link>
           </div>
         </li>
       </ul>
-      {/* /Header Menu */}
-      {/* Mobile Menu */}
       <div className="dropdown mobile-user-menu">
         <Link
           to="#"
@@ -406,7 +418,6 @@ const Header = (props) => {
           </Link>
         </div>
       </div>
-      {/* /Mobile Menu */}
     </div>
   );
 };

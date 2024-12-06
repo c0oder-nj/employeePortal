@@ -4,37 +4,57 @@ import { Link, useNavigate } from "react-router-dom";
 import { Avatar_03, Avatar_04 } from "../../../../../Routes/ImagePath";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import DatePicker from "react-datepicker";
-
+import JwtTokenTimeExpire from "../../../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../../../hooks/useAuth";
+import ShaktiLoader from "../../../../../components/ShaktiLoader";
 const TravelExpenseReportTable = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
   const [setApprove, setApproveData] = useState([]);
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
+
+  const {checkCookie, isLoading, setIsLoading} = useAuth();
+  
+  
+
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
 
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      const url = `http://localhost:3000/api/TravelExpense/showTravelExpenseToHOD?value=${value}`;
-      await fetch(url)
+      const value = cookieExists.cookie.split('=').at(1);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showTravelExpenseToHOD`;
+      await fetch(url, {headers : {'Access-Control-Allow-Origin' : '*', 'accesstoken' : value}})
         .then((response) => response.json())
         .then((data) => {
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
+          setIsLoading(false);
           setApiData(data.data);
           setFilterData(data.data);
-          console.log(data);
+          console.log(data.data);
+          if (data.data.length == 0) {
+            console.log("Line 86");
+            withReactContent(Swal).fire({
+              title: "No trips are available for approval !!!",
+              preConfirm: () => {
+                navigate("/employee-dashboard");
+              },
+            });
+          }
+
         })
         .catch((err) => {
           console.error("Error fetching data:", err);
@@ -371,19 +391,32 @@ const TravelExpenseReportTable = () => {
   };
 
   const approveTrip = (props) => {
+    setIsLoading(true);
     const [sapNumber, tripNumber] = [props.PERNR, props.REINR];
     console.log("In hod travel approval", sapNumber, tripNumber);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
-      const url = `http://localhost:3000/api/TravelExpense/approveTravelExpenseByHOD?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const value = checkCookie('accessToken').cookie.split('=').at(1);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/approveTravelExpenseByHOD?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url)
+      fetch(url, {
+        headers : {'Access-Control-Allow-Origin' : '*' , 'accesstoken' : value}
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
+
           console.log(data);
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
+          setIsLoading(false);
           Toastify({
             text: data.message,
             duration: 3000,
@@ -401,62 +434,133 @@ const TravelExpenseReportTable = () => {
     fetchData();
   };
 
-  const handleDateFilterFrom = (dateValue) => {
-    console.log(dateValue);
-    console.log(apiData);
-    console.log(dateValue);
-    // console.log(dataFetched);
+  // const handleDateFilterFrom = (dateValue) => {
+  //   console.log(dateValue);
+  //   console.log(apiData);
+  //   console.log(dateValue);
+  //   // console.log(dataFetched);
 
-    if (!Array.isArray(apiData)) {
-      console.error("api Data is not an array");
-      return;
-    }
-    const formatDate = (date) => {
-      const d = new Date(date);
-      const year = d.getFullYear();
-      const month = `0${d.getMonth() + 1}`.slice(-2);
-      const day = `0${d.getDate()}`.slice(-2);
-      return `${year}-${month}-${day}`;
-    };
+  //   if (!Array.isArray(apiData)) {
+  //     console.error("api Data is not an array");
+  //     return;
+  //   }
+  //   const formatDate = (date) => {
+  //     const d = new Date(date);
+  //     const year = d.getFullYear();
+  //     const month = `0${d.getMonth() + 1}`.slice(-2);
+  //     const day = `0${d.getDate()}`.slice(-2);
+  //     return `${year}-${month}-${day}`;
+  //   };
+  //   const formattedDate = formatDate(dateValue);
+  //   console.log("Formatted Date:", formattedDate);
+  //   const res = apiData.filter((f) => f.DATV1 >= formattedDate);
+  //   console.log(res);
+  //   setApiData(res);
+  // };
+  // const handleDateFilterTo = (dateValue) => {
+  //   console.log(dateValue);
+  //   console.log(apiData);
+  //   console.log(dateValue);
+  //   // console.log(dataFetched);
 
-    const formattedDate = formatDate(dateValue);
-    console.log("Formatted Date:", formattedDate);
+  //   if (!Array.isArray(apiData)) {
+  //     console.error("api Data is not an array");
+  //     return;
+  //   }
+  //   const formatDate = (date) => {
+  //     const d = new Date(date);
+  //     const year = d.getFullYear();
+  //     const month = `0${d.getMonth() + 1}`.slice(-2);
+  //     const day = `0${d.getDate()}`.slice(-2);
+  //     return `${year}-${month}-${day}`;
+  //   };
 
-    const res = apiData.filter((f) => f.DATV1 >= formattedDate);
+  //   const formattedDate = formatDate(dateValue);
+  //   console.log("Formatted Date:", formattedDate);
 
-    console.log(res);
-    setApiData(res);
-  };
-  const handleDateFilterTo = (dateValue) => {
-    console.log(dateValue);
-    console.log(apiData);
-    console.log(dateValue);
-    // console.log(dataFetched);
+  //   const res = apiData.filter((f) => f.DATB1 <= formattedDate);
 
-    if (!Array.isArray(apiData)) {
-      console.error("api Data is not an array");
-      return;
-    }
-    const formatDate = (date) => {
-      const d = new Date(date);
-      const year = d.getFullYear();
-      const month = `0${d.getMonth() + 1}`.slice(-2);
-      const day = `0${d.getDate()}`.slice(-2);
-      return `${year}-${month}-${day}`;
-    };
-
-    const formattedDate = formatDate(dateValue);
-    console.log("Formatted Date:", formattedDate);
-
-    const res = apiData.filter((f) => f.DATB1 <= formattedDate);
-
-    console.log(res);
-    setApiData(res);
-  };
+  //   console.log(res);
+  //   setApiData(res);
+  // };
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  // const formatDateForComparison = (date) => {
+  //   const d = new Date(date);
+  //   const day = `0${d.getDate()}`.slice(-2);
+  //   const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+  //   const year = d.getFullYear();
+  //   return `${year}${month}${day}`;
+  // };
+  // const convertJsonDateForComparison = (jsonDate) => {
+  //   const [day, month, year] = jsonDate.split(".");
+  //   return `${year}${month}${day}`;
+  // };
+
+  // Unified search handler
+  const handleSearch = () => {
+    let results = apiData;
+
+    // Filter by search term
+    if (searchTerm) {
+      results = results.filter((f) =>
+        f.ENAME.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (dateFrom) {
+      const formatDate = (date) => {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = `0${d.getMonth() + 1}`.slice(-2);
+        const day = `0${d.getDate()}`.slice(-2);
+        return `${year}-${month}-${day}`;
+      };
+
+      const formattedDate = formatDate(dateFrom);
+      console.log("Formatted Date:", formattedDate);
+      results = results.filter((f) => f.DATV1 >= formattedDate);
+    }
+
+    if (dateTo) {
+      
+      // const formattedDate = formatDateForComparison(dateTo);
+      // console.log("Formatted Date for Comparison:", formattedDate);
+      // results = results.filter((f) => {
+      //   const endDate = convertJsonDateForComparison(f.datb1);
+      //   return endDate <= formattedDate;
+      // });
+      const formatDate = (date) => {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = `0${d.getMonth() + 1}`.slice(-2);
+        const day = `0${d.getDate()}`.slice(-2);
+        return `${year}-${month}-${day}`;
+      };
+  
+      const formattedDate = formatDate(dateTo);
+      console.log("Formatted Date:", formattedDate);
+  
+      results = results.filter((f) => f.DATB1 <= formattedDate);
+    }
+
+    setFilterData(results);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchTerm, dateFrom, dateTo]);
   return (
     <>
+
+    {
+      isLoading && <ShaktiLoader page='travel-report'/>
+    }
+
+
       <div className="row">
         <div className="col-md-12">
           <div className="table-responsive" style={{ "overflow-x": "hidden" }}>
@@ -491,7 +595,8 @@ const TravelExpenseReportTable = () => {
                     placeholder="search here ..."
                     className="form-control"
                     onChange={(e) => {
-                      handleFilter(e.target.value);
+                      // handleFilter(e.target.value);
+                      setSearchTerm(e.target.value);
                     }}
                   ></input>
                   <label className="focus-label">Employee Name</label>
@@ -506,7 +611,8 @@ const TravelExpenseReportTable = () => {
                       // onChange={handleDateChange}
                       onChange={(e) => {
                         setStart(e);
-                        handleDateFilterFrom(e);
+                        // handleDateFilterFrom(e);
+                        setDateFrom(e);
                       }}
                       dateFormat="dd-MM-yyyy"
                     />
@@ -523,7 +629,8 @@ const TravelExpenseReportTable = () => {
                       // onChange={handleDateChange}
                       onChange={(e) => {
                         setEnd(e);
-                        handleDateFilterTo(e);
+                        // handleDateFilterTo(e);
+                         setDateTo(e);
                       }}
                       dateFormat="dd-MM-yyyy"
                     />
@@ -545,7 +652,7 @@ const TravelExpenseReportTable = () => {
               className="table-striped"
               style={{ overflowX: "auto" }}
               columns={columns}
-              dataSource={apiData}
+              dataSource={filterData}
               rowKey={(record) => record.id}
             />
           </div>

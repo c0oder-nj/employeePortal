@@ -282,9 +282,13 @@ const ShowTravelData = (props) => {
       console.log(value);
 
       console.log("Printing values in useEffect",sapNumber,tripNumber)
-      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      await fetch(url)
+      await fetch(url, {
+        headers : {
+          'Access-Control-Allow-Origin' : '*'
+        }
+      })
         .then((response) => {
           return response.json();
         })

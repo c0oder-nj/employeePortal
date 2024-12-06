@@ -5,26 +5,41 @@ import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import useAuth from "../../hooks/useAuth";
 
 const AllEmployeeAddPopup = (props) => {
-  // console.log("In attendance",props.data);
-    const [startDate, setStartDate] = useState(null);
+  console.log("In attendance",props.data);
+  const [sapid,setSapId] = useState(props.data);
+  const [startDate, setStartDate] = useState(null);
   const navigate = useNavigate();
+  const {checkCookie} = useAuth();
   const [formData,setFormData] = useState({
-    SapNumber : props.data,
+    SapNumber : props.data || "",
     status : "",
     date :"",
     remark : ""
   })
 
+  useEffect(() => {
+    if (props.data) {
+      setFormData(()=>({
+        ...formData,
+        SapNumber : props.data
+    }));
+    }
+  }, [props.data]);
  
   async function sendData(e){
     e.preventDefault();
     // console.log("In send Data")
     console.log(JSON.stringify(formData));
-    const value = `${document.cookie}`;
+    const isCookieExist = checkCookie('accessToken');
+    let value = isCookieExist.cookie;
+    value = value.split('=').at(1);
     console.log(value)
-    const url = `http://localhost:3000/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus`;
     
     const response = await fetch(url, {
         method: "POST",
@@ -32,19 +47,27 @@ const AllEmployeeAddPopup = (props) => {
             'content-type': 'application/json',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
             'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Origin' : '*',
+            'accesstoken' : value
         },
         body: JSON.stringify(formData)
     }).then((response)=>{
 
       response.json().then(body => {console.log(body)
-        Toastify({
-          text: body.message,
-          duration: 3000,
-          close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-        }).showToast();
+        // Toastify({
+        //   text: body.message,
+        //   duration: 3000,
+        //   close: true,
+        //   gravity: "top", // `top` or `bottom`
+        //   position: "center", // `left`, `center` or `right`
+        //   backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        // }).showToast();
+        withReactContent(Swal).fire({
+          title: body.message,
+          preConfirm: () => {
+            navigate("/attendance-employee");
+          },
+        });
      
       })
       // console.log(response)
@@ -81,41 +104,22 @@ const AllEmployeeAddPopup = (props) => {
     }),
   };
   var dataFetchedThroughApi=null;
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for(let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if(cookie.startsWith(cookieName + '=')) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(';');
+  //   for(let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if(cookie.startsWith(cookieName + '=')) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   useEffect(()=>{
     let cookieExists = checkCookie('accessToken');
-    if(!cookieExists){
-      navigate("react/template/");
+    if(!cookieExists.status){
+      navigate("/");
     }
-
-    // var fetchData = async ()=>{
-    // const value = `${document.cookie}`;
-    //     console.log(value)
-        
-    //     const url = `http://localhost:3000/api/DailyAttendance/employeeDailyAttendnceCorrectionStatus?value=${value}`;
-    //     console.log(url);
-        
-    //     dataFetchedThroughApi = await fetch
-    //     (url).then((response)=>{
-    //       return response.json();
-    //     }).then((data) => {
-    //     //   setData(data.employeeAttendance);
-    //       return data;
-    //     }).catch((error)=>{
-    //       console.log("Error");
-    //     });
-    // }
-    // fetchData();
   },[]);
 
   const handleDateChange1 = (date) => {

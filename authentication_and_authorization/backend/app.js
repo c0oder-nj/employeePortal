@@ -8,6 +8,7 @@ const empAttnedanceControllers = require("./Controllers/empAttendanceControllers
 const empTravelExpense = require("./Controllers/travelExpense");
 const authUserThoughMiddleware = require("./middleware/authUserMiddle");
 const routes = require("./Routes/index");
+const { default: axios } = require("axios");
 env.config();
 const app = express();
 app.use(cookieParser());
@@ -16,14 +17,24 @@ app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
   credentials: true,
-  origin: [
-    "http://localhost:5000",
-    "http://localhost:3000",
-    "http://localhost:3001",
-  ], // Whitelist the domains you want to allow
-  methods: "GET, POST, PUT, DELETE, HEAD",
+  origin: ["http://empportal.shaktipumps.com/", "https://customerportal.shaktipumps.com/" , "http://localhost:3000", "http://localhost:3001", "http://www.empportal.shaktipumps.com" ], // Whitelist the domains you want to allow 
+   origin : '*',
+  methods: "GET, POST, PUT, DELETE, HEAD, OPTIONS",
 };
 app.use(cors(corsOptions));
+
+// setting res headers for cors error
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,HEAD');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+});
+
+
+
+
 // Working on session : start
 //app.use(session({secret : "Creating a seesion for user authentication"}))
 // app.use(session({
@@ -46,8 +57,8 @@ app.post("/TestAPI", express.raw({ type: "*/*" }), (req, res) => {
 
 // //For user login and jwt token creation
 // app.post('/api/auth/login',authControllers.login)
-// //Just for test
-app.post("/api/auth/test", authControllers.test);
+// // //Just for test
+// app.post("/api/auth/test", authControllers.test);
 
 // //For setting a password
 // app.post('/api/auth/setPassword',authControllers.setPassword)
@@ -59,32 +70,32 @@ app.post("/api/auth/test", authControllers.test);
 //For Employee attendance need to add middleware
 app.get(
   "/api/employee/employeeSapNumber",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeesapNumber
 );
 app.get(
   "/api/employee/employeeAttendance",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeattendance
 );
 
 //For Leave creation
 app.post(
   "/api/employee/employeeAttendanceApply",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeLeaveCreation
 );
 
 //Leave showing to HOD
 app.get(
   "/api/employee/employeeLeaveApproval",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empControllers.employeeLeaveStatus
 );
 
 app.get(
   "/api/DailyAttendance/employeeDailyAttendnceStatus",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.employeeDailyAttendnceStatus
 );
 app.post(
@@ -95,74 +106,76 @@ app.post(
 //Api to show all the previous day daily attendance of all the employees who are under HOD
 app.get(
   "/api/DailyAttendance/allEmployeeDailyAttendnceCorrection",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.allEmployeeDailyAttendnceCorrection
 );
 
 //Api for approve and reject of leave
 app.get(
   "/api/employee/employeeAttendanceApproveReject",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empAttnedanceControllers.allEmployeeDailyAttendnceApproveReject
 )
 
 //Information about country code and cost center
 app.get(
   "/api/TravelExpense/countryAndCostCenterCode",
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.countryCodeAndCostCenter
 );
 
 //Employee's domestic leave approval
 app.post(
   "/api/TravelExpense/domesticTravelExpens",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.domesticTravelAllowance
 );
 
 //Show all travel expense using sap only
 app.get(
   "/api/TravelExpense/showExpenseUsingSap",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseUsingSap
 );
 
 //Show travel expense using sap and travel code
 app.get(
   "/api/TravelExpense/showExpenseUsingSapAndCode",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseUsingSapAndTravelCode
 );
 
 //Delete Travel expense using sap and trip number
 app.get(
   "/api/TravelExpense/deleteExpenseUsingSapAndCode",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseDelete
 );
 
 //Create travel expense using sap and trip number
 app.get(
   "/api/TravelExpense/createRequestExpenseUsingSapAndCode",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseCreate
 );
 
 //Show travel expense approval to HOD
 app.get(
   "/api/TravelExpense/showTravelExpenseToHOD",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.showTravelExpenseHodApproval
 );
 
 //Approve travel expense by HOD
 app.get(
   "/api/TravelExpense/approveTravelExpenseByHOD",
-  authUserThoughMiddleware.checkUser,
+  authUserThoughMiddleware.checkUserNeeraj,
   empTravelExpense.travelExpenseHodApproval
 );
 
 
 app.use("/api", routes);
+
 
 app.get("/get_cookie", (req, res) => {
   console.log(req.session.username);
@@ -181,8 +194,41 @@ app.get("/destroy_cookie", (req, res) => {
 //for encoding a password
 app.get("/encode_me", authControllers.encodePassword);
 
+
+
+// customer portal api endpoints
+
+
+
+
+
 const port = process.env.port || 3000;
 
 app.listen(port, () => {
   console.log(`server is listening at http://localhost:${port}`);
 });
+
+
+
+
+
+
+
+
+// Job server in the same server
+setInterval(() => {
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'http://localhost:3000/api/job/fetch-attendance',
+    headers: { }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}, 1000*60*15);

@@ -8,5 +8,6 @@ router.post('/home', authControllers.home);
 router.post('/forget-password', authControllers.forgetPassword);
 router.post('/verify-otp', authControllers.verifyOtp);
 router.get('/encode_me', authControllers.encodePassword);
+router.get('/fetch-phone', authControllers.fetchPhone);
 
 module.exports = router;

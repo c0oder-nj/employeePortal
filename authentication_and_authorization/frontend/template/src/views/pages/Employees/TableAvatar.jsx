@@ -2,34 +2,64 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar_09 } from "../../../Routes/ImagePath";
 import AttendenceModelPopup from "../../../components/modelpopup/AttendenceModelPopup";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const TableAvatar = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const {checkCookie, isLoading, setIsLoading} = useAuth();
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
+
 
   useEffect(() => {
+    setIsLoading(true);
+
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
 
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      const url = `http://localhost:3000/api/DailyAttendance/allEmployeeDailyAttendnceCorrection?value=${value}`;
-      await fetch(url)
+      let value = cookieExists.cookie;
+      value = value.split("=").at(1);
+
+      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/allEmployeeDailyAttendnceCorrection`;
+      console.log("Printing uri at frontend :: ", url);
+      await fetch(url, {
+        headers: {
+           "Access-Control-Allow-Origin": "*" ,
+           "accessToken" : value
+        }
+      })
         .then((response) => response.json())
         .then((data) => {
+          console.log("In data from allEmployeeattendance", data);
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
+            }
+          }
+
+          if (data.status == false) {
+            console.log("Line 86");
+            withReactContent(Swal).fire({
+              title: "You are not an Admin !!!",
+              preConfirm: () => {
+                navigate("/employee-dashboard");
+              },
+            });
+            return;
+          }
+
+          setIsLoading(false);
           setData(data.data);
         })
         .catch((err) => {
@@ -48,6 +78,10 @@ const TableAvatar = () => {
 
   return (
     <>
+      {
+        isLoading && <ShaktiLoader page='view-profile'/>
+      }
+
       <table className="table table-striped custom-table table-nowrap mb-0">
         <thead>
           <tr>
@@ -55,7 +89,7 @@ const TableAvatar = () => {
             {/* {[...Array(32).keys()].slice(1).map((_, i) => (
               <th key={i + 1}>{i + 1}</th>
             ))} */}
-             <th></th>
+            <th></th>
             <th>1</th>
             <th>2</th>
             <th>3</th>
@@ -76,6 +110,7 @@ const TableAvatar = () => {
             <th>18</th>
             <th>19</th>
             <th>20</th>
+            <th>21</th>
             <th>22</th>
             <th>23</th>
             <th>24</th>
@@ -95,20 +130,30 @@ const TableAvatar = () => {
                 <h2 className="table-avatar">{ele.ENAME}</h2>
               </td>
               {[...Array(31).keys()].map((_, index) => {
-                const dateStr = new Date(2024, 7, index + 1)
+                
+                const currentDate = new Date();
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                const dateStr = new Date(year, month, index + 1)
                   .toISOString()
                   .split("T")[0];
-                const attendance = ele.ATTENDANCE.find(
-                  (att) => att.BEGDAT === dateStr,
+                  console.log(dateStr);
+                  const date=  new Date();
+                  const todayDate = date.getDate();
                   
+                  console.log(todayDate);
+                
+                  const attendance = ele.ATTENDANCE.find(
+                  (att) => att.BEGDAT === dateStr
                 );
-                console.log(index);
+                console.log("Index value",index);
+                console.log("Today date",todayDate);
                 return (
                   <td key={index}>
                     <div className="half-day">
                       {isPastSunday(dateStr) ? (
                         <span className="first-off">
-                          <i className="fa fa-close text-danger" />
+                          <i className="fa fa-circle text-success" />
                         </span>
                       ) : attendance ? (
                         attendance.ATN_STATUS === "P" ? (
@@ -155,8 +200,9 @@ const TableAvatar = () => {
                           </span>
                         )
                       ) : (
-                        // "N/A"
-                        ""
+                        (todayDate>=index && index!=0)?(<span className="first-off">
+                          <i className="fa fa-circle text-info" />
+                        </span>):""
                       )}
                     </div>
                   </td>

@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import Swal from 'sweetalert2';
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Applogo } from "../../../Routes/ImagePath";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Applogo , bgImageLogin } from "../../../Routes/ImagePath";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
@@ -11,6 +11,12 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
 import Error from './Error';
+import '../../../assets/css/shakti.css'
+
+
+// import custom hooks for context api custom hooks
+import useAuth from '../../../hooks/useAuth';
+import ShaktiLoader from '../../../components/ShaktiLoader';
 
 const validationSchema = Yup.object({
   sapid: Yup
@@ -29,6 +35,20 @@ const validationSchema = Yup.object({
 
 const Login = () => {
 
+  // setting autheticated user object
+  const { auth, setAuth } = useAuth();
+  const {checkCookie} = useAuth();
+  const {state} = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const customStyle = {
+
+    'backgroundImage'  : `url(${bgImageLogin})`,
+    'backgroundRepeat' : 'no-repeat',
+    'backgroundPosition' : '0 0',
+    'background-size'   : 'cover'
+  }
+
   const {
     register,
     control,
@@ -41,61 +61,67 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState(false);
-  // cont [errorStatus, setErrorStatus] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
   const [display, setDisplay] = useState('block');
 
-
   
-  const checkCookie = async ()=>{
-    
-    function checkCookie(cookieName) {
-      const cookies = document.cookie.split(';');
-      for(let i = 0; i < cookies.length; i++) {
-          let cookie = cookies[i].trim();
-          // Check if the cookie name matches the parameter
-          if(cookie.startsWith(cookieName + '=')) {
-              // Cookie found
-              // console.log(cookie);
-              return true;
-          }
-      }
-      // Cookie not found
-      return false;
-  }
-    
-    let cookieExists = checkCookie('accessToken');
-    if(cookieExists){
-      navigate("/admin-dashboard");
-    }
-  }
+
+
+  // apply this check on requireAuth when cookie exist then not let user to Login.jsx page
+  // useEffect(()=>{
+  //   console.log("Printing values of state :: ", state)
+  //   if(state.status == false && state.type == "Token Expired"){
+  //     console.log("Token has been expired :: ", state);
+  //   }else{
+  //     let isCookieExist = checkCookie('accessToken');
+  //     if(isCookieExist.status){
+  //       navigate('/employee-dashboard');
+  //     }
+  //   }
+  // }, [])
  
  
   const onSubmit = async (data) => {
+      setIsLoading(true);
         // when user enters the default password navigate it to set new password
-
         try {
-            const response = await fetch(`http://localhost:3000/api/auth/login`, {
+          let apiUrl = `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
+          console.log('api url: ',apiUrl);
+            const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     'content-type': 'application/json',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers',
                     'Access-Control-Allow-Methods': 'POST',
+                    'Access-Control-Allow-Origin' : '*'
                 },
                 body: JSON.stringify(data)
             }).then((response)=>{
                 return response.json();
             });   
             if(response.status){
+              localStorage.setItem('username', response.name);
               document.cookie= 'accessToken='+response.accessToken;
+              console.log("Cookie has been set");
+              console.log('accessToken='+response.accessToken)
+              setAuth({'user': true,'name' : response.name, 'roles' : response.roles,'accessToken':response.accessToken})
+              console.log("New auth that has been set :: -> ", auth);
+              setIsLoading(false);
               navigate("/employee-dashboard");
             }else if(response.newUser){
-              navigate('/set-password');
+              setIsLoading(false);
+              navigate('/set-password', {
+                state : {
+                  "sapid" : data.sapid
+                }
+              });
+              <Navigate to={"/set-password"}/>
             }
             else{
               console.log(response.message);
               setErrorMessage({"status": true, "message":response.message});
               setDisplay('block');
+              setIsLoading(false);
               navigate("/")
             }
         } catch (error) {
@@ -144,22 +170,26 @@ const Login = () => {
 
   return (
     <div>
-      <div className="account-page" >
+      <div className="account-page" style={customStyle}>
         <div className="main-wrapper">
           <div className="account-content">
-            <Link to="/job-list" className="btn btn-primary apply-btn">
+            {/* <Link to="/job-list" className="btn btn-primary apply-btn">
               Apply Job
-            </Link>
+            </Link> */}
             <div className="container">
               {/* Account Logo */}
               <div className="account-logo">
                 <Link to="/admin-dashboard">
-                  <img src={Applogo} alt="Dreamguy's Technologies" />
+                  <img src={Applogo} alt="Shakti Pumps" style={{'width':'50%'}} />
                 </Link>
               </div>
               {/* /Account Logo */}
               <div className="account-box">
                 <div className="account-wrapper">
+
+                  { isLoading && <ShaktiLoader page='login' loaderSize='shakti-gif-small'/> }
+
+
                   <h3 className="account-title">Login</h3>
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}
@@ -177,7 +207,7 @@ const Login = () => {
                    }
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
-                        <label className="col-form-label">Enter You Sap Id</label>
+                        <label className="col-form-label">Username / SAP Id</label>
                         <Controller
                           name="sapid"
                           control={control}
@@ -189,6 +219,7 @@ const Login = () => {
                               type="text"
                               name='sapNumber' value={value} onChange={onChange}
                               autoComplete="true"
+                              placeholder='Enter your SAP ID'
                             />
                           )}
                         />
@@ -221,6 +252,7 @@ const Login = () => {
                                 }`}
                                 type={eye ? "password" : "text"}
                                 name='password' value={value} onChange={onChange}
+                                placeholder='Enter your Password'
                               />
                             )}
                           />
@@ -245,16 +277,17 @@ const Login = () => {
                         <button
                           className="btn btn-primary account-btn"
                           type="submit"
+                          style={{background:"#0088cc"}}
                         >
                           Login
                         </button>
                       </div>
                     </form>
                     <div className="account-footer">
-                      <p>
+                      {/* <p>
                         Don't have an account yet?{" "}
                         <Link to="/register">Register</Link>
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                   {/* /Account Form */}

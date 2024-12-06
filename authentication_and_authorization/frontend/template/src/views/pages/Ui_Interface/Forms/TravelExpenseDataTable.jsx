@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Salary from "../../../../assets/json/employeeSalary";
 import { Table } from "antd";
+import { Navigate } from "react-router-dom";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import DatePicker from "react-datepicker";
+import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../../hooks/useAuth";
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 // import Breadcrumbs from "../../../../components/Breadcrumbs";
 // import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
 // import DeleteModal from "../../../../components/modelpopup/deletePopup";
@@ -14,14 +18,27 @@ const TravelExpenseDataTable = (props) => {
   console.log(props);
   const data = Salary.Salary;
   console.log(props);
+  const navigate = useNavigate();
   const [ddataFetched, setDdataFetched] = useState([]);
   const [checkData, setCheckData] = useState(false);
   const [setDelete, setDeleteData] = useState([]);
   const [createTrip, setCreateTrip] = useState([]);
+  //New Search implementation state start
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const { checkCookie , isLoading, setIsLoading } = useAuth();
+  // const [filteredData, setFilteredData] = useState(initialData);
+  // New Search implementation state End
   const [formData, setFormData] = useState({
     purposeText: "",
     outComingText: "",
   });
+
+  const isCookieExist = checkCookie("accessToken");
+  if (!isCookieExist.status) {
+    navigate("/");
+  }
   const setColums = [
     // {
     //     title: "Sap Number",
@@ -38,7 +55,7 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "reinr",
       sorter: (a, b) => a.reinr.length - b.reinr.length,
     },
-    
+
     // {
     //   title: "Receipt Number",
     //   dataIndex: "receiptno",
@@ -146,17 +163,28 @@ const TravelExpenseDataTable = (props) => {
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
+      const isCookie = checkCookie("accessToken");
+      let value = isCookie.cookie.split("=").at(1);
 
       console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url)
+      fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
+            }
+          }
           console.log("Helo data", data.travel_data);
           setDdataFetched(data.travel_data);
 
@@ -174,18 +202,27 @@ const TravelExpenseDataTable = (props) => {
     console.log("Your data in showTable", props);
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
+    let value = checkCookie("accessToken").cookie.split("=").at(1);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
-
       console.log("Printing values in useEffect", sapNumber, tripNumber);
-      const url = `http://localhost:3000/api/TravelExpense/deleteExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/deleteExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}`;
       console.log(url);
-      fetch(url)
+      fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
+            }
+          }
           // console.log("Helo data", data.travel_data);
           // setDdataFetched(data.travel_data);
           console.log(data);
@@ -222,17 +259,29 @@ const TravelExpenseDataTable = (props) => {
       const [sapNumber, tripNumber] = [props.pernr, props.reinr];
       console.log("Sap and trip number", sapNumber, tripNumber);
       const fetchData = async () => {
-        const value = `${document.cookie}`;
-        console.log(value);
+        // const value = `${document.cookie}`;
+        // console.log(value);
+        let value = checkCookie("accessToken").cookie.split("=").at(1);
 
         console.log("Printing values in useEffect", sapNumber, tripNumber);
-        const url = `http://localhost:3000/api/TravelExpense/createRequestExpenseUsingSapAndCode?value=${value}&sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
+        const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/createRequestExpenseUsingSapAndCode?sapNumber=${sapNumber}&tripNumber=${tripNumber}&objectText=${purposeText}&outcomeText=${outComingText}`;
         console.log(url);
-        fetch(url)
+        fetch(url, {
+          headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+        })
           .then((response) => {
             return response.json();
           })
           .then((data) => {
+            if (data.status == false) {
+              if (data.type == "Token Expired") {
+                console.log("Line 305", data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate("/logout");
+                return;
+              }
+            }
             console.log(data);
             Toastify({
               text: data.message,
@@ -286,7 +335,6 @@ const TravelExpenseDataTable = (props) => {
           >
             <i
               className={
-                
                 text === "Request Entered"
                   ? "far fa-dot-circle text-primary"
                   : text === "Trip Created"
@@ -316,42 +364,46 @@ const TravelExpenseDataTable = (props) => {
     {
       title: "Action",
       id: "pernr",
-      render: (id) => (
-        id.antrg_text == "Trip Completed" || id.antrg_text == "Trip Approved" ? "" :(<div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <button
-              className="dropdown-item "
-              data-bs-toggle="modal"
-              data-bs-target="#create"
-              onClick={() => {
-                setCreateTrip(id);
-              }}
+      render: (id) =>
+        id.antrg_text == "Trip Completed" ||
+        id.antrg_text == "Trip Approved" ? (
+          ""
+        ) : (
+          <div className="dropdown dropdown-action text-end">
+            <Link
+              to="#"
+              className="action-icon dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              {" "}
-              Create trip
-            </button>
-            <button
-              className="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#delete"
-              onClick={() => {
-                setDeleteData(id);
-              }}
-            >
-              {" "}
-              Delete
-            </button>
+              <i className="material-icons">more_vert</i>
+            </Link>
+            <div className="dropdown-menu dropdown-menu-right">
+              <button
+                className="dropdown-item "
+                data-bs-toggle="modal"
+                data-bs-target="#create"
+                onClick={() => {
+                  setCreateTrip(id);
+                }}
+              >
+                {" "}
+                Create trip
+              </button>
+              <button
+                className="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#delete"
+                onClick={() => {
+                  setDeleteData(id);
+                }}
+              >
+                {" "}
+                Delete
+              </button>
+            </div>
           </div>
-        </div>)
-      ),
+        ),
     },
     {
       title: "Reimbursement Number",
@@ -373,7 +425,7 @@ const TravelExpenseDataTable = (props) => {
     //   dataIndex: "uhrv1",
     //   sorter: (a, b) => a.uhrv1.length - b.uhrv1.length,
     // },
-    
+
     // {
     //   title: "Travel End Time",
     //   dataIndex: "uhrb1",
@@ -404,8 +456,7 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "antrg_text",
       sorter: (a, b) => a.antrg_text.length - b.antrg_text.length,
     },
-   
-    
+
     {
       title: "Trip Total",
       dataIndex: "trip_total",
@@ -426,21 +477,40 @@ const TravelExpenseDataTable = (props) => {
       dataIndex: "out_txt",
       sorter: (a, b) => a.out_txt.length - b.out_txt.length,
     },
-    
   ];
   const [setApi, setApiData] = useState([]);
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
-      const value = `${document.cookie}`;
-      console.log(value);
-      const url = `http://localhost:3000/api/TravelExpense/showExpenseUsingSap?value=${value}`;
+      // const value = `${document.cookie}`;
+      const value = checkCookie("accessToken").cookie.split("=").at(1);
+      console.log(
+        "Printing value at 478 for travelexpense data in local :: ",
+        value
+      );
+      const url = `${process.env.REACT_APP_BASE_URL}/api/TravelExpense/showExpenseUsingSap`;
       console.log(url);
-      await fetch(url)
+      await fetch(url, {
+        headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          console.log(data.travel_data);
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
+            }
+          }
+          console.log(
+            "Printing travel data in data.travel_data :: ",
+            data.travel_data
+          );
+          setIsLoading(false);
           setDataFetched(data.travel_data.data);
           setApiData(data.travel_data.data);
           return data;
@@ -452,76 +522,147 @@ const TravelExpenseDataTable = (props) => {
     fetchData();
   }, []);
   const [selectedDate, setSelectedDate] = useState([]);
-  const handleFilter = (value) => {
-    console.log(value);
-    console.log(dataFetched);
-    const res = setApi.filter((f) =>
-      f.reinr.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log(res);
-    setDataFetched(res);
-  };
-  const handleDateFilterFrom = (dateValue) => {
-    console.log(dateValue);
-    console.log(dataFetched);
+  // const handleFilter = (value) => {
+  //   console.log(value);
+  //   console.log(dataFetched);
+  //   const res = setApi.filter((f) =>
+  //     f.reinr.toLowerCase().includes(value.toLowerCase())
+  //   );
+  //   console.log(res);
+  //   setDataFetched(res);
+  // };
+  // const handleDateFilterFrom = (dateValue) => {
+  //   console.log(dateValue);
+  //   console.log(dataFetched);
 
-    if (!Array.isArray(dataFetched)) {
-      console.error("dataFetched is not an array");
-      return;
+  //   if (!Array.isArray(dataFetched)) {
+  //     console.error("dataFetched is not an array");
+  //     return;
+  //   }
+  //   const formatDateForComparison = (date) => {
+  //     const d = new Date(date);
+  //     const day = `0${d.getDate()}`.slice(-2);
+  //     const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+  //     const year = d.getFullYear();
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const convertJsonDateForComparison = (jsonDate) => {
+  //     const [day, month, year] = jsonDate.split(".");
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const formattedDate = formatDateForComparison(dateValue);
+  //   console.log("Formatted Date for Comparison:", formattedDate);
+  //   const res = dataFetched.filter((f) => {
+  //     const startDate = convertJsonDateForComparison(f.datv1);
+  //     return startDate >= formattedDate;
+  //   });
+  //   console.log(res);
+  //   setDataFetched(res);
+  // };
+
+  // const handleDateFilterTo = (dateValue) => {
+  //   console.log(dateValue);
+  //   console.log(dataFetched);
+
+  //   if (!Array.isArray(dataFetched)) {
+  //     console.error("dataFetched is not an array");
+  //     return;
+  //   }
+  //   const formatDateForComparison = (date) => {
+  //     const d = new Date(date);
+  //     const day = `0${d.getDate()}`.slice(-2);
+  //     const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+  //     const year = d.getFullYear();
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const convertJsonDateForComparison = (jsonDate) => {
+  //     const [day, month, year] = jsonDate.split(".");
+  //     return `${year}${month}${day}`;
+  //   };
+  //   const formattedDate = formatDateForComparison(dateValue);
+  //   console.log("Formatted Date for Comparison:", formattedDate);
+  //   const res = dataFetched.filter((f) => {
+  //     const startDate = convertJsonDateForComparison(f.datb1);
+  //     return startDate <= formattedDate;
+  //   });
+  //   console.log(res);
+  //   setDataFetched(res);
+  // };
+
+  //   const formatDateForComparison = (date) => {
+  //     const d = new Date(date);
+  //     return d.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  // };
+
+  // const parseDate = (dateStr) => {
+  //     const d = new Date(dateStr);
+  //     return d.toISOString().split('T')[0]; // Convert to YYYY-MM-DD for comparison
+  // };
+
+  //New search implemented start
+
+  const formatDateForComparison = (date) => {
+    const d = new Date(date);
+    const day = `0${d.getDate()}`.slice(-2);
+    const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
+    const year = d.getFullYear();
+    return `${year}${month}${day}`;
+  };
+  const convertJsonDateForComparison = (jsonDate) => {
+    const [day, month, year] = jsonDate.split(".");
+    return `${year}${month}${day}`;
+  };
+
+  // Unified search handler
+  const handleSearch = () => {
+    let results = setApi;
+
+    // Filter by search term
+    if (searchTerm) {
+      results = results.filter((f) =>
+        f.reinr.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-    const formatDateForComparison = (date) => {
-      const d = new Date(date);
-      const day = `0${d.getDate()}`.slice(-2);
-      const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
-      const year = d.getFullYear();
-      return `${year}${month}${day}`;
-    };
-    const convertJsonDateForComparison = (jsonDate) => {
-      const [day, month, year] = jsonDate.split(".");
-      return `${year}${month}${day}`;
-    };
-    const formattedDate = formatDateForComparison(dateValue);
-    console.log("Formatted Date for Comparison:", formattedDate);
-    const res = dataFetched.filter((f) => {
-      const startDate = convertJsonDateForComparison(f.datv1);
-      return startDate >= formattedDate;
-    });
-    console.log(res);
-    setDataFetched(res);
-  };
 
-  const handleDateFilterTo = (dateValue) => {
-    console.log(dateValue);
-    console.log(dataFetched);
-
-    if (!Array.isArray(dataFetched)) {
-      console.error("dataFetched is not an array");
-      return;
+    if (dateFrom) {
+      const formattedDate = formatDateForComparison(dateFrom);
+      console.log("Formatted Date for Comparison:", formattedDate);
+      results = results.filter((f) => {
+        const startDate = convertJsonDateForComparison(f.datb1);
+        console.log(startDate);
+        console.log(formattedDate);
+        return startDate >= formattedDate;
+      });
     }
-    const formatDateForComparison = (date) => {
-      const d = new Date(date);
-      const day = `0${d.getDate()}`.slice(-2);
-      const month = `0${d.getMonth() + 1}`.slice(-2); // Months are zero-indexed
-      const year = d.getFullYear();
-      return `${year}${month}${day}`;
-    };
-    const convertJsonDateForComparison = (jsonDate) => {
-      const [day, month, year] = jsonDate.split(".");
-      return `${year}${month}${day}`;
-    };
-    const formattedDate = formatDateForComparison(dateValue);
-    console.log("Formatted Date for Comparison:", formattedDate);
-    const res = dataFetched.filter((f) => {
-      const startDate = convertJsonDateForComparison(f.datb1);
-      return startDate <= formattedDate;
-    });
-    console.log(res);
-    setDataFetched(res);
+
+    if (dateTo) {
+      const formattedDate = formatDateForComparison(dateTo);
+      console.log("Formatted Date for Comparison:", formattedDate);
+      results = results.filter((f) => {
+        const endDate = convertJsonDateForComparison(f.datb1);
+        return endDate <= formattedDate;
+      });
+    }
+
+    setDataFetched(results);
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchTerm, dateFrom, dateTo]);
+  //New search implemented ends here
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
   return (
-    <>
+<>
+{
+        isLoading && <ShaktiLoader page='travel-report'/>
+      }
+
+    <div>
+
+     
+
       <div className="row">
         <div className="row filter-row">
           <div className="col-sm-6 col-md-3">
@@ -531,7 +672,8 @@ const TravelExpenseDataTable = (props) => {
                 placeholder="search here ..."
                 className="form-control"
                 onChange={(e) => {
-                  handleFilter(e.target.value);
+                  // handleFilter(e.target.value);
+                  setSearchTerm(e.target.value);
                 }}
               ></input>
               <label className="focus-label">Trip number</label>
@@ -546,7 +688,8 @@ const TravelExpenseDataTable = (props) => {
                   // onChange={handleDateChange}
                   onChange={(e) => {
                     setStart(e);
-                    handleDateFilterFrom(e);
+                    // handleDateFilterFrom(e);
+                    setDateFrom(e);
                   }}
                   dateFormat="dd-MM-yyyy"
                 />
@@ -563,7 +706,9 @@ const TravelExpenseDataTable = (props) => {
                   // onChange={handleDateChange}
                   onChange={(e) => {
                     setEnd(e);
-                    handleDateFilterTo(e);
+                    // handleDateFilterTo(e);
+                    // console.log(e);
+                    setDateTo(e);
                   }}
                   dateFormat="dd-MM-yyyy"
                 />
@@ -669,7 +814,7 @@ const TravelExpenseDataTable = (props) => {
         </div>
       </div>
       {/* Pop up for trip create start*/}
-      <div className="modal custom-modal fade" id="create" role="dialog" >
+      <div className="modal custom-modal fade" id="create" role="dialog">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-body">
@@ -758,6 +903,7 @@ const TravelExpenseDataTable = (props) => {
         </div>
       </div>
       {/* Pop up for trip create end */}
+    </div>
     </>
   );
 };

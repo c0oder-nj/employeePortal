@@ -8,55 +8,70 @@ import EmployeeLeaveModelPopup from "../../../components/modelpopup/EmployeeLeav
 import SearchBox from "../../../components/SearchBox";
 import { useNavigate } from "react-router-dom";
 import { base_url } from "../../../base_urls";
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
+// import { TokenExpiredError } from "jsonwebtoken";
 
 const EmployeeLeave = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [displayVariable, displayVariableSet] = useState("none");
   const [leaveInfo,leaveSet] = useState([]);
   const [casualLeave,setCasualLeave]  = useState("");
   const [allEmp,allEmpFunction]  = useState([]);
+  const [page,setPage] = useState(10);
   const [isFetchedData,isFetchedDataFunction] = useState(false);
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
+
+  const { checkCookie } = useAuth();
   
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(';');
-    for(let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if(cookie.startsWith(cookieName + '=')) {
-        return true;
-      }
-    }
-    return false;
-  }
+
 
 
   useEffect(() => {
-    // axios
-    // .get(base_url + "/api/adminleaves.json")
-    // .then((res) => setUsers(res.data));
-    let cookieExists = checkCookie('accessToken');
-    if(!cookieExists){
-      navigate("react/template/");
+
+    setIsLoading(true);
+    
+    var cookieExists = checkCookie('accessToken');
+    if(!cookieExists.status){
+      navigate("/");
     }
 
     const fetchData = async ()=>{
 
         //Fetching data for attendance
-        const value = `${document.cookie}`;
-        console.log(value)
+    
+        let cookieExist = checkCookie('accessToken')
+        console.log("Printing response of cookie exist :: ", cookieExist)
+        let value = cookieExist.cookie;
+        value = value.split('=').at(1);
         
         // const url = `http://localhost:3000/api/auth/home?value=${value}`;
         //Value dena padega kynoki uske basis p[ar hi user ki info identify kar rahe hai
-        const url = `http://localhost:3000/api/employee/employeeAttendance?value=${value}`;
+        const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendance`;
         console.log(url);
+
+        console.log("Printing token before fetch :: ", value);
         
         dataFetchedThroughApi = await fetch
-        (url).then((response)=>{
+        (url, {headers: {'Access-Control-Allow-Origin' : '*', 'accesstoken' : value}}).then((response)=>{
           return response.json();
         }).then((data) => {
           
+          if(data.status==false){
+            if(data.type=="Token Expired"){
+              console.log("Line 305",data);
+                // handleLogout();
+                JwtTokenTimeExpire();
+                navigate('/logout');
+                return;
+            }
+          }
+
           //Value will be initialized after getting a response
+          console.log("Printing data after fetch :: ", data);
           leaveSet(data.leave)
           console.log("Printing")
           setUsers(data.leaveInfo)
@@ -64,6 +79,7 @@ const EmployeeLeave = () => {
           setCasualLeave(data.leave);
           allEmpFunction(data.companyEmployee)
           displayVariableSet("block");
+          setIsLoading(false);
           isFetchedDataFunction(true);
           return data;
           
@@ -82,7 +98,7 @@ const EmployeeLeave = () => {
   console.log("All emp value : ",allEmp)
 
  
-  const userElements = users.map((user, index) => ({
+  const userElements = users?.map((user, index) => ({
     key: index,
     leavetype: user.lev_typ,
     from: user.lev_frm,
@@ -90,7 +106,7 @@ const EmployeeLeave = () => {
     noofdays: user.horo,
     reason: user.reason,
     role: user.role,
-    status: (user.apphod)?"Approved":"Decline",
+    status: (user.apphod)?"Approved":(user.dele)?"Decline":"Pending",
     approvedby: user.approvedby,
   }));
   const columns = [
@@ -233,9 +249,21 @@ const EmployeeLeave = () => {
     },
   ];
 
-  
+  const entriesChange = (e) => {
+    const newFilteredData = userElements.slice(0, e.target.value);
+    setPage(e.target.value);
+    // newUserElement = newFilteredData;
+    // setNewUserElement(newFilteredData);
+    // console.log("Filter value and data ", e.target.value, newFilteredData);
+  };
 
   return (
+<>
+    {
+      isLoading && <ShaktiLoader/>
+    }
+
+
     <div className="blockingOrNot" style= {{display:displayVariable}}>
       <div className="page-wrapper">
         <div className="content container-fluid">
@@ -244,28 +272,55 @@ const EmployeeLeave = () => {
             title="Dashboard"
             subtitle="Leaves"
             modal="#add_leave"
-            name="Add New"
+            name="Add Leave"
           />
 
           <div className="row">
-            {leaveInfo.map((stat, index) => (
+            {leaveInfo?.map((stat, index) => (
+              console.log(stat),
               <div className="col-md-3" key={index}>
                 <div className="stats-info">
-                  <h6>{stat.leaveType}</h6>
+                  <h6>{stat.leaveType.split('-')[0]} LEAVE</h6>
                   <h4>{stat.leaveBal}</h4>
                   {/* <h4>{leave}</h4> */}
                 </div>
               </div>
             ))}
           </div>
-
+          <div className="row">
+              <div className="col-sm-12 col-md-6">
+                <div className="dataTables_length d-flex">
+                  <label className="d-flex">
+                    Show{" "}
+                    <select
+                      name="DataTables_Table_0_length"
+                      aria-controls="DataTables_Table_0"
+                      className="custom-select custom-select-sm form-control form-control-sm me-1 ms-1 mb-2"
+                      onChange={entriesChange}
+                      
+                    >
+                      <option value="">Select</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+                      <option value="30">30</option>
+                    </select>{" "}
+                    entries
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-12 col-md-6"></div>
+            </div>
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
-                <SearchBox />
+                {/* <SearchBox /> */}
                 <Table
                   columns={columns}
                   dataSource={userElements?.length > 0 ? userElements : []}
+                  pagination={{ pageSize: page }}
                   className="table-striped"
                 />
               </div>
@@ -286,6 +341,7 @@ const EmployeeLeave = () => {
       <DeleteModal Name="Delete Leaves" />
       {/* Delete Modal */}
     </div>
+    </>
   );
 };
 

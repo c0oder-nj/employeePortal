@@ -1,31 +1,34 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table } from "antd";
+import SearchBox from "../../../components/SearchBox";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 // import AttendanceEmployeeFilter from "../../../components/AttendanceEmployeeFilter";
 import { base_url } from "../../../base_urls";
 import { useNavigate } from "react-router-dom";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrection";
-// import AttendaceCorrection from "../../../../../template/src/components/modelpopup/AttendenceModelPopup"
+import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
+import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
+
 const AttendanceEmployee = () => {
+
+  
   const [users, setUsers] = useState([]);
-  const [activity, setActivity] = useState([]);
   const [dailyPunchIn, setDailyPunchIn] = useState([]);
   const [data, setData] = useState([]);
   const [sap, setSap] = useState(null);
-  const navigate = useNavigate();
-  var dataFetchedThroughApi = null;
+  const [isData, setIsData] = useState(false);
+  const [today, setToday] = useState({});
+  const [page,setPage] = useState(10);
+  const [isLoading, setIsLoading] = useState(false)
+  var todayDate, todayPunchIn, todayPunchOut;
+  const [filteredData, setFilteredData] = useState([]);
+  const {checkCookie} = useAuth();
 
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
+  const navigate = useNavigate();
+  var dataFetchedThroughApi;
+
   function fetchWeekData() {
     function parseDate(d) {
       const [day, month, year] = d.split(".");
@@ -196,13 +199,26 @@ const AttendanceEmployee = () => {
       return { totSecs, bucket };
     }
 
+    function calcTotalSecondsForLateMin(filtData) {
+      let totSecs = 0;
+      filtData.forEach((entry) => {
+
+        const workedSecs = parseTotSeconds(entry.late_min);
+        console.log(workedSecs);
+        totSecs += workedSecs;
+      });
+
+      return Math.floor(120-(totSecs/60));
+    }
+
     const { totSecs, bucket } = calcTotalSeconds(filtData);
     const totHours = Math.floor(totSecs / 3600);
     const remSecsAfterHours = totSecs % 3600;
     const totMins = Math.floor(remSecsAfterHours / 60);
     const remSecs = remSecsAfterHours % 60;
-    const remBucketMins = Math.floor(bucket / 60);
-
+    // const remBucketMins = Math.floor(bucket / 60);
+    console.log(calcTotalSecondsForLateMin(filtData));
+    const remBucketMins = calcTotalSecondsForLateMin(filtData);
     console.log(
       `Total hours worked this month (excluding today): ${String(
         totHours
@@ -211,10 +227,11 @@ const AttendanceEmployee = () => {
       ).padStart(2, "0")}`
     );
     console.log(`Remaining minutes in the bucket: ${remBucketMins}`);
+    console.log(`Total sec: ${totSecs}`);
     users.push({
       title: "Remaining Time",
       value: String(remBucketMins).padStart(2, "0"),
-      valuespan: "/120 hrs",
+      valuespan: "/120 Minutes",
       // progressWidth: "30%",
       progressWidth: String((remBucketMins / 120) * 100) + "%",
       progressBarColor:
@@ -226,26 +243,44 @@ const AttendanceEmployee = () => {
     });
   }
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
 
     const fetchData = async () => {
       //Fetching data for attendance
-      const value = `${document.cookie}`;
-      console.log(value);
+      let value = cookieExists.cookie;
+      value = value.split('=').at(1);
 
-      const url = `http://localhost:3000/api/DailyAttendance/employeeDailyAttendnceStatus?value=${value}`;
-      console.log(url);
+      const url = `${process.env.REACT_APP_BASE_URL}/api/DailyAttendance/employeeDailyAttendnceStatus`;
+      console.log("Base uri for daily attendance:: ", url);
 
-      dataFetchedThroughApi = await fetch(url)
+      dataFetchedThroughApi = await fetch(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          'accesstoken' : value
+        },
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
+          if (data.status == false) {
+            if (data.type == "Token Expired") {
+              console.log("Line 305", data);
+              // handleLogout();
+              JwtTokenTimeExpire();
+              navigate("/logout");
+              return;
+            }
+          }
+
           setData(data.employeeAttendance);
           setSap(data.sapNumber);
+          setIsLoading(false);
+          setIsData(true);
 
           return data;
         })
@@ -256,22 +291,22 @@ const AttendanceEmployee = () => {
     fetchData();
   }, []);
 
-  if (data.length > 0) {
+  if (data?.length > 0 && isData) {
+    console.log(data[0]);
+    todayDate = data[0].begdat;
+    todayPunchIn = data[0].indz;
+    todayPunchOut = data[0].iodz;
+    setToday({
+      todayDate: data[0].begdat,
+      todayPunchIn: data[0].indz,
+      todayPunchOut: data[0].iodz,
+    });
+    console.log(todayDate, todayPunchIn, todayPunchOut);
     fetchWeekData();
     fetchMonthData();
     fetchreaminingtime();
+    setIsData(false);
   }
-
-  // const userElements = data?.map((user, index) => ({
-  //   key: index,
-  //   id: user.id,
-  //   Date: user.Date,
-  //   PunchIn: user.PunchIn,
-  //   PunchOut: user.PunchOut,
-  //   Production: user.Production,
-  //   Break: user.Break,
-  //   Overtime: user.Overtime,
-  // }));
 
   const userElements = data?.map((user, index) => ({
     key: index,
@@ -305,6 +340,16 @@ const AttendanceEmployee = () => {
     // Overtime: user.Overtime,
     LateMin: user.late_min,
   }));
+  // let newUserElement = userElements;
+  const [newUserElement,setNewUserElement] = useState(userElements);
+  
+  const entriesChange = (e) => {
+    const newFilteredData = userElements.slice(0, e.target.value);
+    setPage(e.target.value);
+    // newUserElement = newFilteredData;
+    setNewUserElement(newFilteredData);
+    console.log("Filter value and data ", e.target.value, newFilteredData);
+  };
 
   const columns = [
     {
@@ -343,44 +388,20 @@ const AttendanceEmployee = () => {
       sorter: (a, b) => a.Overtime.length - b.Overtime.length,
     },
   ];
-  // useEffect(() => {
-  //   axios
-  //     .get(base_url + "/api/attendenceemployeedatatable.json")
-  //     .then((res) => setData(res.data));
-  // }, []);
-
-  useEffect(() => {
-    axios.get(base_url + "/api/attendenceemployee.json").then((res) => {
-      // Assuming the API response is an array of objects
-      const apiData = res.data;
-      // Map the API data to the statisticsData format
-      const mappedData = apiData?.map((data) => ({
-        title: data.title,
-        value: data.value,
-        valuespan: data.valuespan,
-        progressWidth: data.progressWidth,
-        progressBarColor: data.progressBarColor,
-      }));
-      setUsers(mappedData);
-    });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(base_url + "/api/attendenceemployeeactivity.json")
-      .then((res) => setActivity(res.data));
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `http://localhost:3002/emp-todays-punch?sapId=5054`;
-      console.log(url);
-      await fetch(url)
+      const url = `${process.env.REACT_APP_BASE_URL}/api/job/emp-punch-data?sapId=5054`;
+      // console.log("Attendance employee url :: ",url);
+      await fetch(url, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          console.log("Daily pucnh in data", data);
           setDailyPunchIn(data);
           return data;
         })
@@ -393,28 +414,23 @@ const AttendanceEmployee = () => {
   const date = new Date();
   const showTime =
     date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
   return (
     <>
-      <div className="page-wrapper">
+
+      {
+        isLoading && <ShaktiLoader loaderSize='shakti-gif-medium' page='shakti-emp-dashboard'/>
+      }
+
+      <div className="page-wrapper" style={{display : isLoading ? 'none' : 'block'}}>
         {/* /Page Header */}
         <div className="content container-fluid">
-          {/* <Breadcrumbs
-            // maintitle="Attendance"
-            title="Leave Correction"
-            modal="#attendace_correction"
-            // subtitle="Attendance"
-          /> */}
           <Breadcrumbs
-            // maintitle="Employee Attendance Correction"
-            // title="Attendance Correction Dashboard"
-            // subtitle="Attendance Correction of Employee"
             modal="#add_employee_attendance_correction"
             name="Attendance Correction Request"
             Linkname="/attendance-employee"
-            // Linkname1="/employees-list"
           />
-          {/* <AttendenceModelPopup/> */}
-          {/* <EmployeeLeaveModelPopup data1={"Hello"} data2={"Hello"}/> */}
+
           {/* /Page Header */}
           <div className="row">
             <div className="col-md-4">
@@ -422,18 +438,19 @@ const AttendanceEmployee = () => {
                 <div className="card-body">
                   <h5 className="card-title">
                     Timesheet{" "}
-                    <small className="text-muted">
-                      {dailyPunchIn.punch1_date}
-                    </small>
+                    <small className="text-muted">{today.todayDate}</small>
                   </h5>
                   <div className="punch-det">
                     <h6>Punch In at</h6>
                     {/* <p>Wed, 11th Mar 2023 10.00 AM</p> */}
-                    <p>Date : {dailyPunchIn.punch1_date}</p>
-                    <p>Time : {dailyPunchIn.punch1_time}</p>
+                    <p>Date : {today.todayDate}</p>
+                    <p>Time : {today.todayPunchIn}</p>
                   </div>
-                  <div className="punch-info" >
-                    <div className="punch-hours" style={{color: "red",border:"5px solid #E2E536"}}>
+                  <div className="punch-info">
+                    <div
+                      className="punch-hours"
+                      style={{ color: "red", border: "5px solid #E2E536" }}
+                    >
                       <span>
                         {parseInt(showTime) -
                           parseInt(dailyPunchIn.punch1_time)}{" "}
@@ -441,11 +458,7 @@ const AttendanceEmployee = () => {
                       </span>
                     </div>
                   </div>
-                  {/* <div className="punch-btn-section">
-                    <button type="button" className="btn btn-primary punch-btn">
-                      Punch Out
-                    </button>
-                  </div> */}
+
                   <div className="statistics">
                     <div className="row">
                       <div className="col-md-6 col-6 text-center">
@@ -472,7 +485,11 @@ const AttendanceEmployee = () => {
                   <div className="stats-list">
                     {Array.isArray(users) && users.length > 0 ? (
                       users.map((data, index) => (
-                        <div className="stats-info" key={index}>
+                        <div
+                          className="stats-info"
+                          id="stats-info-primary"
+                          key={index}
+                        >
                           <p>
                             {data.title}{" "}
                             <strong>
@@ -503,7 +520,7 @@ const AttendanceEmployee = () => {
               <div className="card recent-activity">
                 <div className="card-body">
                   <h5 className="card-title">Today Activity</h5>
-                  <ul className="res-activity-list">
+                  <ul id="list-icon" className="res-activity-list fs-5">
                     {/* {Array.isArray(activity) && activity.length > 0 ? (
                       activity.map((activity, index) => (
                         <li key={index}>
@@ -518,24 +535,25 @@ const AttendanceEmployee = () => {
                       <p>No activities available.</p>
                     )} */}
 
-                    <li>
-                      <p className="mb-0">Punch In Time</p>
-                      <p className="res-activity-time">
+                    <li className="mt-5 mb-5">
+                      <p className="custom-size">Punch In Time</p>
+                      <p className="res-activity-time custom-size">
                         <i className="fa-regular fa-clock"></i>{" "}
-                        {dailyPunchIn.punch1_time}
+                        {today.todayPunchIn}
                       </p>
                     </li>
-                    <li>
-                      <p className="mb-0"> Lunch Break</p>
+                    <li className="mt-5 mb-5">
+                      <p className="custom-size"> Lunch Break</p>
                       <p className="res-activity-time">
                         <i className="fa-regular fa-clock"></i> 1:00 pm
                       </p>
                     </li>
-                    <li>
-                      <p className="mb-0"> Punch Out</p>
+
+                    <li className="mt-5 mb-5">
+                      <p className="mt-5"> Punch Out</p>
                       <p className="res-activity-time">
                         <i className="fa-regular fa-clock"></i>{" "}
-                        {dailyPunchIn.outpunch_time}
+                        {today.todayPunchOut}
                       </p>
                     </li>
                   </ul>
@@ -545,13 +563,47 @@ const AttendanceEmployee = () => {
 
             <AllEmployeeAddPopup data={sap} />
             <div className="row">
+              <div className="col-sm-12 col-md-6">
+                <div className="dataTables_length d-flex">
+                  <label className="d-flex">
+                    Show{" "}
+                    <select
+                      name="DataTables_Table_0_length"
+                      aria-controls="DataTables_Table_0"
+                      className="custom-select custom-select-sm form-control form-control-sm me-1 ms-1 mb-2"
+                      onChange={entriesChange}
+                      
+                    >
+                      <option value="">Select</option>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+                      <option value="30">30</option>
+                    </select>{" "}
+                    entries
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm-12 col-md-6"></div>
+            </div>
+            <div className="row">
               <div className="col-lg-12">
                 <div className="table-responsive">
                   <Table
                     columns={columns}
-                    dataSource={userElements?.length > 0 ? userElements : []}
+                    //Data for showing the number of data on the basis of slice menas first n data
+                    // dataSource={
+                    //   newUserElement?.length > 0 ? newUserElement : []
+                    // }
+                    dataSource={
+                        userElements?.length > 0 ? userElements : []
+                      }
+                    // dataSource={filteredData?.length > 0 ? filteredData : []}
+                    pagination={{ pageSize: page }}
                     className="table-striped"
-                    rowKey={(record) => record.id}
+                    // rowKey={(record) => record.id}
                   />
                 </div>
               </div>

@@ -26,18 +26,12 @@ const employeesapNumber = async (req,res)=>{
 const employeeDailyAttendnceStatus = async (req,res)=>{
     console.log("Hello You are in attendance status");
 
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
   console.log(sapNumber)
   let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_dashboard1.htm?pernr=${sapNumber}`,
-      // url: `https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_dashboard1.htm?pernr=${sapNumber}`,
-      // url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`,
+      url: `https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/employee_dashboard1.htm?pernr=${sapNumber}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -64,8 +58,8 @@ const employeeDailyAttendnceStatus = async (req,res)=>{
 
 //Funtion for attendance correction of logged in employee
 const employeeDailyAttendnceCorrection = async (req,res)=>{
-  // console.log("Your value",req.body)
-  const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/attendance_correction.htm?date=${req.body.date}&perno=${req.body.SapNumber}&status=${req.body.status}&remark=${req.body.remark}`);
+  console.log("Your value for attendance correction",req.body)
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/attendance_correction.htm?date=${req.body.date}&perno=${req.body.SapNumber}&status=${req.body.status}&remark=${req.body.remark}`);
   console.log(result.data);
   console.log("Your cookie is working")
   res.status(200).send(result.data)
@@ -74,15 +68,15 @@ const employeeDailyAttendnceCorrection = async (req,res)=>{
 //Funtion for attendance correction of logged in employee
 const allEmployeeDailyAttendnceCorrection = async (req,res)=>{
   // console.log("Your value",req.body)
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  var sapNumber = req.sapid;
 
-  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/hod_emp_attendance.htm?sapid=5089`);
-  console.log(result.data);
-  console.log("All employee attendance ")
+  const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/hod_emp_attendance.htm?sapid=${sapNumber}`);
+  console.log("From data",result.data);
+  console.log("All employee attendance")
   res.status(200).send(result.data)
 }
 
@@ -90,20 +84,22 @@ const allEmployeeDailyAttendnceCorrection = async (req,res)=>{
 
 const allEmployeeDailyAttendnceApproveReject = async (req,res)=>{
   // console.log("Your value",req.body)
-  console.log(req.query.value)
-  const newValue = req.query.value;
-  headerValue = newValue.split("=")[1];
-  var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
-  var sapNumber = decodedValue.empCode;
+  // console.log(req.query.value)
+  // const newValue = req.query.value;
+  // headerValue = newValue.split("=")[1];
+  // var decodedValue = jwt.verify(headerValue, "gfg_jwt_secret_key");
+  // var sapNumber = decodedValue.empCode;
+  var sapNumber = req.sapid;
+
 
   if(req.query.option==1){
 
-    const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/leave_apporvereject.htm?leave_no=${req.query.type}&approver=5089&sign=1`);
+    const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/leave_apporvereject.htm?leave_no=${req.query.type}&approver=${sapNumber}&sign=1`);
     console.log(result.data);
     console.log("All employee attendance approve ")
     res.status(200).send(result.data)
   }else{
-    const result = await axios.get(`https://spquasrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/leave_apporvereject.htm?leave_no=${req.query.type}&approver=5089&sign=2`);
+    const result = await axios.get(`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_portal_new/leave_apporvereject.htm?leave_no=${req.query.type}&approver=${sapNumber}&sign=2`);
     console.log(result.data);
     console.log("All employee attendance reject ")
     res.status(200).send(result.data)

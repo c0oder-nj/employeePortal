@@ -9,13 +9,16 @@ import { useForm } from "react-hook-form";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 
 const EmployeeLeaveModelPopup = (props) => {
   const [selectedDate1, setSelectedDate1] = useState(null);
   const [selectedDate2, setSelectedDate2] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [EndDate, setEndDate] = useState(null);
+  const {checkCookie} = useAuth();
   const form = useForm();
   const { leaveName } = form;
   const [formData, setFormData] = useState({
@@ -113,16 +116,20 @@ const EmployeeLeaveModelPopup = (props) => {
     e.preventDefault();
     console.log("In send Data");
     console.log(JSON.stringify(formData));
-    const value = `${document.cookie}`;
+    let isCookieExist = checkCookie('accessToken')
+    let value = isCookieExist.cookie;
+    value = value.split('=').at(1);
     console.log(value);
-    const url = `http://localhost:3000/api/employee/employeeAttendanceApply?value=${value}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeAttendanceApply`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Access-Control-Allow-Headers",
         "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Origin": "*",
+        'accesstoken' : value
       },
       body: JSON.stringify(formData),
     }).then((response) => {
@@ -130,14 +137,20 @@ const EmployeeLeaveModelPopup = (props) => {
       response.json().then((body) => {
         console.log(body);
         // alert(body.message);
-        Toastify({
-          text: body.message,
-          duration: 3000,
-          close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-        }).showToast();
+        // Toastify({
+        //   text: body.message,
+        //   duration: 3000,
+        //   close: true,
+        //   gravity: "top", // `top` or `bottom`
+        //   position: "center", // `left`, `center` or `right`
+        //   backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        // }).showToast();
+        withReactContent(Swal).fire({
+          title: body.message,
+          preConfirm: () => {
+            navigate("/leaves-employee");
+          },
+        });
         //   toast(body.message, {
         //     position: toast.POSITION.TOP_LEFT,
         // });
@@ -179,54 +192,61 @@ const EmployeeLeaveModelPopup = (props) => {
   };
 
   //Checking for wheter cooie is existing or not
-  function checkCookie(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
-      if (cookie.startsWith(cookieName + "=")) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // function checkCookie(cookieName) {
+  //   const cookies = document.cookie.split(";");
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     let cookie = cookies[i].trim();
+  //     if (cookie.startsWith(cookieName + "=")) {
+  //       console.log("You are in cookiee testing area", cookie);
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
   useEffect(() => {
     let cookieExists = checkCookie("accessToken");
-    if (!cookieExists) {
-      navigate("react/template/");
+    if (!cookieExists.status) {
+      navigate("/");
     }
 
-    const fetchSapNumber = async () => {
-      // const url = `http://localhost:3000/api/auth/home?value=${value}`;
-      const value = `${document.cookie}`;
-      console.log(value);
-      const url = `http://localhost:3000/api/employee/employeeSapNumber?value=${value}`;
-      console.log(url);
+    // const fetchSapNumber = async () => {
+    //   // const url = `http://localhost:3000/api/auth/home?value=${value}`;
+    //   let value = cookieExists.cookie;
+    //   value = value.split('=').at(1);
+    //   console.log(value);
+    //   const url = `${process.env.REACT_APP_BASE_URL}/api/employee/employeeSapNumber?value=${value}`;
+    //   console.log(url);
 
-      sapNumber = await fetch(url)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setFormData(() => ({
-            ...formData,
-            SapNumber: data,
-          }));
+    //   sapNumber = await fetch(url, {
+    //     method: "get",
+    //     headers: {
+    //       "Access-Control-Allow-Origin": "*",
+    //     },
+    //   })
+    //     .then((response) => {
+    //       return response.json();
+    //     })
+    //     .then((data) => {
+    //       setFormData(() => ({
+    //         ...formData,
+    //         SapNumber: data,
+    //       }));
 
-          return data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    //       return data;
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
 
-      console.log(sapNumber);
-      dataToBeSent.sapNumber = sapNumber;
-    };
-    fetchSapNumber();
+    //   console.log(sapNumber);
+    //   dataToBeSent.sapNumber = sapNumber;
+    // };
+    // fetchSapNumber();
   }, []);
 
-  console.log(data1[0].leaveType);
-  dataToBeSent.sapNumber = sapNumber;
-  console.log(sapNumber);
+  console.log(data1[0]?.leaveType);
+  // dataToBeSent.sapNumber = sapNumber;
+  // console.log(sapNumber);
   console.log(data2);
   var counter = 1;
 

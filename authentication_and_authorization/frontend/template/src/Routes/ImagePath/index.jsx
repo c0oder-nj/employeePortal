@@ -1,6 +1,7 @@
 export { default as headerlogo } from "../../assets/img/logo.svg";
 // export { default as Applogo } from "../../assets/img/logo2.png";
 export { default as Applogo } from "../../assets/img/shaktiLogo.png";
+export { default as Applogowhite } from "../../assets/img/shaktiwhite.png";
 // export {default as shakitLogo} from "../../assets/img/shaktiLogo.png";
 export { default as logo3 } from "../../assets/img/logo3.png";
 export { default as lnEnglish } from "../../assets/img/flags/us.png";
@@ -141,3 +142,7 @@ export { default as avatar14 } from "../../assets/img/avatar/avatar-14.jpg";
 export { default as avatar15 } from "../../assets/img/avatar/avatar-15.jpg"; 
 export { default as avatar17 } from "../../assets/img/avatar/avatar-17.jpg"; 
 export { default as tagUserIcon } from "../../assets/img/icons/tag-user-icon.svg"; 
+
+
+// custom added images
+export {default as bgImageLogin } from "../../assets/img/bg/about_img4.jpg"

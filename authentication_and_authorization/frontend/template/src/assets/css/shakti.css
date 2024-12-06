@@ -1,0 +1,59 @@
+.shakti-loader{
+    text-align: center;
+    position: absolute;
+    top: 35vh;
+    bottom: 35vh;
+    left: 47vw;
+    padding: 10px;
+}
+
+
+.shakti-loader > img {
+    margin: 5px !important; 
+    padding: 0px !important;
+}
+
+.view-profile{
+    left: 35vw !important;
+}
+
+.login{
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+}
+
+
+.shakti-gif-small{
+
+    height: 50px !important;
+}
+
+.shakti-gif-medium{
+    height: 150px;
+}
+
+.travel-report{
+    left: 35vw !important;
+    top: 40vh;
+}
+
+
+
+.important-lable-fs{
+    font-size: 11px !important;
+}
+
+
+
+/* 
+.shakti-emp-dashboard{
+    height: 100vh;
+    margin-top: 45vh;
+}
+
+.shakti-view-profile{
+    height: 100vh;
+    margin-top: 36vh;
+} */
