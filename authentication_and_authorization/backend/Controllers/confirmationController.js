@@ -25,7 +25,7 @@ const empConfPPT = (req,res) => {
     let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `${process.env.BASE_URL_QUALITY}/empconfirmationppt.htm?data=${jsonStringData}`,
+    url: `${process.env.BASE_URL}/empconfirmationppt.htm?data=${jsonStringData}`,
     headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
     }
@@ -56,7 +56,7 @@ const confirmationListingToHOD = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/confirmation_emp_listing_hod.htm?sapid=${sapId}`,
+      url: `${process.env.BASE_URL}/confirmation_emp_listing_hod.htm?sapid=${sapId}`,
       
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
@@ -90,7 +90,7 @@ const confirmationListingToHOD = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/emp_confirmation_hodaction.htm?detail=${data}`,
+      url: `${process.env.BASE_URL}/emp_confirmation_hodaction.htm?detail=${data}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -143,7 +143,7 @@ const confirmationListingToHOD = (req,res) => {
         config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: `${process.env.BASE_URL_QUALITY}/hod_confassessment.htm?data=${data}`,
+          url: `${process.env.BASE_URL}/hod_confassessment.htm?data=${data}`,
           headers: { 
             'Cookie': 'sap-usercontext=sap-client=900'
           }
@@ -181,7 +181,7 @@ const confirmationListingToHOD = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/hodfinalapprovallisting.htm?sapid=${sapId}`,
+      url: `${process.env.BASE_URL}/hodfinalapprovallisting.htm?sapid=${sapId}`,
       
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
@@ -216,7 +216,7 @@ const confirmationListingToHOD = (req,res) => {
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `${process.env.BASE_URL_QUALITY}/emppptdatagetapi.htm?sapid=${employeeSap}`,
+        url: `${process.env.BASE_URL}/emppptdatagetapi.htm?sapid=${employeeSap}`,
         headers: { 
           'Cookie': 'sap-appcontext=c2FwLXNlc3Npb25pZD1TSUQlM2FBTk9OJTNhU1BRVUFTUlZSMV9TNFFfMDAlM2FzNDduV0V5Nm9wa01mOEFaV095RzM4VkZVSjFnRmtSTVltU2hyMEdyLUFUVA%3d%3d; sap-usercontext=sap-client=900'
         }
@@ -239,7 +239,7 @@ const confirmationListingToHOD = (req,res) => {
       let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `${process.env.BASE_URL_QUALITY}/hodassesmentformdatagetapi.htm?sapid=${employeeSap}`,
+        url: `${process.env.BASE_URL}/hodassesmentformdatagetapi.htm?sapid=${employeeSap}`,
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
         }
@@ -271,7 +271,7 @@ const confirmationListingToHOD = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/confirmationhrdatalisting.htm`,
+      url: `${process.env.BASE_URL}/confirmationhrdatalisting.htm`,
       
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
@@ -306,7 +306,7 @@ const confirmationListingToHOD = (req,res) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `${process.env.BASE_URL_QUALITY}/hodfinalapprovalapi.htm?hod_remark=${hod_remark}&empSapId=${req.body.employeeSapNumber}`,
+      url: `${process.env.BASE_URL}/hodfinalapprovalapi.htm?hod_remark=${hod_remark}&empSapId=${req.body.employeeSapNumber}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -338,7 +338,7 @@ const confirmationListingToHOD = (req,res) => {
       method: 'get',
       maxBodyLength: Infinity,
       // url: `${process.env.BASE_URL_QUALITY}/hodfinalapprovalapi.htm?hod_remark=${hod_remark}&empSapId=${req.body.employeeSapNumber}`,
-      url :`${process.env.BASE_URL_QUALITY}/empconfirmationhrapproval.htm?hr_sapid=${sapId}&emp_sapid=${req.body.employeeSapNumber}&hr_remark=${hod_remark}`,
+      url :`${process.env.BASE_URL}/empconfirmationhrapproval.htm?hr_sapid=${sapId}&emp_sapid=${req.body.employeeSapNumber}&hr_remark=${hod_remark}`,
       headers: { 
         'Cookie': 'sap-usercontext=sap-client=900'
       }
@@ -360,4 +360,70 @@ const confirmationListingToHOD = (req,res) => {
 
 
 
-module.exports = {hrlvl1Controller,sendApprovalToHrFromHOD,confirmationShowPptAndFormDataHrlvl1,empConfPPT,confirmationListingToHOD,confimExtendTerminateByHod,confirmationShowPptAndFormData,assesmentDataShow};
+
+  // hr level 2
+  const confirmationShowPptAndFormDataHrlvl2 = async(req,res)=>{
+    const sapId = req.sapid;
+    console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
+    console.log("Form Data",req.body);
+    // return res.json({"status" : true, "data" : "Showing data of ppt form to HOD for particular employee"});
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${process.env.BASE_URL}/Emp_Conf_Head_HR.htm`,
+      
+      headers: { 
+        'Cookie': 'sap-usercontext=sap-client=900'
+      }
+    };
+    console.log(config.url);
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      if(response.status == 200) {
+        return res.json({"status" : true, "data" : response.data});
+      }else{
+        return res.json({"status" : false, "data" : "Some error occured"});
+      }
+    })
+    .catch((error) => {
+      return res.json({"status" : false, "data" : error});
+    });
+  }
+  
+
+  const hrlvl2Controller = async(req,res)=>{
+    const sapId = req.sapid;
+    console.log("Your Sap id in HOD confirmation fnfnf ",sapId);
+    console.log("Form Data",req.body);
+    // return res.json({"status" : true, "data" : "Hello data form final HOD approval"});
+    console.log("Printing data after stringify",req.body);
+    let headHrRemark = req.body.remarkText;
+    headHrRemark = encodeURIComponent(headHrRemark)
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      // url: `${process.env.BASE_URL_QUALITY}/hodfinalapprovalapi.htm?hod_remark=${hod_remark}&empSapId=${req.body.employeeSapNumber}`,
+      url :`${process.env.BASE_URL}/emp_confirmation_headhr_approval.htm?headhr_sapid=${sapId}&emp_sapid=${req.body.employeeSapNumber}&headhr_remark=${headHrRemark}`,
+      headers: { 
+        'Cookie': 'sap-usercontext=sap-client=900'
+      }
+    };
+    console.log(config.url);
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      if(response.status == 200) {
+        return res.status(200).json({"status" : true, "message" : "Employee has been confirmed from your side"});
+      }else{
+        return res.status(400).json({"status" : false, "message" : "Some error occured in first api"});
+      }
+    })
+    .catch((error) => {
+      return res.status(400).json({"status" : false, "message" : error});
+    });
+  }
+
+
+
+module.exports = {hrlvl1Controller,sendApprovalToHrFromHOD,confirmationShowPptAndFormDataHrlvl1,empConfPPT,confirmationListingToHOD,confimExtendTerminateByHod,confirmationShowPptAndFormData,assesmentDataShow, confirmationShowPptAndFormDataHrlvl2, hrlvl2Controller};

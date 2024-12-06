@@ -11,10 +11,11 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 
 
 const Coff = () => {
-  const { checkCookie } = useAuth();
+  const { checkCookie , isLoading, setIsLoading } = useAuth();
   const navigate = useNavigate();
   const [cOffData, setcOffData] = useState([]);
   const [isCreated, setIsCreated] = useState(false);
@@ -53,6 +54,7 @@ const Coff = () => {
 
   
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       const tokenResult = checkCookie("accessToken");
       if (!tokenResult.status) {
@@ -87,6 +89,7 @@ const Coff = () => {
     };
 
     fetchData().then((data) => {
+      setIsLoading(false);
       console.log("Fetched data: ", data.data.response);
       if(data.data.response.length==0){
         withReactContent(Swal).fire({
@@ -290,6 +293,11 @@ const Coff = () => {
 
   return (
     <div className="main-wrapper">
+
+      {
+        isLoading && <ShaktiLoader/>
+      }
+
       <Header />
       <Sidebar />
       <div className="page-wrapper">

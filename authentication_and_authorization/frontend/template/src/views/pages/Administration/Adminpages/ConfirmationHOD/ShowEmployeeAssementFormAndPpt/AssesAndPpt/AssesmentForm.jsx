@@ -6,11 +6,12 @@ import useAuth from "../../../../../../../hooks/useAuth";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import ShaktiLoader from "../../../../../../../components/ShaktiLoader";
 
 
 const Assesment = () => {
   const navigate = useNavigate();
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
 
   const location = useLocation();
   const locationVar = location.state;
@@ -25,6 +26,7 @@ const Assesment = () => {
     }),
   };
   useEffect(() => {
+    setIsLoading(true);
     console.log("In useEffect");
     const checkCk = checkCookie('accessToken');
     if (checkCk.status === false) {
@@ -58,6 +60,7 @@ const Assesment = () => {
           if (response.status == 200) {
             console.log("Printing data in axio :: ", response.data);
             // return  response.data;
+            setIsLoading(false);
             setApiData(response.data.data.data);
           }
         })
@@ -73,6 +76,10 @@ const Assesment = () => {
 
 
   return (
+
+
+
+
     <div className="page-wrapper">
       <div className="content container-fluid">
         <Breadcrumbs
@@ -82,6 +89,11 @@ const Assesment = () => {
         // modal="#add_categories"
         // name="Add Salary"
         />
+
+
+        {
+          isLoading && <ShaktiLoader/>
+        }
 
         <div className="row">
           <div className="col-md-12">

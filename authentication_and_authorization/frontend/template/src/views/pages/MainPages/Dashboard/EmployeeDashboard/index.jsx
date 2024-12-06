@@ -12,6 +12,7 @@ import './oc_style.css'
 import JwtTokenTimeExpire from "../../../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../../../hooks/useAuth";
 import { t } from "i18next";
+import ShaktiLoader from "../../../../../components/ShaktiLoader";
 // import jwt from "jsonwebtoken"
 
 const EmployeeDashboard = () => {
@@ -27,6 +28,7 @@ const EmployeeDashboard = () => {
   const [workingHoursTimeFrame, setWorkingHoursTimeFrame] = useState("Week");
   const [heirarchyData, setHeirarchyData] = useState([]);
   const {checkCookie} = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [chartOptions, setChartOptions] = useState({
     series: [],
@@ -255,10 +257,10 @@ const EmployeeDashboard = () => {
   }
 
   // custom implementation of monthly hour chart
-  const customMonthlyChart = {
-    'working_hours': [],
-    'categories': []
-  }
+  // const customMonthlyChart = {
+  //   'working_hours': [],
+  //   'categories': []
+  // }
   // All custom built objects end
 
 
@@ -268,6 +270,9 @@ const EmployeeDashboard = () => {
     // if(checkCk.status === false){
     //   return navigate('/');
     // }
+
+
+    setIsLoading(true);
 
 
     const fetchData = async () => {
@@ -416,7 +421,10 @@ const EmployeeDashboard = () => {
           // if(val.)
 
           let workingHours = val.totdz.split(':');
-          workingHours = (parseFloat(workingHours.at(0)) + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
+          // workingHours = (parseFloat(workingHours.at(0)) + parseFloat((parseFloat(workingHours.at(1))) / 60)).toFixed(2);
+          // customChart.last7DaysWorkingHour.push(workingHours);
+          workingHours = workingHours.at(0) + '.' + workingHours.at(1);
+          workingHours = parseFloat(workingHours);
           customChart.last7DaysWorkingHour.push(workingHours);
           // customChart.categories.push(val.begdat); // date wise showing working hour
         })
@@ -426,7 +434,10 @@ const EmployeeDashboard = () => {
 
         oneMonthData.map((val, index) => {
           const [hour, minute, second] = val.totdz.split(':');
-          let workingHours = (parseFloat(hour) + parseFloat((parseInt(minute) / 60))).toFixed(2);
+          // let workingHours = (parseFloat(hour) + parseFloat((parseInt(minute) / 60))).toFixed(2);
+          // customChartMonthly.working_hours.push(workingHours);
+          let workingHours = hour.slice(1) + '.' + minute;
+          workingHours = parseFloat(workingHours);
           customChartMonthly.working_hours.push(workingHours);
           customChartMonthly.categories.push(val.begdat);
         })
@@ -486,7 +497,7 @@ const EmployeeDashboard = () => {
       })
 
 
-
+      setIsLoading(false);
       setPageDisplay('block')
     });
   }, []);
@@ -568,35 +579,54 @@ const EmployeeDashboard = () => {
     })
 
     let totalWorkingHoursInMonth = 0;
+    let totalWorkingMinutesInMonth = 0;
     let totalLateMinutesInMonth = 0;
     let lunchDurationInMonth = 0;
     // calculating working hours and late minutes
     oneMonthData.map((val, index) => {
       let [hour, minute, second] = val.totdz.split(':');
-      var tempVar = (parseInt(hour) + parseFloat(parseInt(minute) / 60)).toFixed(2);
+      // var tempVar = (parseInt(hour) + parseFloat(parseInt(minute) / 60)).toFixed(2);
+      totalWorkingHoursInMonth += parseInt(hour);
+      totalWorkingMinutesInMonth += parseInt(minute);
+      if(totalWorkingMinutesInMonth > 60){
+        totalWorkingHoursInMonth += 1;
+        totalWorkingMinutesInMonth -= 60;
+      }
+
+
+      let tempVar1 = (hour.slice(1) + '.' + minute);
       // console.log(typeof parseInt(hour), parseInt(minute));
       // console.log("Printing one day hour record and its type:: ",tempVar, typeof tempVar);
-      tempVar = parseFloat(tempVar);
-      // console.log("Printing tempvar type after covnersion:: ",tempVar, typeof tempVar);
-      totalWorkingHoursInMonth += tempVar
-      customMonthlyChart.working_hours.push(tempVar);
-      customMonthlyChart.categories.push(val.begdat);
+      tempVar1 = parseFloat(tempVar1);
+      // customMonthlyChart.working_hours.push(tempVar1);
+      // customMonthlyChart.categories.push(val.begdat);
 
 
       let [lateHour, lateMin, lateSec] = val.late_min.split(':');
-      totalLateMinutesInMonth += ((parseInt(lateHour) * 60) + parseInt(lateMin))
+      totalLateMinutesInMonth += (parseInt(lateHour)*60*60 + parseInt(lateMin)*60 + parseInt(lateSec))
       lunchDurationInMonth += 30;
     })
 
+    // late minutes in month
+    totalLateMinutesInMonth = parseFloat(totalLateMinutesInMonth);
+    totalLateMinutesInMonth = Math.ceil(totalLateMinutesInMonth / 60).toFixed(2);
 
+    // working hours in month
+    totalWorkingMinutesInMonth = totalWorkingMinutesInMonth / 100;
+    totalWorkingMinutesInMonth = parseFloat(totalWorkingMinutesInMonth);
+
+    totalWorkingHoursInMonth += totalWorkingMinutesInMonth;
 
 
     monthlyStatisticsCard = {
-      'working_hours': totalWorkingHoursInMonth.toFixed(2),
+      // 'working_hours': totalWorkingHoursInMonth.toFixed(2),
+      'working_hours': totalWorkingHoursInMonth,
       'used_late_min': totalLateMinutesInMonth,
       'rem_late_min': 120 - totalLateMinutesInMonth,
       'lunch_duration': lunchDurationInMonth
     }
+
+    // console.log("Printing monthly statistics card :: ", monthlyStatisticsCard);
 
 
 
@@ -608,20 +638,43 @@ const EmployeeDashboard = () => {
 
 
     let totalWorkingHoursInWeek = 0;
+    let totalWorkingMinutesInWeek = 0;
     let totalLateMinutesInWeek = 0;
     let lunchDurationInWeek = 0;
     oneWeekData.filter((val, index) => {
-      let workingHoursArray = val.totdz.split(':');
-      var tempVar = ((parseInt(workingHoursArray.at(0)) + parseFloat((parseInt(workingHoursArray.at(1))) / 60)).toFixed(2));
-      tempVar = parseFloat(tempVar);
-      totalWorkingHoursInWeek += tempVar;
+      let [hour,minutes,seconds] = val.totdz.split(':');
+      totalWorkingHoursInWeek += parseInt(hour);
+      totalWorkingMinutesInWeek += parseInt(minutes);
+      if(totalWorkingMinutesInWeek > 60){
+        totalWorkingHoursInWeek += 1;
+        totalWorkingMinutesInWeek -= 60;
+      }
+
+      // let tempVar = ((parseInt(workingHoursArray.at(0)) + parseFloat((parseInt(workingHoursArray.at(1))) / 60)).toFixed(2));
+      // // let tempVar = (parseInt(workingHoursArray.at(0))*60*60 + parseInt((parseInt(workingHoursArray.at(1))) * 60) + parseInt(workingHoursArray.at(2))) ; // total late minutes used in last week
+      // tempVar = parseFloat(tempVar);
+      // totalWorkingHoursInWeek += tempVar;
+
       let lateMinutesArray = val.late_min.split(':');
-      totalLateMinutesInWeek += ((parseInt(lateMinutesArray.at(0)) * 60) + parseInt(lateMinutesArray.at(1)))
+      // totalLateMinutesInWeek += ((parseInt(lateMinutesArray.at(0)) * 60) + parseInt(lateMinutesArray.at(1)))
+      totalLateMinutesInWeek += (parseInt(lateMinutesArray.at(0))*60*60 + parseInt((parseInt(lateMinutesArray.at(1))) * 60) + parseInt(lateMinutesArray.at(2))) ; // total late minutes used in last week
       lunchDurationInWeek += 30;
     })
 
+
+    // converting lateminutes find in seconds to minutes
+    totalLateMinutesInWeek = parseFloat(totalLateMinutesInWeek);
+    totalLateMinutesInWeek = Math.ceil(totalLateMinutesInWeek / 60);
+
+    totalWorkingMinutesInWeek = totalWorkingMinutesInWeek / 100;
+    totalWorkingMinutesInWeek = parseFloat(totalWorkingMinutesInWeek);
+
+    
+    let workingHoursInWeek = parseFloat(totalWorkingHoursInWeek + totalWorkingMinutesInWeek).toFixed(2);
+
     weeklyStatisticsCard = {
-      'working_hours': totalWorkingHoursInWeek.toFixed(2),
+      // 'working_hours': totalWorkingHoursInWeek.toFixed(2),
+      'working_hours': workingHoursInWeek,
       'used_late_min': totalLateMinutesInWeek,
       'rem_late_min': monthlyStatisticsCard.rem_late_min,
       'lunch_duration': lunchDurationInWeek,
@@ -660,8 +713,10 @@ const EmployeeDashboard = () => {
   return (
     <>
       {/* Page Wrapper */}
+
+
       {
-        !dashboardData && <div className="loader">Loading Data</div>
+        isLoading && <ShaktiLoader page='emp-dashboard'/>
       }
       {
         dashboardData &&
@@ -828,7 +883,7 @@ const EmployeeDashboard = () => {
                               />
                             </div>
                             <div className="holiday-calendar-content">
-                              <h6>{recentHoliday?.holiday_text}</h6>
+                              <h6>{recentHoliday?.holiday_text ? recentHoliday?.holiday_text : 'No Upcoming Holiday this year'}</h6>
                               <p>{recentHoliday?.date}</p>
                             </div>
                           </div>

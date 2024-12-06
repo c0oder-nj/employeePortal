@@ -6,11 +6,17 @@ import OffCanvas from "./OffCanvas";
 import axios from 'axios'
 import { useEffect, useState } from "react";
 import { responsivePropType } from "react-bootstrap/esm/createUtilityClasses";
+import ShaktiLoader from "./ShaktiLoader";
 // import jwt from 'jsonwebtoken';
 
 
 
 const RequireAuth = ({ allowedRoles }) => {
+
+
+    console.log("Allowed roles are :: ", allowedRoles);
+
+
     const { auth , setAuth , checkCookie ,  } = useAuth();
     const [isfetched, setIsFetched] = useState(false);
     const location = useLocation();
@@ -86,12 +92,19 @@ const RequireAuth = ({ allowedRoles }) => {
 
 
     if(!isfetched){
-        return ( <div>Loading ....</div>)
+        return ( <div>
+            <ShaktiLoader/>
+        </div>)
     }
+
+    console.log("user Roles :: ", auth.roles)
+        console.log("allowed roles :: ", allowedRoles)
     
     return (
 
-        auth?.roles?.find( role => allowedRoles?.includes(role))
+        
+
+        auth?.roles?.some( role => allowedRoles?.includes(role))
             ? 
             <>
                 <Header/>
@@ -100,6 +113,8 @@ const RequireAuth = ({ allowedRoles }) => {
                 <Outlet />
             </>
             : <Navigate to="/" state={{ from: location }} replace />
+
+        
     );
 } 
 export default RequireAuth;

@@ -275,6 +275,7 @@ import EmployeeConfirmationFromDetailsHRHead from "../../views/pages/Administrat
 // import { AuthProvider } from "../../Context/AuthProvider.jsx";
 import RequireAuth from "../../components/RequireAuth.jsx";
 import useAuth from "../../hooks/useAuth.jsx";
+import CreateKraTemplate from "../../views/pages/Employees/kra/CreateKraTemplate.jsx";
 
 // copied functions
 // const SidebarLayout = () => (
@@ -342,7 +343,7 @@ const AppRouter = () => {
                   <Route path="/od_ot_creation" element={<OdOt />} />
                   <Route path="/c-off" element={<Coff/>}/>
                   <Route path="/confirm-emp-ppt" element={<EmpConfirmationPPT/>}/>
-
+                  <Route path='create-kra-template' element={<CreateKraTemplate/>} />
                 </Route>
                 
 
@@ -350,44 +351,26 @@ const AppRouter = () => {
 
                 <Route element={<RequireAuth allowedRoles={['admin']} />}>
                     {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
-                    {console.log("In admin part")}
                     <Route path="/adminattendance" element={<AttendenceAdmin />} />
                     <Route path="/adminleaves" element={<AdminLeave />} />
-                    {/* <Route path="/gate-pass-approval" element={<AdminLeave />} /> */}
                     <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
                     <Route path="/gatepass-approval" element={<Gatepass />} />
                     <Route path="/odot-approval" element={<OdOtApproval />} />
                     <Route path="/coff-approval" element={<CoffApproval />} />
                     <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
                     <Route path="/HOD-Employee-Confirmation-Details" element={<EmployeeConfirmationFromDetails />} />
-                    <Route path="/assesment-view" element={<Assesment />} />
-                    {/* <Route path="/hr-leave" element={<EmployeeConfirmationFromDetailsHR />} /> */}
                 </Route>
 
-                <Route element={<RequireAuth allowedRoles={['hrlvl1','admin','user']} />}>
-                    <Route path="/adminattendance" element={<AttendenceAdmin />} />
-                    <Route path="/adminleaves" element={<AdminLeave />} />
-                    <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
-                    <Route path="/gatepass-approval" element={<Gatepass />} />
-                    <Route path="/odot-approval" element={<OdOtApproval />} />
-                    <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
-                    <Route path="/HOD-Employee-Confirmation-Details" element={<EmployeeConfirmationFromDetails />} />
-                    <Route path="/assesment-view" element={<Assesment />} />
-                    {console.log("Hello HR Section")}
+                <Route element={<RequireAuth allowedRoles={['hrlvl1']} />}>
                     <Route path="/hr-leave" element={<EmployeeConfirmationFromDetailsHR />} />
                 </Route>
                 
                 <Route element={<RequireAuth allowedRoles={['hrlvl2']} />}>
-                    <Route path="/adminattendance" element={<AttendenceAdmin />} />
-                    <Route path="/adminleaves" element={<AdminLeave />} />
-                    <Route path="/hod_travel_expense_approval" element={<HodTravelExpenseShow />} />
-                    <Route path="/gatepass-approval" element={<Gatepass />} />
-                    <Route path="/odot-approval" element={<OdOtApproval />} />
-                    <Route path="/employee-confirmation" element={<ConfirmationHOD />} />
-                    <Route path="/HOD-Employee-Confirmation-Details" element={<EmployeeConfirmationFromDetails />} />
-                    <Route path="/assesment-view" element={<Assesment />} />
                     <Route path="/hr-head-leave" element={<EmployeeConfirmationFromDetailsHRHead />} />
-                    {console.log("Hello Head HR Section")}
+                </Route>
+
+                <Route element={<RequireAuth allowedRoles={['hrlvl1', 'hrlvl2', 'admin']} />}>
+                  <Route path="/assesment-view" element={<Assesment />} />
                 </Route>
 
 

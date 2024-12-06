@@ -7,18 +7,19 @@ import { Table } from "antd";
 import axios from "axios";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import ShaktiLoader from "../../../../../../../components/ShaktiLoader";
 
 const EmployeeConfirmationDetailsHRHead = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
   const [formData,setFormData] = useState({
     employeeSapNumber:"",
     remarkText:"",
   });
   //Use effect for showing data just for testing
   useEffect(() => {
-    console.log("Showing data to be send in hr side ", apiData);
+    console.log("Showing data to be send in hr head side ", apiData);
   }, [apiData]);
 
   useEffect(() => {
@@ -29,12 +30,13 @@ const EmployeeConfirmationDetailsHRHead = () => {
     }
 
     const fetchData = async () => {
+      setIsLoading(true);
       const value = checkCookie("accessToken").cookie.split("=").at(1);
       console.log(
         "Printing value at 478 for travelexpense data in local :: ",
         value
       );
-      const url = `${process.env.REACT_APP_BASE_URL}/api/admin/hod-show-form-ppt-details`;
+      const url = `${process.env.REACT_APP_BASE_URL}/api/admin/hrlv2-lisitng`;
       console.log(url);
       await fetch(url, {
         headers: { "Access-Control-Allow-Origin": "*", accesstoken: value },
@@ -47,6 +49,7 @@ const EmployeeConfirmationDetailsHRHead = () => {
             "Printing travel data in data.travel_data :: ",
             typeof data.data.data
           );
+          setIsLoading(false);
           setApiData(data.data.data);
           return data;
         })
@@ -105,7 +108,7 @@ const EmployeeConfirmationDetailsHRHead = () => {
         <Link
           className="btn btn-sm btn-primary"
           to="/assesment-view"
-          state={text}
+          state={text + '-ppt'}
         >
           Generate PPT
         </Link>
@@ -118,7 +121,7 @@ const EmployeeConfirmationDetailsHRHead = () => {
         <Link
           className="btn btn-sm btn-primary"
           to="/assesment-view"
-          state={text}
+          state={text + '-assessment'}
         >
           Generate Form
         </Link>
@@ -152,6 +155,7 @@ const EmployeeConfirmationDetailsHRHead = () => {
   ];
 
   async function sendRemarkAndConfirmation (event){
+    setIsLoading(true);
     
     event.preventDefault();
    
@@ -159,11 +163,11 @@ const EmployeeConfirmationDetailsHRHead = () => {
     let cookieValue = cookieExists.cookie;
     cookieValue = cookieValue.split('=').at(1);
     console.log(JSON.stringify(formData));
-    console.log(`${process.env.REACT_APP_BASE_URL}/api/admin/hr-approval`);
+    console.log(`${process.env.REACT_APP_BASE_URL}/api/admin/hr-head-approval`);
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_BASE_URL}/api/admin/hr-approval`,
+      url: `${process.env.REACT_APP_BASE_URL}/api/admin/hr-head-approval`,
       headers: {
         'accesstoken': cookieValue,
         'Content-Type': 'application/json'
@@ -182,20 +186,29 @@ const EmployeeConfirmationDetailsHRHead = () => {
             showCancelButton: false,
             preConfirm: () => {
               // trigger parent component re-rendering
-    
+              window.location.reload(); 
             },
           });
         }
+        setIsLoading(false);
         console.log(response.data.message);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log(error);
       });
     
   };
 
   return (
+
     <>
+
+    {
+      isLoading && <ShaktiLoader/>
+    }
+
+    <div>
       <div className="row">
         <div className="col-md-12">
           <div className="table-responsive">
@@ -218,8 +231,8 @@ const EmployeeConfirmationDetailsHRHead = () => {
           <div className="modal-content">
             <div className="modal-body">
               <div className="form-header">
-                <h3>HR Remark</h3>
-                <p>Sap Number : </p>
+                <h3>Head HR Remark</h3>
+                <p>Sap Number : {formData?.employeeSapNumber} </p>
               </div>
               <div className="modal-btn delete-action">
                 <div className="row">
@@ -272,6 +285,7 @@ const EmployeeConfirmationDetailsHRHead = () => {
       </div>
       {/* <EditSalaryModal />
       <DeleteModal Name="Delete Salary" /> */}
+    </div>
     </>
   );
 };

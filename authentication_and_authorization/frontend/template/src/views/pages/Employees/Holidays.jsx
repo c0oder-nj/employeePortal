@@ -13,10 +13,12 @@ import user from "../../../user";
 import { AuthProvider } from "../../../cookieTimeOut/jwtTokenTime";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const Holidays = () => {
   const [users, setUsers] = useState([]);
   const [holidays, setHolidays] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
   const navigate = useNavigate();
   const {checkCookie} = useAuth();
   var holidaysArray;
@@ -34,6 +36,7 @@ const Holidays = () => {
   // }
 
   useEffect(() => {
+    setisLoading(true);
     const fetchData = async () => {
       console.log("Fetching data...");
       const tokenResult = checkCookie('accessToken');
@@ -76,6 +79,7 @@ const Holidays = () => {
         }
       }
       console.log("when fetchdata completes :: ", data.data);
+      setisLoading(false);
       setHolidays(data.data)
     })
     
@@ -161,6 +165,9 @@ const Holidays = () => {
 
   return (
     <>
+
+
+    
       <div className="page-wrapper">
         {/* Page Content */}
         <div className="content container-fluid">
@@ -169,6 +176,9 @@ const Holidays = () => {
             title="Dashboard"
             subtitle="Holidays"
           />
+
+
+          {isLoading && <ShaktiLoader page='view-profile' />}
 
           {/* /Page Header */}
           <div className="row">

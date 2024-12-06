@@ -8,6 +8,7 @@ import "toastify-js/src/toastify.css";
 import DatePicker from "react-datepicker";
 import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../../hooks/useAuth";
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 // import Breadcrumbs from "../../../../components/Breadcrumbs";
 // import EditSalaryModal from "../../../../components/modelpopup/EditSalaryModal";
 // import DeleteModal from "../../../../components/modelpopup/deletePopup";
@@ -26,7 +27,7 @@ const TravelExpenseDataTable = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const { checkCookie } = useAuth();
+  const { checkCookie , isLoading, setIsLoading } = useAuth();
   // const [filteredData, setFilteredData] = useState(initialData);
   // New Search implementation state End
   const [formData, setFormData] = useState({
@@ -479,6 +480,7 @@ const TravelExpenseDataTable = (props) => {
   ];
   const [setApi, setApiData] = useState([]);
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       // const value = `${document.cookie}`;
       const value = checkCookie("accessToken").cookie.split("=").at(1);
@@ -508,6 +510,7 @@ const TravelExpenseDataTable = (props) => {
             "Printing travel data in data.travel_data :: ",
             data.travel_data
           );
+          setIsLoading(false);
           setDataFetched(data.travel_data.data);
           setApiData(data.travel_data.data);
           return data;
@@ -651,7 +654,15 @@ const TravelExpenseDataTable = (props) => {
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
   return (
-    <>
+<>
+{
+        isLoading && <ShaktiLoader page='travel-report'/>
+      }
+
+    <div>
+
+     
+
       <div className="row">
         <div className="row filter-row">
           <div className="col-sm-6 col-md-3">
@@ -892,6 +903,7 @@ const TravelExpenseDataTable = (props) => {
         </div>
       </div>
       {/* Pop up for trip create end */}
+    </div>
     </>
   );
 };

@@ -24,6 +24,30 @@ const login = async (req,res) => {
     });
 }
 
+const forgetPass = async (req,res) => {
+     
+    // console.log(req.body);
+    const userId = req.body.userid;
+    const mobile = req.body.mobile;
+
+    console.log(mobile , "::" , userId);
+
+    let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.REACT_APP_BASEURL}forgot_pass.htm?pernr=${userId}&mobno=${mobile}`,
+    headers: { }
+    };
+
+    axios.request(config)
+    .then((response) => {
+        res.send(response.data);
+    })
+    .catch((error) => {
+    console.log(error);
+    });
+}
+
 //GET Method
 const dashboard = async (req,res) =>{
 
@@ -408,6 +432,59 @@ const submitComplian = async (req,res) => {
         });
 }
 
+
+const summaryReport = async (req,res) => {
+
+    console.log(req.body);
+      const userId = req.body.userid;
+      const sdate = req.body.sdate;
+      const edate = req.body.edate;
+  
+  
+      console.log("Request ", req.body);
+  
+      let config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url : `${process.env.REACT_APP_BASEURL}summary_report.htm?kunnr=${userId}&datefr=${sdate}&dateto=${edate}`,
+          headers: { }
+          };
+      
+          axios.request(config)
+          .then((response) => {
+              res.send(response.data);
+          })
+          .catch((error) => {
+          console.log(error);
+          });
+  }
+  const detailReport = async (req,res) => {
+  
+      console.log(req.body);
+        const userId = req.body.userid;
+        const sdate = req.body.sdate;
+        const edate = req.body.edate;
+    
+    
+        console.log("Request ", req.body);
+    
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url : `${process.env.REACT_APP_BASEURL}materiladetail.htm?kunnr=${userId}&datefr=${sdate}&dateto=${edate}`,
+            headers: { }
+            };
+        
+            axios.request(config)
+            .then((response) => {
+                res.send(response.data);
+            })
+            .catch((error) => {
+            console.log(error);
+            });
+    }
+
+
 module.exports = {login,dashboard,profileData,replacmentReport,billReport,billPrint,complainReport,companyList,accountStatment,materialStock
-    ,complainList,productList,billList,createBill,submitReplaceProduct,submitComplian
+    ,complainList,productList,billList,createBill,submitReplaceProduct,submitComplian, forgetPass, detailReport, summaryReport
 }

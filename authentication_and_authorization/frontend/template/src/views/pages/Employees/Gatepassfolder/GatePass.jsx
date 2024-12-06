@@ -12,9 +12,10 @@ import EditPfModal from "../../HR/Sales/ProvidentFund/EditPfModal";
 import AddPfModal from "../../HR/Sales/ProvidentFund/AddPfModal";
 
 import CreateGatePass from "./CreateGatePass";
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 
 const GatePass = () => {
-const {checkCookie} = useAuth();
+const {checkCookie, isLoading, setIsLoading} = useAuth();
 const navigate = useNavigate();
 const [gatePassData, setGatePassData] = useState([]);
 const [isCreated, setIsCreated] = useState(false);
@@ -25,6 +26,9 @@ const changeParentState = () => {
 }
 
   useEffect(() => {
+
+    setIsLoading(true);
+
     const fetchData = async () => {
       const tokenResult = checkCookie('accessToken');
       if (!tokenResult.status) {
@@ -59,6 +63,7 @@ const changeParentState = () => {
 
     fetchData().then((data)=>{
       console.log("Printing data after fetch :: ", data);
+      setIsLoading(false);
       setGatePassData(data.data)
     })
     
@@ -209,6 +214,10 @@ const changeParentState = () => {
 
   return (
     <div className="main-wrapper">
+
+      {
+        isLoading && <ShaktiLoader/>
+      }
       <Header />
       <Sidebar />
       <div className="page-wrapper">

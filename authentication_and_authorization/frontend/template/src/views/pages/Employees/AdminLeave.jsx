@@ -30,6 +30,7 @@ import LeaveFilter from "../../../components/LeaveFilter";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 import { useAccordionButton } from "react-bootstrap";
 import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const AdminLeave = () => {
   const [setPendingLeaves, setPendingLeavesFunction] = useState([]);
@@ -38,12 +39,13 @@ const AdminLeave = () => {
   const [casualLeave, setCasualLeave] = useState("");
   const [allEmp, allEmpFunction] = useState([]);
   const [isFetchedData, isFetchedDataFunction] = useState(false);
-  const {checkCookie} = useAuth();
+  const {checkCookie, isLoading, setIsLoading} = useAuth();
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
 
 
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
       navigate("/");
@@ -100,6 +102,7 @@ const AdminLeave = () => {
             });
           }
           console.log("Printing");
+          setIsLoading(false);
           setPendingLeavesFunction(data.employeePendingLeave);
           // setUsers(data.leaveInfo)
           // console.log()
@@ -122,6 +125,7 @@ const AdminLeave = () => {
   }
 
   async function fetchDataFromApproveReject(option, type) {
+    setIsLoading(true);
     //Fetching data for attendance
     const cookieExists = checkCookie('accessToken');
     let value = cookieExists.cookie;
@@ -143,6 +147,7 @@ const AdminLeave = () => {
       })
       .then((data) => {
         console.log(data[0].msg);
+        setIsLoading(false);
         Toastify({
           text: data[0].msg,
           duration: 3000,
@@ -356,6 +361,11 @@ const AdminLeave = () => {
   ];
   return (
     <>
+
+    {
+      isLoading && <ShaktiLoader />
+    }
+
       {setPendingLeaves.length > 0 && (
         <div className="page-wrapper">
           {/* Page Content */}

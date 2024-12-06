@@ -9,16 +9,18 @@ import withReactContent from "sweetalert2-react-content";
 import DatePicker from "react-datepicker";
 import JwtTokenTimeExpire from "../../../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../../../hooks/useAuth";
+import ShaktiLoader from "../../../../../components/ShaktiLoader";
 const TravelExpenseReportTable = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
   const [setApprove, setApproveData] = useState([]);
 
-  const {checkCookie} = useAuth();
+  const {checkCookie, isLoading, setIsLoading} = useAuth();
   
   
 
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
       navigate("/");
@@ -39,6 +41,7 @@ const TravelExpenseReportTable = () => {
                 return;
             }
           }
+          setIsLoading(false);
           setApiData(data.data);
           setFilterData(data.data);
           console.log(data.data);
@@ -388,6 +391,7 @@ const TravelExpenseReportTable = () => {
   };
 
   const approveTrip = (props) => {
+    setIsLoading(true);
     const [sapNumber, tripNumber] = [props.PERNR, props.REINR];
     console.log("In hod travel approval", sapNumber, tripNumber);
     const fetchData = async () => {
@@ -412,6 +416,7 @@ const TravelExpenseReportTable = () => {
                 return;
             }
           }
+          setIsLoading(false);
           Toastify({
             text: data.message,
             duration: 3000,
@@ -550,6 +555,12 @@ const TravelExpenseReportTable = () => {
   }, [searchTerm, dateFrom, dateTo]);
   return (
     <>
+
+    {
+      isLoading && <ShaktiLoader page='travel-report'/>
+    }
+
+
       <div className="row">
         <div className="col-md-12">
           <div className="table-responsive" style={{ "overflow-x": "hidden" }}>

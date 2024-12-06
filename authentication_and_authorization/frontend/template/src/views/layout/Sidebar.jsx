@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";
-import * as Icon from 'react-feather';
+import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
 
@@ -33,20 +33,37 @@ const Sidebar = () => {
   const { auth } = useAuth();
 
   useEffect(()=>{
+
+
+
+
     const filteredSidebarData = SidebarData.map(section => {
       return {
         ...section,
         menu: section.menu.map(menuItem => {
           return {
             ...menuItem,
-            subMenus: menuItem.subMenus.filter(subMenu => 
-              subMenu.visibility.some(role => auth.roles.includes(role))
+            subMenus: menuItem.subMenus.filter(subMenu => {
+              if(subMenu.menuValue == 'Confirmation Emp PPT' && !auth.status ){
+                return false; //
+              }
+              return subMenu.visibility.some(role => auth.roles.includes(role))
+            }
             ),
           };
         }).filter(menuItem => menuItem.subMenus.length > 0), // remove menuItems with no visible subMenus
       };
     }).filter(section => section.menu.length > 0); // remove sections with no visible menuItems
     setSidebarData(filteredSidebarData);
+
+
+    console.log("Printing filtered sidebar data :: ", filteredSidebarData);
+
+
+
+
+
+
   }, []); 
   
 

@@ -227,11 +227,24 @@ export const SidebarData = [
         menuValue: "Official Duty/Trip",
         hasSubRoute: true,
         showSubRoute: false,
-        icon: "la la-door-open",
+        icon: "la la-plane-departure",
         subMenus: [
           {
             menuValue: "Od/Ot Creation and show",
             route: "/od_ot_creation",
+            visibility: ["user", "admin"],
+          },
+        ],
+      },
+      {
+        menuValue: "Key Responsibility Area",
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: "la la-box-open",
+        subMenus: [
+          {
+            menuValue: "Create KRA Template",
+            route: "/create-kra-template",
             visibility: ["user", "admin"],
           },
         ],

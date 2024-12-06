@@ -7,11 +7,12 @@ import { Table } from "antd";
 import axios from "axios";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import ShaktiLoader from "../../../../../../../components/ShaktiLoader";
 
 const EmployeeConfirmationDetails = () => {
   const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
-  const { checkCookie } = useAuth();
+  const { checkCookie , isLoading, setIsLoading} = useAuth();
   const [formData,setFormData] = useState({
     employeeSapNumber:"",
     remarkText:"",
@@ -22,6 +23,7 @@ const EmployeeConfirmationDetails = () => {
   }, [apiData]);
 
   useEffect(() => {
+    setIsLoading(true);
     console.log("In useEffect");
     const checkCk = checkCookie("accessToken");
     if (checkCk.status === false) {
@@ -47,6 +49,7 @@ const EmployeeConfirmationDetails = () => {
             "Printing travel data in data.travel_data :: ",
             typeof data.data.data
           );
+          setIsLoading(false);
           setApiData(data.data.data);
           return data;
         })
@@ -144,6 +147,7 @@ const EmployeeConfirmationDetails = () => {
   ];
 
   async function sendRemarkAndConfirmation (event){
+    setIsLoading(true);
     
     event.preventDefault();
    
@@ -174,20 +178,29 @@ const EmployeeConfirmationDetails = () => {
             showCancelButton: false,
             preConfirm: () => {
               // trigger parent component re-rendering
-    
+              window.location.reload();
             },
           });
         }
         console.log(response.data.message);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
       });
     
   };
 
   return (
+
+
     <>
+
+    {
+      isLoading && <ShaktiLoader/>
+    }
+    <div>
       <div className="row">
         <div className="col-md-12">
           <div className="table-responsive">
@@ -266,6 +279,8 @@ const EmployeeConfirmationDetails = () => {
       </div>
       {/* <EditSalaryModal />
       <DeleteModal Name="Delete Salary" /> */}
+    </div>
+
     </>
   );
 };

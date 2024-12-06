@@ -244,7 +244,7 @@ const EmployeeLeaveModelPopup = (props) => {
     // fetchSapNumber();
   }, []);
 
-  console.log(data1[0].leaveType);
+  console.log(data1[0]?.leaveType);
   // dataToBeSent.sapNumber = sapNumber;
   // console.log(sapNumber);
   console.log(data2);

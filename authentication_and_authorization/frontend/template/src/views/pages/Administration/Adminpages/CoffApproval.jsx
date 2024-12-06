@@ -11,9 +11,10 @@ import Breadcrumbs from "../../../../components/Breadcrumbs";
 import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../../hooks/useAuth";
 import axios from 'axios'
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 
 const CoffApproval = () => {
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
   const [coffData, setCoffData] = useState([]);
@@ -28,6 +29,7 @@ const CoffApproval = () => {
     }
 
     const fetchData = async () => {
+      setIsLoading(true);
       let value = cookieExists.cookie;
       value = value.split('=').at(1);
       const url = `${process.env.REACT_APP_BASE_URL}/api/admin/coff-listing`;
@@ -66,6 +68,7 @@ const CoffApproval = () => {
                     },
                   });
             }else{
+              setIsLoading(false);
                 setCoffData(response.response);
             }
           }
@@ -83,6 +86,7 @@ const CoffApproval = () => {
 
 
   async function fetchDataFromApproveReject(param) { 
+    setIsLoading(true);
 
     const value = checkCookie('accessToken').cookie.split('=').at(1);
 
@@ -299,6 +303,10 @@ const CoffApproval = () => {
   });
   return (
     <>
+
+    {
+      isLoading && <ShaktiLoader/>
+    }
       {coffData?.length > 0 &&
         <div className="page-wrapper">
           <div className="content container-fluid">

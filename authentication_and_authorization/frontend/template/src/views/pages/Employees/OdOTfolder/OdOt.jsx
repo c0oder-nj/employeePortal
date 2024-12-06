@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 import CreateOdOT from "./CreateOdOt";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import ShaktiLoader from "../../../../components/ShaktiLoader";
+import SweetAlert from "../../Ui_Interface/Components/SweetAlert";
 const OdOt = () => {
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
   const navigate = useNavigate();
   const [oDoTData, setOdOtData] = useState([]);
   const [isCreated, setIsCreated] = useState(false);
@@ -26,6 +28,7 @@ const OdOt = () => {
 
   // Fetch data on component mount
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       const tokenResult = checkCookie("accessToken");
       if (!tokenResult.status) {
@@ -61,12 +64,14 @@ const OdOt = () => {
 
     fetchData().then((data) => {
       console.log("Fetched data: ", data);
+      setIsLoading(false);
       setOdOtData(data);
     });
   }, []);
 
   // Build the table data based on the fetched oDoTData
   useEffect(() => {
+
     let tempTable = [];
     oDoTData?.forEach((val, index) => {
       let temp = {};
@@ -194,6 +199,11 @@ const OdOt = () => {
 
   return (
     <div className="main-wrapper">
+
+      {
+        isLoading && <ShaktiLoader/>
+      }
+
       <Header />
       <Sidebar />
       <div className="page-wrapper">
@@ -243,7 +253,9 @@ const OdOt = () => {
                     pagination={{ pageSize: "10" }}
                   />
                 ) : (
-                  <>Loading...</>
+                  <>
+                    <p>No data found for your record</p>
+                  </>
                 )}
               </div>
             </div>

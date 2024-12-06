@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AttendanceCorrection";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const AttendanceEmployee = () => {
 
@@ -20,6 +21,7 @@ const AttendanceEmployee = () => {
   const [isData, setIsData] = useState(false);
   const [today, setToday] = useState({});
   const [page,setPage] = useState(10);
+  const [isLoading, setIsLoading] = useState(false)
   var todayDate, todayPunchIn, todayPunchOut;
   const [filteredData, setFilteredData] = useState([]);
   const {checkCookie} = useAuth();
@@ -241,6 +243,7 @@ const AttendanceEmployee = () => {
     });
   }
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
       navigate("/");
@@ -276,6 +279,7 @@ const AttendanceEmployee = () => {
 
           setData(data.employeeAttendance);
           setSap(data.sapNumber);
+          setIsLoading(false);
           setIsData(true);
 
           return data;
@@ -413,7 +417,12 @@ const AttendanceEmployee = () => {
 
   return (
     <>
-      <div className="page-wrapper">
+
+      {
+        isLoading && <ShaktiLoader loaderSize='shakti-gif-medium' page='shakti-emp-dashboard'/>
+      }
+
+      <div className="page-wrapper" style={{display : isLoading ? 'none' : 'block'}}>
         {/* /Page Header */}
         <div className="content container-fluid">
           <Breadcrumbs

@@ -5,10 +5,12 @@ import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
+  const [isLoading, setisLoading] = useState(false);
   const {checkCookie} = useAuth();
 
   // function checkCookie(cookieName) {
@@ -27,7 +29,7 @@ const Profile = () => {
 
     useEffect(() => {
 
-  
+    setisLoading(true);
     const fetchData = async () => {
       let isCookieExist = checkCookie('accessToken');
       if(!isCookieExist.status){
@@ -60,6 +62,7 @@ const Profile = () => {
 
     fetchData().then((data)=>{
       console.log("when fetchdata completes :: ", data);
+      setisLoading(false);
       setEmpData(data);
     })
     
@@ -77,7 +80,14 @@ const Profile = () => {
           modal="#add_indicator"
           name="Add New"
         />
-        <div className="card mb-0">
+
+        {
+          isLoading && <ShaktiLoader page='view-profile'/>
+        }
+        
+        
+
+        <div className="card mb-0" style={{display : isLoading ? 'none' : "block"}}>
           <div className="card-body">
             <div className="row">
               <div className="col-md-12">
@@ -180,7 +190,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="card tab-box">
+        <div className="card tab-box" style={{display : isLoading ? 'none' : 'block'}}>
           <div className="row user-tabs">
             <div className="col-lg-12 col-md-12 col-sm-12 line-tabs">
               <ul className="nav nav-tabs nav-tabs-bottom">
@@ -226,7 +236,12 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <ProfileTab profile={empData}/>
+
+        {
+          !isLoading &&  <ProfileTab profile={empData}/>
+        }
+        
+
       </div> 
     </div>
   );

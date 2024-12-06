@@ -41,4 +41,11 @@ router.post('/submit_replaced_product',customerPortalController.submitReplacePro
 
 router.post('/submit_complain',customerPortalController.submitComplian);
 
+router.post('/forgetPass', customerPortalController.forgetPass);
+
+
+router.post('/summary_report', customerPortalController.summaryReport);
+
+router.post('/detail_report', customerPortalController.detailReport);
+
 module.exports = router;

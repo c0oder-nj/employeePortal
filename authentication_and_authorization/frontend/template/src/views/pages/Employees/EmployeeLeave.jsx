@@ -10,9 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { base_url } from "../../../base_urls";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 // import { TokenExpiredError } from "jsonwebtoken";
 
 const EmployeeLeave = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [displayVariable, displayVariableSet] = useState("none");
   const [leaveInfo,leaveSet] = useState([]);
@@ -29,6 +31,8 @@ const EmployeeLeave = () => {
 
 
   useEffect(() => {
+
+    setIsLoading(true);
     
     var cookieExists = checkCookie('accessToken');
     if(!cookieExists.status){
@@ -75,6 +79,7 @@ const EmployeeLeave = () => {
           setCasualLeave(data.leave);
           allEmpFunction(data.companyEmployee)
           displayVariableSet("block");
+          setIsLoading(false);
           isFetchedDataFunction(true);
           return data;
           
@@ -253,6 +258,12 @@ const EmployeeLeave = () => {
   };
 
   return (
+<>
+    {
+      isLoading && <ShaktiLoader/>
+    }
+
+
     <div className="blockingOrNot" style= {{display:displayVariable}}>
       <div className="page-wrapper">
         <div className="content container-fluid">
@@ -330,6 +341,7 @@ const EmployeeLeave = () => {
       <DeleteModal Name="Delete Leaves" />
       {/* Delete Modal */}
     </div>
+    </>
   );
 };
 

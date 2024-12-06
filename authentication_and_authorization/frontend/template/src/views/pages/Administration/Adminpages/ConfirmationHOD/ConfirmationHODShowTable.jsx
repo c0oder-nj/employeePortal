@@ -12,6 +12,7 @@ import Select from "react-select";
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import ShaktiLoader from "../../../../../components/ShaktiLoader";
 
 const ConfirmationHODShowTable = (props) => {
   console.log(props);
@@ -23,7 +24,7 @@ const ConfirmationHODShowTable = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
   const [typeAction,setTypeAction] = useState();
   const [formData, setFormData] = useState({
     empSapNumer:"",
@@ -164,6 +165,7 @@ const ConfirmationHODShowTable = (props) => {
   ];
 
   const ShowTravelData = (props) => {
+    setIsLoading(true);
     console.log("Your data in showTable", props);
     const [sapNumber, tripNumber] = [props.pernr, props.reinr];
     console.log("Sap and trip number", sapNumber, tripNumber);
@@ -191,6 +193,7 @@ const ConfirmationHODShowTable = (props) => {
             }
           }
           console.log("Helo data", data.travel_data);
+          setIsLoading(false);
           setDdataFetched(data.travel_data);
 
           return data;
@@ -203,7 +206,7 @@ const ConfirmationHODShowTable = (props) => {
   };
 
   async function sendDataForConfimationTerminationDeletion (event,props){
-    
+    setIsLoading(true);
     event.preventDefault();
    
     const cookieExists = checkCookie("accessToken");
@@ -233,13 +236,14 @@ const ConfirmationHODShowTable = (props) => {
             showCancelButton: false,
             preConfirm: () => {
               // trigger parent component re-rendering
-              
+              window.location.reload();
             },
           });
         }
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
       });
     
   };
@@ -477,6 +481,7 @@ const ConfirmationHODShowTable = (props) => {
   ];
   const [setApi, setApiData] = useState([]);
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       // const value = `${document.cookie}`;
       const value = checkCookie("accessToken").cookie.split("=").at(1);
@@ -503,6 +508,7 @@ const ConfirmationHODShowTable = (props) => {
             }
           }
           console.log("Printing travel data in data.travel_data :: ", data);
+          setIsLoading(false);
           setDataFetched(data.data.data);
           setApiData(data.data.data);
           return data;
@@ -511,6 +517,7 @@ const ConfirmationHODShowTable = (props) => {
           console.log("Error");
         });
     };
+    setIsLoading(false)
     fetchData();
   }, []);
 
@@ -557,6 +564,7 @@ const ConfirmationHODShowTable = (props) => {
       });
     }
 
+    setIsLoading(false);
     setDataFetched(results);
   };
 
@@ -567,7 +575,15 @@ const ConfirmationHODShowTable = (props) => {
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
   return (
+
     <>
+
+
+    {
+      isLoading && <ShaktiLoader/>
+    }
+
+    <div>
       <div className="row">
         <div className="row filter-row">
           <div className="col-sm-6 col-md-3">
@@ -1623,6 +1639,8 @@ const ConfirmationHODShowTable = (props) => {
           </div>
         </div>
       </div>
+    </div>
+
     </>
   );
 };

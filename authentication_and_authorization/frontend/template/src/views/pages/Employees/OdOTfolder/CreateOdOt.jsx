@@ -103,7 +103,7 @@ const CreateOdOT = (props) => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://localhost:3000/api/employee/odot-create',
+      url: `${process.env.REACT_APP_BASE_URL}/api/employee/odot-create`,
       headers: { 
         'accessToken': cookieValue,
         'Content-Type': 'application/json'

@@ -13,9 +13,10 @@ import Breadcrumbs from "../../../../components/Breadcrumbs";
 import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../../hooks/useAuth";
 import axios from 'axios'
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 
 const GatePass = () => {
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
   const [gatePassData, setGatePassData] = useState([]);
@@ -24,6 +25,7 @@ const GatePass = () => {
 
 
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
       navigate("/");
@@ -62,6 +64,7 @@ const GatePass = () => {
               },
             });
           }
+          setIsLoading(false);
           setGatePassData(data.DATA);
 
         })
@@ -77,6 +80,7 @@ const GatePass = () => {
 
 
   async function fetchDataFromApproveReject(option, type) { // 1 stands to approve | 0 stands to reject the gate pass
+    setIsLoading(true);
     console.log("Flow come here, printing params :: ", option, type);
     let isCookie = checkCookie('accessToken');
     let value = isCookie.cookie;
@@ -102,7 +106,7 @@ const GatePass = () => {
           //   position: "center",
           //   backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
           // }).showToast();
-
+          setIsLoading(false);
           withReactContent(Swal).fire({
             title: response.data.msg,
             confirmButtonText: "Ok",
@@ -292,6 +296,11 @@ const GatePass = () => {
   });
   return (
     <>
+
+      {
+        isLoading && <ShaktiLoader />
+      }
+
       {gatePassData?.length > 0 &&
         <div className="page-wrapper">
           <div className="content container-fluid">

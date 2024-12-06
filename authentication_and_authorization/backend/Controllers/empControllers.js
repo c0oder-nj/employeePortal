@@ -29,7 +29,7 @@ const employeeattendance = async (req,res)=>{
         method: 'get',
         maxBodyLength: Infinity,
         // url: 'https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=5051',
-        url:`https://spprdsrvr1.shaktipumps.com:8423/sap/bc/bsp/sap/zhr_emp_app_1/sync_android_to_sap.htm?pernr=${sapNumber}`, 
+        url:`${process.env.BASE_URL}/apply_leave.htm?pernr=${sapNumber}`, 
         headers: { 
           'Cookie': 'sap-usercontext=sap-client=900'
         }
@@ -39,21 +39,22 @@ const employeeattendance = async (req,res)=>{
       const employeeAttendanceData = 
       await axios.request(config)
       .then((response) => {
-        // console.log((response.data));
+        console.log(typeof response.data);
         console.log("Here")
         return response.data;
       })
       .catch((error) => {
         console.log(error);
       });
-
+  
+      // console.log(employeeAttendanceData);
 
     // console.log(employeeAttendanceData.leavebalance)
     sendEmployeeData.leave = employeeAttendanceData.leavebalance
     sendEmployeeData.leaveInfo = employeeAttendanceData.leaveemp
     sendEmployeeData.companyEmployee = employeeAttendanceData.activeemployee 
     console.log("szldvhlkzsjhvb;lzshvblksdzfhvblkzsdfvlkzsdfvblkzsdf")
-    // console.log(sendEmployeeData)
+    console.log(sendEmployeeData)
     return res.json(sendEmployeeData); 
 }
 
@@ -313,7 +314,33 @@ const employeeProfile = async (req,res) => {
 
 
 const getRoles = async (req,res) => {
-  return res.json({'user': true,'name' : req.name, 'roles' : req.roles, 'sapid' : req.sapid, 'designation' : req.designation, 'mobile' : req.mobile, 'email' : req.mail , 'address' : req.address});
+  const pernr = req.sapid;
+  let status; // employee ppt status (whether the ppt available for filling or not)
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `${process.env.BASE_URL}/check_for_emp_ppt.htm?pernr=${pernr}`,
+    headers: { 
+      'Cookie': 'sap-usercontext=sap-client=900'
+    }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    if(response.status == 200){
+      status = response.data.status;
+    }else{
+      status = false;
+    }
+    return res.json({'user': true,'name' : req.name, 'roles' : req.roles, 'sapid' : req.sapid, 'designation' : req.designation, 'mobile' : req.mobile, 'email' : req.mail , 'address' : req.address, 'status' : status });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+
+  
 }
 
 

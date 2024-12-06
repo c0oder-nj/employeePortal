@@ -6,15 +6,18 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import JwtTokenTimeExpire from "../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../hooks/useAuth";
+import ShaktiLoader from "../../../components/ShaktiLoader";
 
 const TableAvatar = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const {checkCookie} = useAuth();
+  const {checkCookie, isLoading, setIsLoading} = useAuth();
 
 
 
   useEffect(() => {
+    setIsLoading(true);
+
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
       navigate("/");
@@ -56,6 +59,7 @@ const TableAvatar = () => {
             return;
           }
 
+          setIsLoading(false);
           setData(data.data);
         })
         .catch((err) => {
@@ -74,6 +78,10 @@ const TableAvatar = () => {
 
   return (
     <>
+      {
+        isLoading && <ShaktiLoader page='view-profile'/>
+      }
+
       <table className="table table-striped custom-table table-nowrap mb-0">
         <thead>
           <tr>

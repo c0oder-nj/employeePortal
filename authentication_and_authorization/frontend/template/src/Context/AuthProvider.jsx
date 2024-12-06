@@ -6,6 +6,7 @@ const AuthContext = createContext({})
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     // const navigate = useNavigate();
     const checkCookie = (cookieName) => {
         const cookies = document.cookie.split(';');
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ auth, setAuth, checkCookie, handleLogOut }}>
+        <AuthContext.Provider value={{ auth, setAuth, checkCookie, handleLogOut , isLoading, setIsLoading}}>
             {children}
         </AuthContext.Provider>
     )

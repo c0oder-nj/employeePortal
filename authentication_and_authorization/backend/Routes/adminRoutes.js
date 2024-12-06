@@ -4,7 +4,8 @@ const odotController = require('../Controllers/odotController'); // od ot contro
 const cOffController = require('../Controllers/coffController'); //coff controller
 
 const authUserThoughMiddleware = require('../middleware/authUserMiddle') // middleware for validations
-const confirmationController = require('../Controllers/confirmationController')
+const confirmationController = require('../Controllers/confirmationController');
+const { route } = require('./authRoutes');
 const router = express.Router();
 
 //Gate Pass lisitng to HOD
@@ -31,8 +32,12 @@ router.get('/assesment-form',authUserThoughMiddleware.checkUserNeeraj,confirmati
 //Router for final confirmation remark and approval from HOD side after viewing ppt and assesment form
 router.post('/final-hod-remark',authUserThoughMiddleware.checkUserNeeraj,confirmationController.sendApprovalToHrFromHOD); 
 router.post('/hr-approval',authUserThoughMiddleware.checkUserNeeraj,confirmationController.hrlvl1Controller);
+router.post('/hr-head-approval',authUserThoughMiddleware.checkUserNeeraj,confirmationController.hrlvl2Controller);
+
 
 router.get('/hrlv1-lisitng',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confirmationShowPptAndFormDataHrlvl1)
+router.get('/hrlv2-lisitng',authUserThoughMiddleware.checkUserNeeraj,confirmationController.confirmationShowPptAndFormDataHrlvl2)
+
 
 
 module.exports = router;

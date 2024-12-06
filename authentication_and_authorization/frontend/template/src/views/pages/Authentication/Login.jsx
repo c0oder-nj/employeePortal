@@ -11,9 +11,12 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
 import Error from './Error';
+import '../../../assets/css/shakti.css'
+
 
 // import custom hooks for context api custom hooks
 import useAuth from '../../../hooks/useAuth';
+import ShaktiLoader from '../../../components/ShaktiLoader';
 
 const validationSchema = Yup.object({
   sapid: Yup
@@ -36,6 +39,7 @@ const Login = () => {
   const { auth, setAuth } = useAuth();
   const {checkCookie} = useAuth();
   const {state} = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const customStyle = {
 
@@ -78,6 +82,7 @@ const Login = () => {
  
  
   const onSubmit = async (data) => {
+      setIsLoading(true);
         // when user enters the default password navigate it to set new password
         try {
           let apiUrl = `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
@@ -101,8 +106,10 @@ const Login = () => {
               console.log('accessToken='+response.accessToken)
               setAuth({'user': true,'name' : response.name, 'roles' : response.roles,'accessToken':response.accessToken})
               console.log("New auth that has been set :: -> ", auth);
+              setIsLoading(false);
               navigate("/employee-dashboard");
             }else if(response.newUser){
+              setIsLoading(false);
               navigate('/set-password', {
                 state : {
                   "sapid" : data.sapid
@@ -114,6 +121,7 @@ const Login = () => {
               console.log(response.message);
               setErrorMessage({"status": true, "message":response.message});
               setDisplay('block');
+              setIsLoading(false);
               navigate("/")
             }
         } catch (error) {
@@ -178,6 +186,10 @@ const Login = () => {
               {/* /Account Logo */}
               <div className="account-box">
                 <div className="account-wrapper">
+
+                  { isLoading && <ShaktiLoader page='login' loaderSize='shakti-gif-small'/> }
+
+
                   <h3 className="account-title">Login</h3>
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}

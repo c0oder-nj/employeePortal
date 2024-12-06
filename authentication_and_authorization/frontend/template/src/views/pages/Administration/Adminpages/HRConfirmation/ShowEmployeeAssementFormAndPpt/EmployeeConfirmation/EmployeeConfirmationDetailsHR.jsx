@@ -8,6 +8,7 @@ import axios from "axios";
 // import useAuth from "../../../../../../../hooks/useAuth";
 import useAuth from "../../../../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import ShaktiLoader from "../../../../../../../components/ShaktiLoader";
 
 const EmployeeConfirmationDetailsHR = () => {
   const navigate = useNavigate();
@@ -183,7 +184,7 @@ const EmployeeConfirmationDetailsHR = () => {
             showCancelButton: false,
             preConfirm: () => {
               // trigger parent component re-rendering
-    
+              window.location.reload();
             },
           });
         }
@@ -196,7 +197,14 @@ const EmployeeConfirmationDetailsHR = () => {
   };
 
   return (
+
     <>
+
+    {
+      (apiData?.length <= 0) && <ShaktiLoader/>
+    }
+    
+    <div>
       <div className="row">
         <div className="col-md-12">
           <div className="table-responsive">
@@ -275,6 +283,8 @@ const EmployeeConfirmationDetailsHR = () => {
       </div>
       {/* <EditSalaryModal />
       <DeleteModal Name="Delete Salary" /> */}
+    </div>
+
     </>
   );
 };

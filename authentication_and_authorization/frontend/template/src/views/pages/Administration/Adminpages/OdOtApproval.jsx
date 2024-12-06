@@ -11,9 +11,10 @@ import Breadcrumbs from "../../../../components/Breadcrumbs";
 import JwtTokenTimeExpire from "../../../../cookieTimeOut/jwtTokenTime";
 import useAuth from "../../../../hooks/useAuth";
 import axios from 'axios'
+import ShaktiLoader from "../../../../components/ShaktiLoader";
 
 const OdOtApproval = () => {
-  const { checkCookie } = useAuth();
+  const { checkCookie, isLoading, setIsLoading } = useAuth();
   const navigate = useNavigate();
   var dataFetchedThroughApi = null;
   const [odData, setOdData] = useState([]);
@@ -23,6 +24,7 @@ const OdOtApproval = () => {
 
 
   useEffect(() => {
+    setIsLoading(true);
     let cookieExists = checkCookie("accessToken");
     if (!cookieExists.status) {
       navigate("/");
@@ -69,6 +71,7 @@ const OdOtApproval = () => {
                     },
                   });
             }else{
+                setIsLoading(false);
                 setOdData(response.data);
             }
           }
@@ -86,6 +89,7 @@ const OdOtApproval = () => {
 
 
   async function fetchDataFromApproveReject(action, odplant) { 
+    setIsLoading(true);
     console.log("Flow come here, printing params :: ", action, odplant);
     let isCookie = checkCookie('accessToken');
     let value = isCookie.cookie;
@@ -103,6 +107,7 @@ const OdOtApproval = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         if(response.status == 200){
+          setIsLoading(false);
             withReactContent(Swal).fire({
                 title: response.data.msg,
                 confirmButtonText: "Ok",
@@ -113,6 +118,7 @@ const OdOtApproval = () => {
                 },
               });
         }else{
+          setIsLoading(false);
             withReactContent(Swal).fire({
                 title: "Some Error Occured",
                 confirmButtonText: "Ok",
@@ -291,6 +297,11 @@ const OdOtApproval = () => {
   });
   return (
     <>
+
+    {
+      isLoading && <ShaktiLoader/>
+    }
+
       {odData?.length > 0 &&
         <div className="page-wrapper">
           <div className="content container-fluid">
